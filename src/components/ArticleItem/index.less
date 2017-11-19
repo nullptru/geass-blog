@@ -1,0 +1,66 @@
+@import '~themes/vars.less';
+
+.article {
+    position: relative;
+    margin: 10px;
+    margin-bottom: 20px;
+    padding: 12px 16px;
+    text-align: left;
+    background-color: white;
+    border-radius: 5px;
+    transform: translateZ(0);
+    &:hover {
+        box-shadow:0 0 10px #0CC; 
+    }
+    .header {
+        margin: 5px 0;
+        padding: 4px 0 12px 0;
+    }
+    .title {
+        font-size: 23px;
+        font-weight: bold;
+    }
+    .time {
+        margin-left: 10px;
+        font-size: 14px;
+        color: #ababab;
+    }
+    .tag {
+        margin-right: 4px;
+        font-size: 13px;
+        color: #ababab;
+    }
+    .tags {
+        position: absolute;
+        bottom: 5px;
+        margin: 5px 0 0 0;
+    }
+    .abstraction {
+        height: 100px;
+        margin-right: 8px;
+    }
+}
+
+@media (min-width: @screen-md-min) {
+    .roundImage {
+        width: 180px;
+        height: 144px;
+        display: inline-block;
+        border-radius: 5px;
+    }
+}
+
+@media (min-width: @screen-sm-min) {
+    .roundImage {
+        width: 160px;
+        height: 120px;
+        display: inline-block;
+        border-radius: 5px;
+    }
+}
+
+@media (max-width: @screen-sm-min) {
+    .roundImage {
+        display: none;
+    }
+}

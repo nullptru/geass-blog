@@ -1,0 +1,25 @@
+@import '~themes/vars.less';
+
+ul > li {
+    flex: 0 0 auto;
+    display: inline-block;
+    position: relative;
+    vertical-align: middle;
+    line-height: 1em;
+    text-decoration: none;
+    cursor: pointer;
+    background: 0 0;
+    padding: .92857143em 1.14285714em;
+    text-transform: none;
+    color: rgba(255,255,255,.87);
+    font-weight: 400;
+    transition: background .1s ease,box-shadow .1s ease,color .1s ease;
+
+    &:hover {
+        background: rgba(255,255,255,.08);
+    }
+}
+
+li.active {
+    background: rgba(0,0,0,.1);
+}

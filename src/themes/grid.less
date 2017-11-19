@@ -1,0 +1,70 @@
+@import './vars.less';
+
+@single_col: 1 / 12 * 100%;
+
+:global {
+  .row {
+    display: flex;
+    flex-wrap: wrap;
+  }
+  
+  .container-fixed(@gutter: @grid-gutter-width) {
+    margin-right: auto;
+    margin-left: auto;
+    padding-left:  floor((@gutter / 2));
+    padding-right: ceil((@gutter / 2));
+  }
+  
+  .container {
+    .container-fixed();
+  
+    @media (min-width: @screen-sm-min) {
+      width: @container-sm;
+    }
+    @media (min-width: @screen-md-min) {
+      width: @container-md;
+    }
+    @media (min-width: @screen-lg-min) {
+      width: @container-lg;
+    }
+  }
+  
+  .create_grid(@type, @i) when(@i <= @grid-columns) {
+    .cal-grid(@type, @i, flex);
+    .cal-grid(@type, @i, pull);
+    .cal-grid(@type, @i, push);
+    .create_grid(@type, (@i + 1));
+  }
+  
+  .cal-grid(@type, @i, @method) when (@method = flex) {
+    .col-@{type}-@{i} {
+      flex: 0 1 @single_col * @i;
+      position: relative;
+    }
+  }
+  
+  .cal-grid(@type, @i, @method) when (@method = push) {
+    .col-@{type}-push-@{i} {
+      left: @i * @single_col;
+    }
+  }
+  
+  .cal-grid(@type, @i, @method) when (@method = pull) {
+    .col-@{type}-pull-@{i} {
+      right: @i * @single_col;
+    }
+  }
+  
+  @media (min-width: @screen-sm-min) {
+    .create_grid(sm, 1);
+  }
+  
+  @media (min-width: @screen-md-min) {
+    .create_grid(md, 1);
+  }
+  
+  @media (min-width: @screen-lg-min) {
+    .create_grid(lg, 1);
+  }
+}
+

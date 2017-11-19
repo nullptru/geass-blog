@@ -1,0 +1,39 @@
+@import '~themes/vars.less';
+
+.header {
+    position: relative;
+    z-index: 100;
+    nav {
+        display: flex;
+        position: absolute;
+        top: 0px;
+        justify-content: space-between;
+        width: 100vw;
+        height: @header_height;
+        background: grey;
+    }
+
+    .logo {
+        padding: .92857143em 1.14285714em;
+        line-height: @header_height;
+        vertical-align: middle;
+        text-decoration: none;
+        color: rgba(255,255,255,.87);
+    }
+
+    .left {
+        height: @header_height;
+    }
+
+    .right {
+        display: flex;
+        height: @header_height;
+        margin-left: auto!important;
+    }
+
+    .bgImage {
+        width: 100%;
+        height: 350px;
+        overflow: hidden;
+    }
+}

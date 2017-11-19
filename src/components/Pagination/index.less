@@ -1,0 +1,36 @@
+.pagination {
+  display: table;
+  margin: 8px 0;
+  list-style: none;
+  background-color: #ededed;
+  padding: 5px 4px;
+  border-radius: 30px;
+  border-width: 0px;
+
+  li {
+    &:hover {
+      background: none;
+    }
+  }
+  a {
+    color: #8d8d8d;
+    &:hover {
+      color: #47c9e5;
+    }
+  }
+}
+
+.active {
+  border-radius: 30px;
+  background: #47c9e5;
+  color: #fff;
+  &:hover {
+    background: #47c9e5!important;
+  }
+  a {
+    color: #fff;
+    &:hover {
+      color: #fff;
+    }
+  }
+}
