@@ -4,10 +4,14 @@ import styles from './index.less';
 import logo from '../../assets/logo.png';
 
 export default class ArticleItem extends React.PureComponent {
+  onClick(articleId) {
+    this.props.onClick(articleId);
+  }
+
   render() {
     const { article } = this.props;
     return (
-      <section className={`${styles.article}`} onClick={this.onClick}>
+      <section className={`${styles.article}`} onClick={this.onClick.bind(this, article.id)}>
         <div className="row">
           <header className={`col-md-10 ${styles.header}`}>
             <span className={styles.title}>{ article.title }</span>
@@ -34,9 +38,11 @@ export default class ArticleItem extends React.PureComponent {
 
 ArticleItem.propTypes = {
   article: PropTypes.object,
+  onClick: PropTypes.func,
 };
 
 ArticleItem.defaultProps = {
   article: {},
+  onClick: () => {},
 };
 
