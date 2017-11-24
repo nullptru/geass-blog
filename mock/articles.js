@@ -1,6 +1,4 @@
-import default from "dva";
-
-const articles = [{
+export const chargings = [{
   id: '111',
   type: {
     label: '充电站',
@@ -77,7 +75,7 @@ const articles = [{
   pre: '333',
 }];
 
-const storeActicles = [{
+export const storerooms = [{
   id: '233',
   type: {
     label: '储藏室',
@@ -136,7 +134,7 @@ const storeActicles = [{
   next: '',
 }];
 
-const motionActicles = [{
+export const motions = [{
   id: '223',
   type: {
     label: '储藏室',
@@ -154,10 +152,3 @@ const motionActicles = [{
   ],
   image_url: '#',
 }];
-
-export default {
-  chargings: articles,
-  storerooms: storeActicles,
-  motions: motionActicles,
-};
-

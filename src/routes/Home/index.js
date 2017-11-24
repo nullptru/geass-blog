@@ -9,30 +9,26 @@ import LatestPostCard from './components/LatestPostCard';
 import TagsCard from './components/TagsCard';
 import styles from './index.less';
 
-const Home = ({ dispatch }) => {
-  const pagination = {
-    current: 1,
-    total: 51,
-    pageSize: 10,
-  };
+const Home = ({ dispatch, articles, tagList }) => {
+  const { list, latestPosts, pagination } = articles;
 
-  const onArticleClick = () => {
+  const onArticleClick = (id) => {
     dispatch(routerRedux.push({
-      pathname: '/article/test',
+      pathname: `/article/${id}`,
     }));
   };
 
   return (
     <div className="row">
       <div className={`col-md-8 col-sm-12 ${styles.colLt8}`}>
-        {[1, 2, 3, 4, 5].map(i =>
-          <Article article={article} key={i} onClick={onArticleClick} />)}
+        {list.map(article =>
+          <Article article={article} key={article.id} onClick={onArticleClick.bind(null, article.id)} />)}
         <Pagination pagination={pagination} />
       </div>
       <div className="col-md-4 col-sm-12">
         <Search withBox />
         <LatestPostCard latestPosts={latestPosts} />
-        <TagsCard tags={tags} />
+        <TagsCard tags={tagList} />
       </div>
     </div>
   );
@@ -40,6 +36,13 @@ const Home = ({ dispatch }) => {
 
 Home.propTypes = {
   dispatch: PropTypes.func.isRequired,
+  articles: PropTypes.object.isRequired,
+  tagList: PropTypes.array,
 };
 
-export default connect(({ dispatch }) => ({ dispatch }))(Home);
+Home.defaultProps = {
+  tagList: [],
+};
+
+export default connect(({ dispatch, articles, tags: { list: tagList } }) =>
+  ({ dispatch, articles, tagList }))(Home);

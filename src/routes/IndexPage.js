@@ -35,7 +35,7 @@ function IndexPage({ match, history }) {
         </div>
         <Switch>
           <Route path="/" exact component={Home} />
-          <Route path="/article/:id" exact render={() => <ArticleDetail article={article} />} />
+          <Route path="/article/:id" exact render={props => { console.log(props, 'props'); return <ArticleDetail {...props} />}} />
         </Switch>
       </div>
       <Footer copyright="@CopyRight Blog of Burgess" />

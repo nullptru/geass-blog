@@ -15,6 +15,7 @@
     "jsx-a11y/no-noninteractive-element-interactions": [0],
     "jsx-a11y/click-events-have-key-events": [0],
     "no-bitwise": [0],
+    "max-len": [0],
     "no-cond-assign": [0],
     "no-else-return": [0],
     "no-nested-ternary": [0],

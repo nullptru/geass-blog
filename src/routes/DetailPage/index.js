@@ -1,5 +1,6 @@
 import React from 'react';
 import { Link } from 'dva/router';
+import { connect } from 'dva';
 import PropTypes from 'prop-types';
 import styles from './index.less';
 
@@ -39,4 +40,5 @@ Detail.defaultProps = {
   article: { type: {}, tags: [] },
 };
 
-export default Detail;
+export default connect(({ articles: { article } }) => ({ article }))(Detail);
+

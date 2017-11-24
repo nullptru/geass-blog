@@ -1,31 +1,35 @@
 import request from '../utils/request';
-import { chargings, storerooms, motions } from 'mock/articles';
+import { chargings, storerooms, motions } from '../../mock/articles';
+import latestPosts from '../../mock/latestPosts';
 
-export function queryArticles() {
-  return chargings.concat(storerooms).concat(motions);
-}
-
-export function queryArticlesByType(type) {
-  switch (type) {
-    case 'storeroom': return storerooms;
-    case 'chargins': return chargings;
-    case 'motions': return motions;
-    default: return [];
+const response = { status: 200 };
+export function queryArticles(params) {
+  if (params.type) {
+    switch (params.type) {
+      case 'storeroom': response.data = storerooms; break;
+      case 'chargins': response.data = chargings; break;
+      case 'motions': response.data = motions; break;
+      default: response.data = []; break;
+    }
+  } else if (params.tag) {
+    response.data = chargings;
+  } else {
+    response.data = chargings.concat(storerooms).concat(motions);
   }
+  return response;
 }
 
-export function queryArticlesByTag(tag) {
-  return chargings;
+export function querySingleArticle(params) {
+  response.data = chargings[0];
+  return response;
 }
 
-export function querySingleArticle(id) {
-  return chargings[0];
+export function queryLatestArticles() {
+  response.data = latestPosts;
+  return response;
 }
 
-export function getLatestPosts() {
-  return storerooms;
-}
-
-export function search(query) {
-  return motions;
+export function search(params) {
+  response.data = motions;
+  return response;
 }

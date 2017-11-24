@@ -1,6 +1,8 @@
 import request from '../utils/request';
-import tags from 'mock/tags';
+import tags from '../../mock/tags';
 
+const response = { status: 200 };
 export function queryTags() {
-  return tags;
+  response.data = tags;
+  return response;
 }
