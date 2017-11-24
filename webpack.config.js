@@ -49,6 +49,7 @@ module.exports = (config, env) => {
     config: `${__dirname}/src/utils/config`,
     services: `${__dirname}/src/services`,
     models: `${__dirname}/src/models`,
+    mock: `${__dirname}/mock`,
     routes: `${__dirname}/src/routes`,
     themes: `${__dirname}/src/themes`,
   };
