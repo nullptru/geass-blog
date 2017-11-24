@@ -39,7 +39,6 @@ module.exports = (config, env) => {
         collapseWhitespace: true,
       } : null,
       hash: true,
-      headScripts: production ? null : ['/roadhog.dll.js'],
     }),
   ]);
 

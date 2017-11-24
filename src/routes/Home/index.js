@@ -93,7 +93,7 @@ const Home = ({ dispatch }) => {
 
   const onArticleClick = () => {
     dispatch(routerRedux.push({
-      pathname: '/home/article/test',
+      pathname: '/article/test',
     }));
   };
 
