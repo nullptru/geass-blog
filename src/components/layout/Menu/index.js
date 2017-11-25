@@ -19,8 +19,17 @@ export default class Menu extends React.PureComponent {
   render() {
     const { items } = this.props;
     return (
-      <ul>
-        { items.map(item => <li key={item.key} className={this.state.activeKey === item.key ? styles.active : ''} onClick={this.onClick.bind(this, item)} >{item.title}</li>)}
+      <ul className={styles.menu}>
+        { items.map(item =>
+          (
+            <li
+              key={item.key}
+              className={[this.state.activeKey === item.key ? styles.active : '', styles.menuItem].join(' ')}
+              onClick={this.onClick.bind(this, item)}
+            >
+              {item.title}
+            </li>
+          ))}
       </ul>
     );
   }

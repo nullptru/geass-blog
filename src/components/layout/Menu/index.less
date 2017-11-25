@@ -1,6 +1,11 @@
 @import '~themes/vars.less';
 
-ul > li {
+.menu {
+    margin: 0;
+    padding: 0;
+}
+.menu > .menuItem {
+    margin: 0;
     flex: 0 0 auto;
     display: inline-block;
     position: relative;
@@ -20,6 +25,6 @@ ul > li {
     }
 }
 
-li.active {
+.menuItem.active {
     background: rgba(0,0,0,.1);
 }
