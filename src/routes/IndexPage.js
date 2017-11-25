@@ -13,13 +13,13 @@ class IndexPage extends React.PureComponent {
     const { articles } = this.props;
     const headItems = [{
       key: '/',
-      title: 'Home',
+      title: 'HOME',
     }, {
-      key: '/tags',
-      title: 'Tags',
+      key: '/tagslist',
+      title: 'TAGS',
     }, {
       key: '/about',
-      title: 'About',
+      title: 'ABOUT',
     }];
 
     const { article } = articles;

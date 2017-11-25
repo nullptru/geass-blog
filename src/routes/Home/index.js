@@ -19,6 +19,15 @@ const Home = ({ dispatch, articles, tagList }) => {
     }));
   };
 
+  const onSearch = (query) => {
+    dispatch({
+      type: 'articles/search',
+      payload: {
+        query,
+      },
+    });
+  };
+
   return (
     <div>
       <div className="center">
@@ -34,7 +43,7 @@ const Home = ({ dispatch, articles, tagList }) => {
           <Pagination pagination={pagination} />
         </div>
         <div className="col-md-4 col-sm-12">
-          <Search withBox />
+          <Search withBox onSearch={onSearch} />
           <LatestPostCard latestPosts={latestPosts} />
           <TagsCard tags={tagList} />
         </div>
