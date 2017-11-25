@@ -10,8 +10,11 @@ export const chargings = [{
   abstraction: '如果你无法简洁的表达你的想法，那只说明你还不够了解它。好きな気持ちはどうしても隠しできません〜好きで好きでたまらない〜 -- 阿尔伯特·爱因斯坦',
   tags: [
     {
-      label: 'javascript',
-      value: 'Javascript',
+      label: 'Javascript',
+      value: 'javascript',
+    }, {
+      label: 'React',
+      value: 'react',
     },
   ],
   image_url: '#',
@@ -29,8 +32,8 @@ export const chargings = [{
   abstraction: '如果你无法简洁的表达你的想法，那只说明你还不够了解它。好きな気持ちはどうしても隠しできません〜好きで好きでたまらない〜 -- 阿尔伯特·爱因斯坦',
   tags: [
     {
-      label: 'javascript',
-      value: 'Javascript',
+      label: 'Javascript',
+      value: 'javascript',
     },
   ],
   image_url: '#',
