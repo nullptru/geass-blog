@@ -30,6 +30,8 @@ class IndexPage extends React.PureComponent {
         <div className="container">
           <Switch>
             <Route path="/" exact component={Home} />
+            <Route path="/type/:type" exact component={Home} />
+            <Route path="/tags/:tag" exact component={Home} />
             <Route path="/article/:id" exact render={props => <ArticleDetail {...props} article={article} />} />
           </Switch>
         </div>

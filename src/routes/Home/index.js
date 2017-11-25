@@ -47,9 +47,9 @@ const Home = ({ dispatch, articles, tagList, location }) => {
   }
   return (
     <div>
-      <div className="center">
+      {/* <div className="center">
         {getTypeButtons()}
-      </div>
+      </div> */}
       <div className="row">
         <div className="col-md-8 col-sm-12">
           {list.map(article =>
