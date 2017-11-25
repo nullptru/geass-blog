@@ -10,7 +10,7 @@ import LatestPostCard from './components/LatestPostCard';
 import TagsCard from './components/TagsCard';
 import styles from './index.less';
 
-const Home = ({ dispatch, articles, tagList }) => {
+const Home = ({ dispatch, articles, tagList, location }) => {
   const { list, latestPosts, pagination } = articles;
 
   const onArticleClick = (id) => {
@@ -28,13 +28,27 @@ const Home = ({ dispatch, articles, tagList }) => {
     });
   };
 
+  const getTypeButtons = () => {
+    const typeBtns = [{
+      text: '所有',
+      to: '/',
+    }, {
+      text: '充电站',
+      to: '/type/charging',
+    }, {
+      text: '储藏室',
+      to: '/type/storeroom',
+    }, {
+      text: '心情随想',
+      to: '/type/motions',
+    }];
+    const dom = typeBtns.map(btn => <TypeButton key={btn.to} text={btn.text} to={btn.to} type={btn.to === location.pathname ? 'active' : ''} />);
+    return dom;
+  }
   return (
     <div>
       <div className="center">
-        <TypeButton text="所有" to="/" type="active" />
-        <TypeButton text="充电站" to="/type/charging" />
-        <TypeButton text="储藏室" to="/type/storeroom" />
-        <TypeButton text="心情随想" to="/type/motions" />
+        {getTypeButtons()}
       </div>
       <div className="row">
         <div className="col-md-8 col-sm-12">
@@ -56,6 +70,7 @@ Home.propTypes = {
   dispatch: PropTypes.func.isRequired,
   articles: PropTypes.object.isRequired,
   tagList: PropTypes.array,
+  location: PropTypes.object.isRequired,
 };
 
 Home.defaultProps = {
