@@ -20,7 +20,7 @@ const Home = ({ dispatch, articles, tagList }) => {
 
   return (
     <div className="row">
-      <div className={`col-md-8 col-sm-12 ${styles.colLt8}`}>
+      <div className="col-md-8 col-sm-12">
         {list.map(article =>
           <Article article={article} key={article.id} onClick={onArticleClick.bind(null, article.id)} />)}
         <Pagination pagination={pagination} />

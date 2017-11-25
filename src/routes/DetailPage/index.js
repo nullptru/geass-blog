@@ -40,5 +40,5 @@ Detail.defaultProps = {
   article: { type: {}, tags: [] },
 };
 
-export default connect(({ articles: { article } }) => ({ article }))(Detail);
+export default Detail;
 

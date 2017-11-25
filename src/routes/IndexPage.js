@@ -1,5 +1,6 @@
 import React from 'react';
 import { connect } from 'dva';
+import PropTypes from 'prop-types';
 import { Switch, Route } from 'dva/router';
 import Head from 'components/layout/Head';
 import Footer from 'components/layout/Footer';
@@ -8,7 +9,7 @@ import Home from './Home';
 import ArticleDetail from './DetailPage';
 import './IndexPage.less';
 
-function IndexPage({ match, history }) {
+function IndexPage({ articles }) {
   const headItems = [{
     key: 'home',
     title: 'Home',
@@ -23,9 +24,11 @@ function IndexPage({ match, history }) {
     title: 'Rikka',
   }];
 
+  const { article } = articles;
+
   return (
     <div id="app">
-      <Head items={headItems} />
+      <Head items={headItems} article={article} />
       <div className="container">
         <div className="center">
           <TypeButton text="所有" to="/" type="active" />
@@ -35,7 +38,7 @@ function IndexPage({ match, history }) {
         </div>
         <Switch>
           <Route path="/" exact component={Home} />
-          <Route path="/article/:id" exact render={props => { console.log(props, 'props'); return <ArticleDetail {...props} />}} />
+          <Route path="/article/:id" exact render={props => <ArticleDetail {...props} article={article} />} />
         </Switch>
       </div>
       <Footer copyright="@CopyRight Blog of Burgess" />
@@ -44,6 +47,7 @@ function IndexPage({ match, history }) {
 }
 
 IndexPage.propTypes = {
+  articles: PropTypes.object.isRequired,
 };
 
-export default connect()(IndexPage);
+export default connect(({ articles }) => ({ articles }))(IndexPage);
