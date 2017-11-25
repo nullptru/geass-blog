@@ -1,21 +1,35 @@
 import React from 'react';
+import { connect } from 'dva';
+import { routerRedux } from 'dva/router';
 import PropTypes from 'prop-types';
 import Menu from '../Menu';
 import styles from './index.less';
 import bg from '../../../assets/bg.jpg';
 
-export default class Head extends React.PureComponent {
+class Head extends React.PureComponent {
+  onMenuClick = (key) => {
+    this.props.dispatch(routerRedux.push({
+      pathname: key,
+    }));
+  };
+
   render() {
-    const { items } = this.props;
+    const { items, article } = this.props;
     return (
       <header className={styles.header}>
-        <img className={styles.bgImage} src={bg} alt="bg" />
+        <div style={{ position: 'relative' }}>
+          <img className={styles.bgImage} src={article.img === undefined ? bg : article.img} alt="bg" />
+          { article.title === undefined &&
+          <div className={styles.headTitle}>
+            <span className={styles.title}>Stay Hungry, Stay Foolish</span>
+          </div>}
+        </div>
         <nav>
           <section className={styles.left}>
             <a className={styles.logo} href="/">废宅的小窝</a>
           </section>
           <section className={styles.right}>
-            <Menu items={items} />
+            <Menu items={items} onClick={this.onMenuClick.bind(this)}/>
           </section>
         </nav>
       </header>
@@ -24,18 +38,23 @@ export default class Head extends React.PureComponent {
 }
 
 Head.propTypes = {
+  dispatch: PropTypes.func.isRequired,
   items: PropTypes.array,
+  article: PropTypes.object,
 };
 
 Head.defaultProps = {
+  article: {},
   items: [{
-    key: 'home',
+    key: '/',
     title: 'Home',
   }, {
-    key: 'article',
+    key: '/articles',
     title: 'Article',
   }, {
-    key: 'about',
-    title: 'about',
+    key: '/about',
+    title: 'About',
   }],
 };
+
+export default connect()(Head);

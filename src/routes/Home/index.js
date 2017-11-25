@@ -4,6 +4,7 @@ import { routerRedux } from 'dva/router';
 import { connect } from 'dva';
 import Article from 'components/ArticleItem';
 import Search from 'components/Search';
+import TypeButton from 'components/TypeButton';
 import Pagination from 'components/Pagination';
 import LatestPostCard from './components/LatestPostCard';
 import TagsCard from './components/TagsCard';
@@ -19,16 +20,24 @@ const Home = ({ dispatch, articles, tagList }) => {
   };
 
   return (
-    <div className="row">
-      <div className="col-md-8 col-sm-12">
-        {list.map(article =>
-          <Article article={article} key={article.id} onClick={onArticleClick.bind(null, article.id)} />)}
-        <Pagination pagination={pagination} />
+    <div>
+      <div className="center">
+        <TypeButton text="所有" to="/" type="active" />
+        <TypeButton text="充电站" to="/type/charging" />
+        <TypeButton text="储藏室" to="/type/storeroom" />
+        <TypeButton text="心情随想" to="/type/motions" />
       </div>
-      <div className="col-md-4 col-sm-12">
-        <Search withBox />
-        <LatestPostCard latestPosts={latestPosts} />
-        <TagsCard tags={tagList} />
+      <div className="row">
+        <div className="col-md-8 col-sm-12">
+          {list.map(article =>
+            <Article article={article} key={article.id} onClick={onArticleClick.bind(null, article.id)} />)}
+          <Pagination pagination={pagination} />
+        </div>
+        <div className="col-md-4 col-sm-12">
+          <Search withBox />
+          <LatestPostCard latestPosts={latestPosts} />
+          <TagsCard tags={tagList} />
+        </div>
       </div>
     </div>
   );

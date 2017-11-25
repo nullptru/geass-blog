@@ -20,7 +20,9 @@ export function queryArticles(params) {
 }
 
 export function querySingleArticle(params) {
-  response.data = chargings[0];
+  const { id } = params;
+  const all = chargings.concat(storerooms).concat(motions);
+  response.data = all.filter(article => id === article.id)[0];
   return response;
 }
 

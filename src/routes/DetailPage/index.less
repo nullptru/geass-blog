@@ -1,9 +1,15 @@
 @import '~themes/vars.less';
 
+.detailContainer {
+  margin-top: -160px;
+  z-index: 1000;
+  transform: translateZ(0);
+}
 .detail {
-  margin: 12px auto;
+  margin: 24px auto;
   padding: 12px;
-  background: @transparent-white;
+  min-height: 280px;
+  background: white;
   box-shadow: 0 0 40px rgba(0, 0, 0, 0.1);
   border-radius: 8px;
 
@@ -19,7 +25,12 @@
     font-size: @meta-font;
     color: @meta-color;
     .type {
+      color: @meta-color;
       margin-right: 8px;
+      &:hover {
+        cursor: pointer;
+        text-decoration: underline;
+      }
     }
     .time {
       margin-right: 8px;
@@ -34,9 +45,17 @@
   .tags {
     margin: 20px 0 12px;
     color: @tag-color;
+    .tagIcon {
+      margin-left: 8px;
+      color: @tag-color;
+    }
     .tag {
       margin-left: 8px;
       color: @tag-color;
+      &:hover {
+        cursor: pointer;
+        text-decoration: underline;
+      }
     }
   }
 }
@@ -80,5 +99,20 @@
       font-weight: bold;
       z-index: 101;
     }
+  }
+  .noMore {
+    padding: 0 30px 0 20px;
+    display: inline-block;
+    position: relative;
+    width: 100px;
+    height: 50px;
+    text-align: center;
+    line-height: 50px;
+    background: #ccc;
+    color: @font-color;
+    border-radius: 100px;
+    transition: .3s all ease-in-out;
+    overflow: hidden;
+    z-index: 10;
   }
 }

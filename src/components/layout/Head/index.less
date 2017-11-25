@@ -2,7 +2,6 @@
 
 .header {
     position: relative;
-    z-index: 100;
     nav {
         display: flex;
         position: absolute;
@@ -36,4 +35,32 @@
         height: 400px;
         overflow: hidden;
     }
+}
+
+.headTitle {
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+    
+    .title {
+        color: @transparent-white;
+        font-size: 32px;
+        font-weight: bold;
+        font-style: italic;
+    }
+
+  .meta {
+    margin-top: 12px;
+    font-size: 24px;
+    color: @transparent-white;
+    font-weight: bold;
+    font-style: italic;
+    .type {
+      margin-right: 8px;
+    }
+    .time {
+      margin-right: 8px;
+    }
+  }
 }
