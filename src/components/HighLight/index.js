@@ -20,7 +20,7 @@ class HightLight extends React.PureComponent {
   }
   render() {
     return (
-      <div>
+      <div className={this.props.className}>
         {this.props.children}
       </div>
     );
