@@ -4,6 +4,7 @@ import PropTypes from 'prop-types';
 import { Switch, Route } from 'dva/router';
 import Head from 'components/layout/Head';
 import Footer from 'components/layout/Footer';
+import Live2D from 'components/Live2D';
 import Home from './Home';
 import ArticleDetail from './DetailPage';
 import './IndexPage.less';
@@ -35,6 +36,7 @@ class IndexPage extends React.PureComponent {
             <Route path="/article/:id" exact render={props => <ArticleDetail {...props} article={article} />} />
           </Switch>
         </div>
+        <Live2D />
         <Footer copyright="@CopyRight Blog of Burgess" />
       </div>
     );

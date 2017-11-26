@@ -33,7 +33,6 @@ export default {
       history.listen((location) => {
         let match;
         if ((match = location.pathname.match(/\/article\/(\w+)/)) !== null) { // 主页面
-          console.log(match);
           dispatch({ type: 'querySingleArticle', payload: { id: match[1] } }); // 获取文章列表
         } else {
           dispatch({ type: 'updateState', payload: { article: {} } });

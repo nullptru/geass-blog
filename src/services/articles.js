@@ -1,4 +1,4 @@
-import request from '../utils/request';
+// import request from '../utils/request';
 import { chargings, storerooms, motions } from '../../mock/articles';
 import latestPosts from '../../mock/latestPosts';
 
@@ -22,7 +22,7 @@ export function queryArticles(params) {
 export function querySingleArticle(params) {
   const { id } = params;
   const all = chargings.concat(storerooms).concat(motions);
-  response.data = all.filter(article => id === article.id)[0];
+  [response.data] = all.filter(article => id === article.id);
   return response;
 }
 
@@ -32,6 +32,8 @@ export function queryLatestArticles() {
 }
 
 export function search(params) {
+  const query = params;
   response.data = motions;
+  response.query = query;
   return response;
 }

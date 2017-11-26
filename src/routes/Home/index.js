@@ -4,13 +4,14 @@ import { routerRedux } from 'dva/router';
 import { connect } from 'dva';
 import Article from 'components/ArticleItem';
 import Search from 'components/Search';
-import TypeButton from 'components/TypeButton';
 import Pagination from 'components/Pagination';
 import LatestPostCard from './components/LatestPostCard';
 import TagsCard from './components/TagsCard';
-import styles from './index.less';
+import './index.less';
 
-const Home = ({ dispatch, articles, tagList, location }) => {
+const Home = ({
+  dispatch, articles, tagList,
+}) => {
   const { list, latestPosts, pagination } = articles;
 
   const onArticleClick = (id) => {
@@ -28,23 +29,23 @@ const Home = ({ dispatch, articles, tagList, location }) => {
     });
   };
 
-  const getTypeButtons = () => {
-    const typeBtns = [{
-      text: '所有',
-      to: '/',
-    }, {
-      text: '充电站',
-      to: '/type/charging',
-    }, {
-      text: '储藏室',
-      to: '/type/storeroom',
-    }, {
-      text: '心情随想',
-      to: '/type/motions',
-    }];
-    const dom = typeBtns.map(btn => <TypeButton key={btn.to} text={btn.text} to={btn.to} type={btn.to === location.pathname ? 'active' : ''} />);
-    return dom;
-  }
+  // const getTypeButtons = () => {
+  //   const typeBtns = [{
+  //     text: '所有',
+  //     to: '/',
+  //   }, {
+  //     text: '充电站',
+  //     to: '/type/charging',
+  //   }, {
+  //     text: '储藏室',
+  //     to: '/type/storeroom',
+  //   }, {
+  //     text: '心情随想',
+  //     to: '/type/motions',
+  //   }];
+  //   const dom = typeBtns.map(btn => <TypeButton key={btn.to} text={btn.text} to={btn.to} type={btn.to === location.pathname ? 'active' : ''} />);
+  //   return dom;
+  // };
   return (
     <div>
       {/* <div className="center">
@@ -70,7 +71,6 @@ Home.propTypes = {
   dispatch: PropTypes.func.isRequired,
   articles: PropTypes.object.isRequired,
   tagList: PropTypes.array,
-  location: PropTypes.object.isRequired,
 };
 
 Home.defaultProps = {
