@@ -1,53 +1,54 @@
 import CodeMirror from 'codemirror';
 import React from 'react';
+import ReactDOM from 'react-dom';
 import PropTypes from 'prop-types';
+import 'codemirror/mode/markdown/markdown';
+import 'codemirror/mode/xml/xml';
+import 'codemirror/theme/monokai.css';
+import 'codemirror/lib/codemirror.css';
 
-class CodeMirrorEditor extends React.PureComponent {
+export default class CodeMirrorEditor extends React.PureComponent {
   constructor(props) {
     super(props);
-    this.state = { isControlled: this.props.value != null };
+    this.state = {
+      value: this.props.value,
+    };
 
     this.handleChange = this.handleChange.bind(this);
   }
 
-  componentDidUpdate() {
-    if (this.editor) {
-      if (this.props.value != null) {
-        if (this.editor.getValue() !== this.props.value) {
-          this.editor.setValue(this.props.value);
-        }
-      }
-    }
-  }
-
-  handleChange() {
-    if (this.editor) {
-      const value = this.editor.getValue();
-      if (value !== this.props.value) {
-        this.props.onChange({ target: { value } });
-        if (this.editor.getValue() !== this.props.value) {
-          if (this.state.isControlled) {
-            this.editor.setValue(this.props.value);
-          } else {
-            this.props.value = value;
-          }
-        }
-      }
-    }
-  }
-
-  editor(node) {
-    this.editor = CodeMirror.fromTextArea(node, this.props);
+  componentDidMount() {
+    const { value, lineNumbers, ...editorProps } = this.props;
+    // find the textarea node
+    /* eslint-disable */
+    const doms = ReactDOM.findDOMNode(this);
+    const [dom] = doms.getElementsByTagName('textarea');
+    // generator the codemirrorEditor
+    this.editor = CodeMirror.fromTextArea(dom, editorProps);
+    console.log(this.editor);
     this.editor.on('change', this.handleChange);
+    setTimeout(() => { this.editor.setOption('lineNumbers', lineNumbers)}, 0)
+  }
+
+  handleChange(editor) {
+    const value = editor.getValue(); // 得到最新值
+    if (value !== this.state.value) {
+      this.props.onChange(value);
+      this.setState({ value });
+    }
   }
 
   render() {
     const {
-      textAreaStyle, textAreaClass, style, className, ...rest
+      style, className,
     } = this.props;
     return (
-      <div style={style} className={className}>
-        <textarea ref={this.editor} style={textAreaStyle} className={textAreaClass} {...rest} />
+      <div className="ReactCodeMirror">
+        <textarea
+          defaultValue={this.props.value}
+          autoComplete="off"
+          autoFocus={this.props.autoFocus}
+        />
       </div>
     );
   }
@@ -60,6 +61,8 @@ CodeMirrorEditor.propTypes = {
   style: PropTypes.object,
   className: PropTypes.string,
   onChange: PropTypes.func,
+  autoFocus: PropTypes.bool,
+  lineNumbers: PropTypes.bool,
 };
 
 CodeMirrorEditor.defaultProps = {
@@ -67,6 +70,8 @@ CodeMirrorEditor.defaultProps = {
   defaultValue: '',
   style: {},
   className: '',
+  autoFocus: true,
+  lineNumbers: true,
   onChange: () => {},
 };
 
