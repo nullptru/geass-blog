@@ -15,6 +15,7 @@ export default class CodeMirrorEditor extends React.PureComponent {
     };
 
     this.handleChange = this.handleChange.bind(this);
+    this.getEditor = this.getEditor.bind(this);
   }
 
   componentDidMount() {
@@ -25,9 +26,9 @@ export default class CodeMirrorEditor extends React.PureComponent {
     const [dom] = doms.getElementsByTagName('textarea');
     // generator the codemirrorEditor
     this.editor = CodeMirror.fromTextArea(dom, editorProps);
-    console.log(this.editor);
     this.editor.on('change', this.handleChange);
-    setTimeout(() => { this.editor.setOption('lineNumbers', lineNumbers)}, 0)
+    setTimeout(() => { this.editor.setOption('lineNumbers', lineNumbers)}, 0); // 直接设置会导致奇怪的样式错位
+    this.props.getEditor(this.getEditor());
   }
 
   handleChange(editor) {
@@ -36,6 +37,13 @@ export default class CodeMirrorEditor extends React.PureComponent {
       this.props.onChange(value);
       this.setState({ value });
     }
+  }
+
+  /**
+   * return editor instantant for custom design
+   */
+  getEditor() {
+    return this.editor;
   }
 
   render() {
@@ -60,9 +68,10 @@ CodeMirrorEditor.propTypes = {
   defaultValue: PropTypes.string,
   style: PropTypes.object,
   className: PropTypes.string,
-  onChange: PropTypes.func,
   autoFocus: PropTypes.bool,
   lineNumbers: PropTypes.bool,
+  onChange: PropTypes.func,
+  getEditor: PropTypes.func,
 };
 
 CodeMirrorEditor.defaultProps = {
@@ -73,5 +82,6 @@ CodeMirrorEditor.defaultProps = {
   autoFocus: true,
   lineNumbers: true,
   onChange: () => {},
+  getEditor: () => {},
 };
 
