@@ -1,0 +1,67 @@
+@import '~themes/vars.less';
+
+// input status
+// == when focus or actived
+.active(@color: @outline-color) {
+  border-color: ~`colorPalette("@{color}", 5)`;
+  outline: 0;
+  box-shadow: 0 0 @outline-blur-size @outline-width fade(@color, 20%);
+}
+
+// == when hoverd
+.hover(@color: @input-hover-border-color) {
+  border-color: ~`colorPalette("@{color}", 5)`;
+}
+
+.disabled() {
+  background-color: @input-disabled-bg;
+  opacity: 1;
+  cursor: not-allowed;
+  color: @disabled-color;
+  &:hover {
+    .hover(@input-border-color);
+  }
+}
+
+// Basic style for input
+.input() {
+  position: relative;
+  display: inline-block;
+  padding: 4px 8px;
+  width: 100%;
+  height: @input-height-base;
+  font-size: 12px;
+  line-height: @line-height-base;
+  color: @input-color;
+  background-color: @input-bg;
+  background-image: none;
+  border: @border-width-base @border-style-base @input-border-color;
+  border-radius: 6px;
+  transition: all .3s;
+
+  &:hover {
+    .hover();
+  }
+
+  &:focus {
+    .active();
+  }
+
+  &-disabled {
+    .disabled();
+  }
+
+}
+
+// Reset height for `textarea`s
+textarea& {
+  .input();
+  max-width: 100%; // prevent textearea resize from coming out of its container
+  height: auto;
+  vertical-align: bottom;
+  transition: all .3s, height 0s;
+}
+
+.geassBlogInput {
+  .input;
+}

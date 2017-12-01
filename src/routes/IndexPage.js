@@ -37,7 +37,7 @@ class IndexPage extends React.PureComponent {
           </Switch>
         </div>
         <Live2D />
-        <Footer copyright="@CopyRight Blog of Burgess" />
+        <Footer copyright="@CopyRight 2017 Blog of Geass" />
       </div>
     );
   }
