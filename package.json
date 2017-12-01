@@ -15,6 +15,7 @@
     "dva": "^2.1.0",
     "pixi-live2d": "^1.2.1",
     "pixi.js": "^4.6.1",
+    "rc-select": "^7.3.2",
     "react": "^16.1.1",
     "react-dom": "^16.1.1",
     "react-markdown": "^3.0.2"
