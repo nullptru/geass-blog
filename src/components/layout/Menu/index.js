@@ -17,19 +17,25 @@ export default class Menu extends React.PureComponent {
   }
 
   render() {
-    const { items } = this.props;
+    const { items, mode } = this.props;
+    const menuItemClassList = [styles.menuItem];
+    const menuClassList = [styles.menu];
+    menuClassList.push(styles[mode]);
     return (
-      <ul className={styles.menu}>
-        { items.map(item =>
-          (
+      <ul className={menuClassList.join(' ')}>
+        { items.map((item) => {
+          const itemClass = menuItemClassList.slice(0);
+          itemClass.push(this.state.activeKey === item.key ? styles.active : '');
+          return (
             <li
               key={item.key}
-              className={[this.state.activeKey === item.key ? styles.active : '', styles.menuItem].join(' ')}
+              className={itemClass.join(' ')}
               onClick={this.onClick.bind(this, item)}
             >
               {item.title}
             </li>
-          ))}
+          );
+        })}
       </ul>
     );
   }
@@ -38,9 +44,11 @@ export default class Menu extends React.PureComponent {
 Menu.propTypes = {
   items: PropTypes.array,
   onClick: PropTypes.func,
+  mode: PropTypes.string,
 };
 
 Menu.defaultProps = {
   items: [],
   onClick: () => {},
+  mode: 'horizontal',
 };

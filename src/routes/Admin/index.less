@@ -1,33 +1,89 @@
+@import '~themes/vars.less';
+
+.container {
+  height: 100vh;
+  background: white;
+  margin-left: 220px;
+  padding: 20px;
+}
+
+.editPanel {
+  flex: 1 1 auto;
+}
+
+.codePanel {
+  .panel;
+  margin-top: 10px;
+  height: 800px;
+}
+
+.panel {
+  color: black;
+  display: flex;
+
+  &.vertical {
+    flex-direction: column;
+  }
+}
 
 :global {
   .CodeMirror {
-    position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    width: 50%;
     height: 100%;
-
     font-size: 16px;
   }
 
   .ReactCodeMirror {
+    flex: 1 1 50%;
     border: 1px solid #ccc;
   }
 }
 
 .markdownContainer {
+  flex: 1 1 50%;
   padding: 4px 8px;
-  background: white;
-  color: black;
-  position: absolute;
-  top: 0;
-  left: 50%;
-  bottom: 0;
-  width: 50%;
-  height: 100%;
+  background: #f4f4f4;
   overflow: auto;
 
   font-size: 16px;
+}
+
+.upload {
+  width: fit-content;
+
+  button {
+    position: relative;
+    display: inline-block;
+    padding: 4px 8px;
+    width: 100%;
+    height: @button-height-base;
+    font-size: 12px;
+    line-height: @line-height-base;
+    color: @input-color;
+    background-color: @input-bg;
+    background-image: none;
+    border: @border-width-base @border-style-base @input-border-color;
+    border-radius: 6px;
+    transition: all .3s;
+
+    &:hover {
+      .hover();
+    }
+
+    &:focus {
+      .active();
+    }
+  }
+
+  // input status
+  // == when focus or actived
+  .active(@color: @outline-color) {
+    border-color: ~`colorPalette("@{color}", 5)`;
+    outline: 0;
+    box-shadow: 0 0 @outline-blur-size @outline-width fade(@color, 20%);
+  }
+
+  // == when hoverd
+  .hover(@color: @input-hover-border-color) {
+    border-color: ~`colorPalette("@{color}", 5)`;
+  }
 }

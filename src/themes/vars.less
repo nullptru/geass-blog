@@ -1,5 +1,22 @@
 
 
+@text-color             : fade(#000, 65%);
+// Border color
+@border-color-base      : #d9d9d9;        // base border outline a component
+@border-color-split     : #e9e9e9;        // split border inside a component
+@border-width-base      : 1px;            // width of the border for a component
+@border-style-base      : solid;          // style of a components border
+
+@line-height-base       : 1.5;
+@border-radius-base     : 4px;
+
+// Disabled states
+@disabled-color         : fade(#000, 25%);
+@disabled-color-dark    : fade(#fff, 35%);
+// Outline
+@outline-blur-size      : 0;
+@outline-width          : 2px;
+@outline-color          : #108ee9;
 //== Media queries breakpoints
 // Extra small screen / phone
 //** Deprecated `@screen-xs` as of v3.0.1
@@ -67,6 +84,24 @@
 //** For `@screen-lg-min` and up.
 @container-lg:                 @container-large-desktop;
 
+
+// Input
+// ---
+@input-height-base               : 20px;
+@button-height-base              : 28px;
+@input-padding-horizontal        : 8px;
+@input-padding-horizontal-base   : @input-padding-horizontal;
+@input-padding-vertical-base     : 4px;
+@input-placeholder-color         : hsv(0, 0, 75%);
+@input-color                     : @text-color;
+@input-border-color              : @border-color-base;
+@input-bg                        : #fff;
+@input-addon-bg                  : #eee;
+@input-hover-border-color        : #108ee9;
+@input-disabled-bg               : #f7f7f7;
+
+// others
+// ---
 @transparent-white: rgba(255, 255, 255, 0.87);
 
 @article-title-font: 28px;
@@ -81,3 +116,5 @@
 @default-font-color: rgba(0, 0, 0, 0.87);
 
 @header_height: 52px;
+
+@footer-color: #262626;

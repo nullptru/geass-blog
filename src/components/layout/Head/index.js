@@ -22,6 +22,7 @@ class Head extends React.PureComponent {
           { article.title === undefined &&
           <div className={styles.headTitle}>
             <span className={styles.title}>Stay Hungry, Stay Foolish</span>
+            <span className={styles.subtitle}>Geass Blog</span>
           </div>}
         </div>
         <nav>
