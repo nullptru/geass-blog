@@ -15,7 +15,7 @@ articles.get('/', async (ctx, next) => {
 });
 
 /**
- * 当请求为xxxxx/articles/page时，获得所有文章列表
+ * 当请求为/articles/page时，获得所有文章列表
  */
 articles.get('/articles/page', async (ctx) => {
   const { pageSize = 10, current = 1 } = ctx.query;
@@ -25,7 +25,7 @@ articles.get('/articles/page', async (ctx) => {
 });
 
 /**
- * 当请求为xxxxx/articles/:id时，获得所有文章列表
+ * 当请求为/articles/:id时，获得对应id文章列表
  */
 articles.get('/article/:id', async (ctx) => {
   const rows = await Pool.query('SELECT * FROM articles WHERE id = ?', [ctx.params.id]);
@@ -34,33 +34,55 @@ articles.get('/article/:id', async (ctx) => {
 });
 
 /**
+ * 当请求为/articles/tag/:tag时，获得相应tag下的文章列表
+ */
+articles.get('/article/tag/:tag', async (ctx) => {
+  const { pageSize = 10, current = 1 } = ctx.query;
+  const rows = await Pool.query(
+    'SELECT * FROM articles WHERE tag = ? limit ?, ?',
+    [ctx.params.tag, (current - 1) * pageSize, current * pageSize],
+  );
+  response.data = rows;
+  ctx.body = response;
+});
+
+/**
  * 创建新文章
  */
 articles.post('/article', async (ctx) => {
-  console.log(ctx.request);
   const {
-    title, content, abstraction, imageUrl = '', next,
+    title, content, abstraction, imageUrl = '', next, tagId,
   } = ctx.request.body;
+  /**
+   * insert a article by 4 step
+   * 1. select the latest article
+   * 2. insert a new article link to the previous article
+   * 3. insert article's tags infomation into table named tag2article
+   * 4. update the article in step 1 link to the next article
+   */
   const querys = [{
     sql: 'SELECT id from articles ORDER BY created_time DESC LIMIT 0,1',
   }, {
     sql: 'INSERT INTO articles(title, content, abstraction, image_url, pre, next) VALUES (?, ?, ?, ?, ? ,?)',
     params: (results) => {
-      console.log(results, 'query2');
       const preId = results[0][0].id;
       return [title, content, abstraction, imageUrl, preId, next];
     },
   }, {
+    sql: 'INSERT INTO tag2article(article_id, tag_id) VALUES (?, ?)',
+    params: (results) => {
+      const { insertId } = results[1];
+      return [insertId, tagId];
+    },
+  }, {
     sql: 'UPDATE articles SET next = ? WHERE id = ?',
     params: (results) => {
-      console.log(results, 'query3');
       const preId = results[0][0].id;
       const { insertId } = results[1];
       return [insertId, preId];
     },
   }];
   const rows = await Pool.startTransaction(querys);
-  console.log(rows, 'rows');
   response.data = rows;
   ctx.body = response;
 });
