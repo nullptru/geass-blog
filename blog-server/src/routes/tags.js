@@ -25,7 +25,7 @@ tags.get('/tags/page', async (ctx) => {
 });
 
 /**
- * 当请求为xxxxx/tags/:id时，获得所有标签列表
+ * 当请求为xxxxx/tags/:id时，获得对应
  */
 tags.get('/tag/:id', async (ctx) => {
   const rows = await Pool.query('SELECT * FROM tags WHERE id = ?', [ctx.params.id]);
