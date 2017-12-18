@@ -87,6 +87,32 @@ articles.post('/article', async (ctx) => {
   ctx.body = response;
 });
 
+
+/**
+ * 更新文章
+ */
+articles.put('/article', async (ctx) => {
+  const columns = ['title', 'content', 'abstraction', 'image_url'];
+  const { body } = ctx.request;
+  const updateObj = {};
+  let updated = false;
+  columns.forEach((column) => {
+    if (body[column] !== undefined && body[column] !== null) { // if column has value
+      updated = true;
+      updateObj[column] = body[column];
+    }
+  });
+  if (!updated) {
+    response.data = {};
+    response.success = false;
+    response.err = '未发现需更新字段';
+  } else {
+    const rows = await Pool.query('UPDATE articles SET ? WHERE id = ?', [updateObj, body.id]);
+    response.data = rows;
+  }
+  ctx.body = response;
+});
+
 /**
  * 删除文章
  */
