@@ -19,14 +19,23 @@ app.use(async (ctx, next) => {
 });
 
 // 装载所有子路由
-let router = new Router();
+const router = new Router();
 router.use(articles.routes());
 router.use(tags.routes());
+
+app.use(async (ctx, next) => {
+  try {
+    await next();
+  } catch (err) {
+    ctx.status = err.status || 500;
+    ctx.body = { success: false, err: err.message };
+  }
+});
 
 // 加载路由中间件
 app.use(router.routes())
   .use(router.allowedMethods());
 
 app.listen(3000);
-console.log('Server running at ' + 3000);
-console.log("Running in "  + process.env.NODE_ENV + " v" + process.env.npm_package_version);
+/* eslint-disable no-console */
+console.log('Server running at 3000');

@@ -41,7 +41,7 @@ tags.post('/tag', async (ctx) => {
     name, value,
   } = ctx.request.body;
   const rows = await Pool.query('INSERT INTO tags(name, value) VALUES (?, ?)', [name, value]);
-  response.data = rows;
+  response.data = { insertId: rows.insertId };
   ctx.body = response;
 });
 
@@ -63,11 +63,13 @@ tags.put('/tag', async (ctx) => {
     response.data = {};
     response.success = false;
     response.err = '未发现需更新字段';
+    ctx.body = response;
+    ctx.throw(400, 'Error Message');
   } else {
     const rows = await Pool.query('UPDATE tags SET ? WHERE id = ?', [updateObj, body.id]);
-    response.data = rows;
+    response.data = { affectedRows: rows.affectedRows };
+    ctx.body = response;
   }
-  ctx.body = response;
 });
 
 
@@ -80,7 +82,7 @@ tags.delete('/tag/:id', async (ctx) => {
     'DELETE FROM tags WHERE id = ?',
     [id],
   );
-  response.data = rows;
+  response.data = { affectedRows: rows.affectedRows };
   ctx.body = response;
 });
 
