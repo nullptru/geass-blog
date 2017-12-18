@@ -10,6 +10,6 @@ export default class Sider extends React.PureComponent {
         <div className={styles.logo}>Geass Blog</div>
         <Menu items={items} mode="verticle" />
       </div>
-    )
+    );
   }
 }
