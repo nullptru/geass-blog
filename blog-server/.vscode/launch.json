@@ -1,0 +1,26 @@
+{
+  // Use IntelliSense to learn about possible Node.js debug attributes.
+  // Hover to view descriptions of existing attributes.
+  // For more information, visit: https://go.microsoft.com/fwlink/?linkid=830387
+  "version": "0.2.0",
+  "configurations": [
+    {
+      "type": "node",
+      "request": "launch",
+      "name": "Launch",
+      "program": "${workspaceRoot}/src/index",
+      "sourceMaps": true, //sourcemap打开
+      "outFiles": [
+        "${workspaceRoot}/dist/index.js"
+      ], //源映射，指定实际执行文件
+      "preLaunchTask": "build" //首先执行build task
+    },
+    {
+      "type": "node",
+      "request": "attach",
+      "name": "Attach",
+      "address": "localhost",
+      "port": 5858
+    }
+  ]
+}

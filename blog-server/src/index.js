@@ -9,6 +9,7 @@ const app = new Koa();
 
 // request logger
 app.use(logger());
+app.use(KoaBody());
 // x-response-time
 app.use(async (ctx, next) => {
   const start = Date.now();

@@ -4,7 +4,8 @@
   "description": "geass blog server",
   "main": "index.js",
   "scripts": {
-    "start": "babel-node index.js",
+    "start": "babel-node src/index.js",
+    "build": "babel src -d dist --source-maps",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "keywords": [
@@ -25,8 +26,9 @@
     "babel-eslint": "^8.0.2",
     "babel-plugin-dva-hmr": "^0.4.0",
     "babel-plugin-transform-decorators-legacy": "^1.3.4",
-    "babel-plugin-transform-runtime": "^6.9.0",
+    "babel-plugin-transform-runtime": "^6.23.0",
     "babel-preset-env": "^1.6.1",
+    "babel-runtime": "^6.26.0",
     "eslint": "^4.11.0"
   }
 }
