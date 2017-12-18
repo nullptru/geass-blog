@@ -8,6 +8,13 @@
 /dist
 /**/dist
 
+# yarn
+yarn.lock
+
+# vscode config
+/**/.vscode
+.vscode
+
 # misc
 .DS_Store
 npm-debug.log*
