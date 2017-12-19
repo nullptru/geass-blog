@@ -54,14 +54,15 @@
 }
 
 // Reset height for `textarea`s
-textarea& {
+textarea {
   .input();
   max-width: 100%; // prevent textearea resize from coming out of its container
   height: auto;
+  resize: none;
   vertical-align: bottom;
   transition: all .3s, height 0s;
 }
 
 .geassBlogInput {
-  .input;
+  .input();
 }

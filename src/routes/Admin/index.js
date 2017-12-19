@@ -44,6 +44,11 @@ class AdminIndex extends React.PureComponent {
 
   onEditorChange = text => this.setState({ editorText: text });
 
+  onSubmit = () => {
+    const { getFieldsValue } = this.props.form;
+    console.log(getFieldsValue());
+  }
+
   getFieldDecorator = (name) => {
     const { getFieldDecorator } = this.props.form;
     return (child) => {
@@ -54,6 +59,7 @@ class AdminIndex extends React.PureComponent {
       </div>);
     };
   }
+
   render() {
     const props = {
       mode: 'markdown',
@@ -61,7 +67,7 @@ class AdminIndex extends React.PureComponent {
       onChange: this.onEditorChange,
       value: this.state.editorText,
     };
-    const { getFieldDecorator } = this;
+    const { getFieldDecorator } = this.props.form;
     const items = [
       { title: 'test', key: '/' },
       { title: 'test2', key: '/test' },
@@ -69,25 +75,27 @@ class AdminIndex extends React.PureComponent {
     return (
       <div className={styles.container}>
         <Sider items={items} />
-        <div className={styles.editPanel}>
+        <div className={styles.markdownArticlePanel}>
           <form>
-            <div className={[styles.panel, styles.vertical].join(' ')}>
-              {getFieldDecorator('Title')(<Input />)}
-              {getFieldDecorator('Abstraction')(<Input />)}
-              {getFieldDecorator('Tags')(<Select multiple>
-                <Option value="a" key="a">a</Option>
-                <Option value="b" key="b">b</Option>
-                <Option value="c" key="c">c</Option>
-              </Select>)}
-              <Upload {...this.uploaderProps} className={styles.upload}><button type="button">开始上传</button></Upload>
-            </div>
+            <div className={styles.articlePanel}>
+              {getFieldDecorator('title')(<Input className={styles.title} />)}
+              <div className={styles.toolPanel}>
+                <Upload {...this.uploaderProps} className={styles.upload}><button type="button">上传图片</button></Upload>
+                {getFieldDecorator('tags')(<Select multiple>
+                  <Option value="a" key="a">a</Option>
+                  <Option value="b" key="b">b</Option>
+                  <Option value="c" key="c">c</Option>
+                </Select>)}
+                <button type="button" onClick={this.onSubmit}>提交</button>
+              </div>
+              {getFieldDecorator('abstraction')(<Input className={styles.abstraction} multiple />)}
+              <div className={styles.codePanel}>
+                <CodeMirrorEditor {...props} />
 
-            <div className={styles.codePanel}>
-              <CodeMirrorEditor {...props} />
-
-              <HighLight className={styles.markdownContainer}>
-                <ReactMarkdown source={this.state.editorText} escapeHtml={false} />
-              </HighLight>
+                <HighLight className={styles.markdownContainer}>
+                  <ReactMarkdown source={this.state.editorText} escapeHtml={false} />
+                </HighLight>
+              </div>
             </div>
           </form>
         </div>
