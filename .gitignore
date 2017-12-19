@@ -21,3 +21,6 @@ npm-debug.log*
 
 # package-lock
 /**/package-lock.json
+
+# config
+/**/config.js

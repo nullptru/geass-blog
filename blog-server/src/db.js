@@ -1,4 +1,5 @@
 import mysql from 'mysql';
+import config from './config';
 
 const container = () => {
   let pool;
@@ -6,10 +7,10 @@ const container = () => {
   const getPool = () => {
     return pool || mysql.createPool({
       connectionLimit: 10,
-      host: 'localhost',
-      user: 'root',
-      password: '130907',
-      database: 'geass_blog',
+      host: config.dbHost,
+      user: config.dbUser,
+      password: config.dbPwd,
+      database: config.dbName,
     });
   };
   return {

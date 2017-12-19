@@ -4,6 +4,7 @@ import KoaBody from 'koa-body';
 import Router from 'koa-router';
 import articles from './routes/articles';
 import tags from './routes/tags';
+import config from './config';
 
 const app = new Koa();
 
@@ -36,6 +37,6 @@ app.use(async (ctx, next) => {
 app.use(router.routes())
   .use(router.allowedMethods());
 
-app.listen(3000);
+app.listen(config.appPort);
 /* eslint-disable no-console */
-console.log('Server running at 3000');
+console.log(`Server running at ${config.appPort}`);
