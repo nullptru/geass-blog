@@ -20,13 +20,14 @@ const container = () => {
           if (err) {
             reject(err);
           } else {
-            connection.query(sql, params, (errs, results) => {
+            const query = connection.query(sql, params, (errs, results) => {
               connection.release();
               if (errs) {
                 reject(errs);
               }
               resolve(results);
             });
+            console.log(query.sql);
           }
         });
       });
@@ -50,7 +51,7 @@ const container = () => {
                   if (typeof params === 'function') {
                     excuteParams = params(resultArray);
                   }
-                  connection.query(sql, excuteParams, (errs, results) => {
+                  const query = connection.query(sql, excuteParams, (errs, results) => {
                     resultArray.push(results);
                     if (errs) {
                       return connection.rollback(() => {
@@ -73,6 +74,7 @@ const container = () => {
                       exec(i + 1);
                     }
                   });
+                  console.log(query.sql);
                 };
                 exec(0);
               }

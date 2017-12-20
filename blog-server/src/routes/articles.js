@@ -8,6 +8,23 @@ const response = {
   success: true,
 };
 
+const getTags = (tagStr) => {
+  if (!tagStr) return []; // return empty array if tagStr is '' or undefined
+  const arr = tagStr.split('|');
+  const res = [];
+  for (let i = 0; i < arr.length; i += 1) {
+    const t = arr[i].split(',');
+    if (t.length) {
+      res.push({
+        id: t[0] || '',
+        name: t[1] || '',
+        value: t[2] || '',
+      });
+    }
+  }
+  return res;
+};
+
 /**
  * 当请求进入article时，记录相应信息，调用next()保证不直接返回而继续匹配路由
  */
@@ -20,8 +37,22 @@ articles.get('/', async (ctx, next) => {
  */
 articles.get('/articles/page', async (ctx) => {
   const { pageSize = 10, current = 1 } = ctx.query;
-  const rows = await Pool.query('SELECT * FROM articles limit ?, ?', [(current - 1) * pageSize, current * pageSize]);
-  response.data = rows;
+  const rows = await Pool.query(
+    "SELECT articles.*, GROUP_CONCAT(concat_ws(',', tags.id, tags.name,tags.value) ORDER BY tags.id SEPARATOR '|') AS articleTags  FROM articles " +
+    'LEFT JOIN tag2article ON tag2article.article_id = articles.id ' +
+    'LEFT JOIN tags ON tag2article.tag_id = tags.id ' +
+    'GROUP BY articles.id ' +
+    'LIMIT ?, ?',
+    [(current - 1) * pageSize, current * pageSize],
+  );
+  const data = Array.from(rows);
+  const resData = data.map((item) => {
+    const newItem = { ...item };
+    newItem.tags = getTags(newItem.articleTags);
+    delete newItem.articleTags;
+    return newItem;
+  });
+  response.data = resData;
   ctx.body = response;
 });
 
@@ -29,21 +60,47 @@ articles.get('/articles/page', async (ctx) => {
  * 当请求为/articles/:id时，获得对应id文章列表
  */
 articles.get('/article/:id', async (ctx) => {
-  const rows = await Pool.query('SELECT * FROM articles WHERE id = ?', [ctx.params.id]);
-  response.data = rows;
+  const rows = await Pool.query(
+    "SELECT articles.*, GROUP_CONCAT(concat_ws(',', tags.id, tags.name,tags.value) ORDER BY tags.id SEPARATOR '|') AS articleTags  FROM articles " +
+    'LEFT JOIN tag2article ON tag2article.article_id = articles.id ' +
+    'LEFT JOIN tags ON tag2article.tag_id = tags.id ' +
+    'WHERE articles.id = ? ' +
+    'GROUP BY articles.id',
+    [ctx.params.id],
+  );
+  const data = Array.from(rows);
+  const resData = data.map((item) => {
+    const newItem = { ...item };
+    newItem.tags = getTags(newItem.articleTags);
+    delete newItem.articleTags;
+    return newItem;
+  });
+  [response.data] = resData;
   ctx.body = response;
 });
 
 /**
- * 当请求为/articles/tag/:tag时，获得相应tag下的文章列表
+ * 当请求为/articles/tags/:tag/page时，获得相应tag下的文章列表
  */
-articles.get('/article/tag/:tag', async (ctx) => {
+articles.get('/articles/tags/:tag/page', async (ctx) => {
   const { pageSize = 10, current = 1 } = ctx.query;
   const rows = await Pool.query(
-    'SELECT * FROM articles WHERE tag = ? limit ?, ?',
+    "SELECT articles.*, GROUP_CONCAT(concat_ws(',', tags.id, tags.name,tags.value) ORDER BY tags.id SEPARATOR '|') AS articleTags  FROM articles " +
+    'LEFT JOIN tag2article ON tag2article.article_id = articles.id ' +
+    'LEFT JOIN tags ON tag2article.tag_id = tags.id ' +
+    'WHERE articles.id IN (SELECT id FROM articles, tag2article WHERE tag2article.tag_id = ? AND tag2article.article_id = articles.id) ' +
+    'GROUP BY articles.id ' +
+    'LIMIT ?, ?',
     [ctx.params.tag, (current - 1) * pageSize, current * pageSize],
   );
-  response.data = rows;
+  const data = Array.from(rows);
+  const resData = data.map((item) => {
+    const newItem = { ...item };
+    newItem.tags = getTags(newItem.tags);
+    delete newItem.articleTags;
+    return newItem;
+  });
+  response.data = resData;
   ctx.body = response;
 });
 
@@ -58,7 +115,7 @@ articles.post('/article/image/upload', upload.single('titleImage'), async (ctx) 
  */
 articles.post('/article', async (ctx) => {
   const {
-    title, content, abstraction, imageUrl = '', next, tagId,
+    title, content, abstraction, imageUrl = '', next, tagIds,
   } = ctx.request.body;
   /**
    * insert a article by 4 step
@@ -76,10 +133,11 @@ articles.post('/article', async (ctx) => {
       return [title, content, abstraction, imageUrl, preId, next];
     },
   }, {
-    sql: 'INSERT INTO tag2article(article_id, tag_id) VALUES (?, ?)',
+    sql: 'INSERT INTO tag2article(article_id, tag_id) VALUES ?',
     params: (results) => {
       const { insertId } = results[1];
-      return [insertId, tagId];
+      const params = tagIds.map(tagId => [insertId, tagId]);
+      return [params];
     },
   }, {
     sql: 'UPDATE articles SET next = ? WHERE id = ?',
@@ -101,6 +159,7 @@ articles.post('/article', async (ctx) => {
 articles.put('/article', async (ctx) => {
   const columns = ['title', 'content', 'abstraction', 'image_url'];
   const { body } = ctx.request;
+  const { tagIds } = body;
   const updateObj = {};
   let updated = false;
   columns.forEach((column) => {
@@ -116,8 +175,22 @@ articles.put('/article', async (ctx) => {
     ctx.body = response;
     ctx.throw(400, 'Error Message');
   } else {
-    const rows = await Pool.query('UPDATE articles SET ? WHERE id = ?', [updateObj, body.id]);
-    response.data = { affectedRows: rows.affectedRows };
+    let querys = [{
+      sql: 'UPDATE articles SET ? WHERE id = ?',
+      params: [updateObj, body.id],
+    }];
+    if (tagIds !== undefined) {
+      const params = tagIds.map(tagId => [body.id, tagId]);
+      querys = querys.concat([{
+        sql: 'DELETE FROM tag2article WHERE article_id = ?',
+        params: [body.id],
+      }, {
+        sql: 'INSERT INTO tag2article(article_id, tag_id) VALUES ?',
+        params: [params],
+      }]);
+    }
+    const rows = await Pool.startTransaction(querys);
+    response.data = { affectedRows: rows[0].affectedRows };
     ctx.body = response;
   }
 });
@@ -125,13 +198,18 @@ articles.put('/article', async (ctx) => {
 /**
  * 删除文章
  */
-articles.delete('/article/:id', async (ctx) => {
+articles.del('/article/:id', async (ctx) => {
   const { id } = ctx.params;
   const rows = await Pool.query(
     'DELETE FROM articles WHERE id = ?',
     [id],
   );
   response.data = { affectedRows: rows.affectedRows };
+  if (response.data.affectedRows === 0) {
+    response.success = false;
+    response.err = '未找到需删除数据';
+    ctx.status = 400;
+  }
   ctx.body = response;
 });
 
