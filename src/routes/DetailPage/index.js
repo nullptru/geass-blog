@@ -2,7 +2,7 @@ import React from 'react';
 import { Link } from 'dva/router';
 import PropTypes from 'prop-types';
 import ReactMarkdown from 'react-markdown';
-import HighLight from 'components/HighLight';
+import { HighLight } from 'components';
 import styles from './index.less';
 
 class Detail extends React.PureComponent {

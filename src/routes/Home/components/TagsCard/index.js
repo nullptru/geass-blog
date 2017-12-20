@@ -1,7 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import Card from 'components/Card';
-import Tag from 'components/Tag';
+import { Card, Tag } from 'components';
 
 export default class TagsCard extends React.PureComponent {
   render() {

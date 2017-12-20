@@ -1,6 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import Card from 'components/Card';
+import { Card } from 'components';
 import { Link } from 'dva/router';
 import styles from './index.less';
 
