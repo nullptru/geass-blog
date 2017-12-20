@@ -1,0 +1,163 @@
+@import '~themes/vars.less';
+
+.markdownArticlePanel {
+  margin: -20px;
+}
+.panel {
+  color: black;
+  display: flex;
+
+  &.vertical {
+    flex-direction: column;
+  }
+}
+
+.articlePanel {
+  border: 1px solid #ccc;
+}
+
+.toolPanel {
+  display: flex;
+  align-items: center;
+  height: 30px;
+  border: 0 solid #ccc;
+  border-width: 1px 0 1px 0;
+  background: #dedede;
+  .right {
+    margin-left: auto;
+  }
+}
+
+.codePanel {
+  .panel;
+  height: 800px;
+}
+
+:global {
+  .CodeMirror {
+    height: 100%;
+    font-size: 16px;
+  }
+
+  .ReactCodeMirror {
+    flex: 1 1 50%;
+    border: 1px solid #ccc;
+  }
+}
+
+.markdownContainer {
+  flex: 1 1 50%;
+  padding: 4px 8px;
+  background: #f4f4f4;
+  overflow: auto;
+
+  font-size: 16px;
+}
+
+.title {
+  width: ~"calc(100% - 16px)";
+  height: 1.7em;
+  margin: 0;
+  border: none;
+  font-size: 1.5em;
+  line-height: 1.7em;
+  &:focus {
+    border: none;
+    box-shadow: none;
+  }
+}
+
+.abstraction {
+  .title();
+  height: 4.5em;
+  font-size: 1em;
+  line-height: 1.5em;
+}
+
+.upload {
+  width: fit-content;
+  padding: 4px;
+  &:hover {
+    background: #7f7f7f;
+    i {
+      color: white;
+    }
+  }
+  &:focus {
+    border: none;
+    box-shadow: none;
+    outline: 0;
+  }
+}
+
+.iconBtn {
+  padding: 8px 12px;
+  &:hover {
+    background: #7f7f7f;
+  }
+}
+
+.tagSelect {
+  min-width: 100px;
+  :global {
+    .rc-select-selection {
+      border: none;
+      box-shadow: none;
+      background: #dedede;
+      border-radius: 0;
+      &:hover {
+        border: none;
+        box-shadow: none;
+      }
+    }
+    .rc-select-selection__rendered {
+      margin: 0;
+      padding: 0;
+    }
+    .rc-select-search__field {
+      padding: 0;
+      color:transparent;
+    }
+    .rc-select-selection__placeholder {
+      font-size: 12px;
+      color: #7f7f7f
+    }
+  }
+}
+
+button {
+  position: relative;
+  display: inline-block;
+  padding: 4px 8px;
+  width: 120px;
+  height: @button-height-base;
+  font-size: 12px;
+  line-height: @line-height-base;
+  color: @input-color;
+  background-color: @input-bg;
+  background-image: none;
+  border: @border-width-base @border-style-base @input-border-color;
+  border-radius: 6px;
+  transition: all .3s;
+
+  &:hover {
+    .hover();
+  }
+
+  &:focus {
+    .active();
+  }
+}
+
+// input status
+// == when focus or actived
+.active(@color: @outline-color) {
+  border-color: ~`colorPalette("@{color}", 5)`;
+  outline: 0;
+  box-shadow: 0 0 @outline-blur-size @outline-width fade(@color, 20%);
+}
+
+// == when hoverd
+.hover(@color: @input-hover-border-color) {
+  border-color: ~`colorPalette("@{color}", 5)`;
+}
