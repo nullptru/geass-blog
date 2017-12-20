@@ -1,5 +1,5 @@
 import Router from 'koa-router';
-import Pool from '../db';
+import Pool from '../utils/db';
 
 const tags = new Router();
 const response = {

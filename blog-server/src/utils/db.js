@@ -1,5 +1,5 @@
 import mysql from 'mysql';
-import config from './config';
+import config from '../config';
 
 const container = () => {
   let pool;
@@ -51,7 +51,6 @@ const container = () => {
                     excuteParams = params(resultArray);
                   }
                   connection.query(sql, excuteParams, (errs, results) => {
-                    console.log(sql, excuteParams, results);
                     resultArray.push(results);
                     if (errs) {
                       return connection.rollback(() => {
@@ -68,7 +67,6 @@ const container = () => {
                             reject(commitErr);
                           });
                         }
-                        console.log('success!');
                         resolve(resultArray);
                       });
                     } else {

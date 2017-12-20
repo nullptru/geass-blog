@@ -3,6 +3,7 @@ import {
   querySingleArticle,
   queryLatestArticles,
   search,
+  upload,
 } from 'services/articles';
 
 export default {
@@ -73,6 +74,12 @@ export default {
       if (response.status === 200) {
         yield put({ type: 'updateState', payload: { article: response.data } });
       }
+    },
+
+    *uploadImage({ payload = {} }, { call, put }) {
+      console.log(payload, 'enter upload');
+      const response = yield call(upload, payload);
+      console.log(response);
     },
 
     *search({ payload = {} }, { call, put }) {

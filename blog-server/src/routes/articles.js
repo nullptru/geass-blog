@@ -1,5 +1,6 @@
 import Router from 'koa-router';
-import Pool from '../db';
+import Pool from '../utils/db';
+import upload from '../utils/upload';
 
 const articles = new Router();
 const response = {
@@ -44,6 +45,12 @@ articles.get('/article/tag/:tag', async (ctx) => {
   );
   response.data = rows;
   ctx.body = response;
+});
+
+articles.post('/article/image/upload', upload.single('titleImage'), async (ctx) => {
+  ctx.body = {
+    filename: ctx.req.file.path, // 返回文件名
+  };
 });
 
 /**

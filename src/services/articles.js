@@ -1,8 +1,10 @@
-// import request from '../utils/request';
+import request from 'utils/request';
+import config from 'utils/config';
 import { chargings, storerooms, motions } from '../../mock/articles';
 import latestPosts from '../../mock/latestPosts';
 
 const response = { status: 200 };
+const { articles } = config.api;
 export function queryArticles(params) {
   if (params.type) {
     switch (params.type) {
@@ -36,4 +38,12 @@ export function search(params) {
   response.data = motions;
   response.query = query;
   return response;
+}
+
+export function upload(params) {
+  return request({
+    url: articles.upload,
+    method: 'post',
+    data: params,
+  });
 }

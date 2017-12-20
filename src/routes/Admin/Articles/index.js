@@ -1,4 +1,6 @@
 import React from 'react';
+import PropTypes from 'prop-types';
+import { connect } from 'dva';
 import ReactMarkdown from 'react-markdown';
 import Select, { Option } from 'rc-select';
 import { createForm } from 'rc-form';
@@ -15,25 +17,15 @@ class Article extends React.PureComponent {
       editorText: '# Heading\n\nSome **bold** and _italic_ text\nBy [Jed Watson](https://github.com/JedWatson)',
     };
     this.uploaderProps = {
-      data: { a: 1, b: 2 },
-      beforeUpload(file) {
-        console.log('beforeUpload', file.name);
-      },
-      onStart: (file) => {
-        console.log('onStart', file.name);
-        // this.refs.inner.abort(file);
-      },
-      onSuccess(file) {
-        console.log('onSuccess', file);
-      },
-      onError(err) {
-        console.log('onError', err);
-      },
-      customRequest(...args) {
-        const newPromise = new Promise((resolve, reject) => {
-          setTimeout(resolve('succes'), 200);
+      multiple: true,
+      customRequest(upload) {
+        /* eslint-disable no-undef */
+        const formData = new FormData();
+        formData.append('titleImage', upload.file);
+        props.dispatch({
+          type: 'articles/uploadImage',
+          payload: formData,
         });
-        newPromise.then(value => console.log(value, args));
       },
     };
     this.onEditorChange = this.onEditorChange.bind(this);
@@ -69,10 +61,6 @@ class Article extends React.PureComponent {
       value: this.state.editorText,
     };
     const { getFieldDecorator } = this.props.form;
-    const items = [
-      { title: 'test', key: '/' },
-      { title: 'test2', key: '/test' },
-    ];
     return (
       <div className={styles.markdownArticlePanel}>
         <form>
@@ -108,4 +96,8 @@ class Article extends React.PureComponent {
   }
 }
 
-export default createForm()(Article);
+Article.propTypes = {
+  dispatch: PropTypes.func.isRequired,
+};
+
+export default connect()(createForm()(Article));
