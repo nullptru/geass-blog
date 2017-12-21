@@ -1,6 +1,6 @@
 const api = 'http://localhost:3000/';
 export default {
-  api : {
+  api: {
     articles: {
       upload: `${api}article/image/upload`,
       create: `${api}article`,
@@ -9,7 +9,10 @@ export default {
       query: `${api}articles/page`,
       querySingle: `${api}article/:id`,
       queryLatest: `${api}articles/latest`,
-      queryByTag: `${api}articles/tags/page`,
+      queryByTag: `${api}articles/tags/:tag/page`,
+    },
+    tags: {
+      query: `${api}tags/page`,
     },
   },
 };

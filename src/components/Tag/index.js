@@ -8,7 +8,7 @@ export default class Tag extends React.PureComponent {
     const { tag, type } = this.props;
     return (
       <div className={`${styles.tag} ${styles[type]}`}>
-        <Link to={`/tags/${tag.value}`}>{tag.label}</Link>
+        <Link to={`/tags/${tag.value}`}>{tag.name}</Link>
       </div>
     );
   }

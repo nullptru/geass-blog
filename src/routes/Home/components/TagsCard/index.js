@@ -6,9 +6,9 @@ export default class TagsCard extends React.PureComponent {
   render() {
     const { tags } = this.props;
     return (
-      <Card title="Latest Posts">
+      <Card title="Tags">
         { tags.map(item => (
-          <Tag key={item.label} tag={item} />
+          <Tag key={item.value} tag={item} />
         )) }
       </Card>
     );

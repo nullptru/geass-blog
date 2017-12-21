@@ -17,7 +17,6 @@ class Detail extends React.PureComponent {
             <div className={styles.title}>{ article.title }</div>
             <div className={styles.meta}>
               <span className={styles.time}>{ article.createdTime }</span>
-              <Link className={styles.type} to={`/types/${type.value}`}>{ type.label }</Link>
             </div>
           </header>
           <HighLight className={styles.content}>
@@ -26,7 +25,7 @@ class Detail extends React.PureComponent {
           {tags && tags.length > 0 && <section className={styles.tags}>
             <Icon type="tags" />
             { tags.map(tag =>
-              <Link className={styles.tag} key={tag.value} to={`/tags/${tag.value}`}>{ tag.label }</Link>) }
+              <Link className={styles.tag} key={tag.id} to={`/tags/${tag.value}`}>{ tag.name }</Link>) }
           </section>}
         </article>
         <div className={styles.btnGroup}>

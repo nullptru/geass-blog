@@ -12,3 +12,4 @@ export { default as Head } from './layout/Head';
 export { default as Footer } from './layout/Footer';
 export { default as Menu } from './layout/Menu';
 export { default as Sider } from './layout/Sider';
+export { default as ScrollTop } from './ScrollToTop';

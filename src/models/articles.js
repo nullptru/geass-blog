@@ -2,6 +2,7 @@ import {
   queryArticles,
   querySingleArticle,
   queryLatestArticles,
+  queryByTag,
   search,
   upload,
 } from 'services/articles';
@@ -35,8 +36,15 @@ export default {
         const match = location.pathname.match(/\/article\/(\w+)/);
         if (match !== null) { // 主页面
           dispatch({ type: 'querySingleArticle', payload: { id: match[1] } }); // 获取文章列表
-        } else {
-          dispatch({ type: 'updateState', payload: { article: {} } });
+        }
+      });
+    },
+    tags({ dispatch, history }) {
+      history.listen((location) => {
+        const match = location.pathname.match(/\/tags\/(\w+)/);
+        if (match !== null) { // 主页面
+          dispatch({ type: 'queryByTag', payload: { tag: match[1] } }); // 获取文章列表
+          dispatch({ type: 'queryLatestArticles' }); // 获取最新文章
         }
       });
     },
@@ -66,6 +74,23 @@ export default {
       const response = yield call(queryLatestArticles, payload);
       if (response.success) {
         yield put({ type: 'updateState', payload: { latestPosts: response.data } });
+      }
+    },
+
+    *queryByTag({ payload = {} }, { call, put }) {
+      const response = yield call(queryByTag, payload);
+      if (response.success) {
+        yield put({
+          type: 'updateState',
+          payload: {
+            pagination: {
+              current: payload.current || 1,
+              pageSize: payload.pageSize || 10,
+              total: response.total || 1,
+            },
+            list: response.data,
+          },
+        });
       }
     },
 

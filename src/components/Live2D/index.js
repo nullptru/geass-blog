@@ -71,7 +71,7 @@ class Live2D extends React.PureComponent {
   }
 
   render() {
-    return <div id="live2d" />
+    return <div id="live2d" style={{ pointerEvents: 'none' }}/>
   }
 }
 
