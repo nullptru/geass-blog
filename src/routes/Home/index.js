@@ -20,12 +20,10 @@ const Home = ({
   };
 
   const onSearch = (query) => {
-    dispatch({
-      type: 'articles/search',
-      payload: {
-        query,
-      },
-    });
+    dispatch(routerRedux.push({
+      pathname: '/',
+      search: `search=${query}`,
+    }));
   };
 
   // const getTypeButtons = () => {

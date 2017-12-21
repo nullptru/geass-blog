@@ -27,7 +27,9 @@ export default {
   },
 
   effects: {
-    *queryTags({ payload }, { call, put }) {
+    *queryTags({ payload }, { select, call, put }) {
+      const { list } = yield select(({ tags }) => tags);
+      if (list.length !== 0) return; // 如果已获取过，则不再获取
       const response = yield call(queryTags, payload);
       if (response.success) {
         yield put({ type: 'updateState', payload: { list: response.data } });

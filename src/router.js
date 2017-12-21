@@ -9,8 +9,8 @@ function RouterConfig({ history }) {
     <Router history={history}>
       <ScrollTop>
         <Switch>
-          <Route path="/admin" exact component={AdminIndex} />
-          <Route path="/" component={IndexPage} />
+          <Route path="/admin" exact component={AdminIndex} location={location} />
+          <Route path="/" component={IndexPage} location={location} />
         </Switch>
       </ScrollTop>
     </Router>

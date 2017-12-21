@@ -8,7 +8,6 @@ import styles from './index.less';
 class Detail extends React.PureComponent {
   render() {
     const { article } = this.props;
-    const type = article.type || {};
     const tags = article.tags || [];
     return (
       <div className={styles.detailContainer}>

@@ -1,6 +1,7 @@
 import Router from 'koa-router';
 import Pool from '../utils/db';
 import upload from '../utils/upload';
+import { dateFormat } from '../utils/index';
 
 const articles = new Router();
 const response = {
@@ -56,8 +57,10 @@ articles.get('/articles/page', async (ctx) => {
   const resData = data.map((item) => {
     const newItem = { ...item };
     newItem.tags = getTags(newItem.articleTags);
+    newItem.createdTime = dateFormat(newItem.created_time, 'yyyy-MM-dd');
     delete newItem.articleTags;
     delete newItem.total;
+    delete newItem.created_time;
     return newItem;
   });
   response.data = resData;
@@ -86,6 +89,8 @@ articles.get('/article/:id', async (ctx) => {
   [response.data] = resData;
   // 转义
   response.data.content = response.data.content.replace(/\\n/g, '\n');
+  response.data.createdTime = dateFormat(response.data.created_time, 'yyyy-MM-dd');
+  delete response.data.created_time;
   ctx.body = response;
 });
 
@@ -112,8 +117,10 @@ articles.get('/articles/tags/:tag/page', async (ctx) => {
   const resData = data.map((item) => {
     const newItem = { ...item };
     newItem.tags = getTags(newItem.articleTags);
+    newItem.createdTime = dateFormat(newItem.created_time, 'yyyy-MM-dd');
     delete newItem.articleTags;
     delete newItem.total;
+    delete newItem.created_time;
     return newItem;
   });
   response.data = resData;

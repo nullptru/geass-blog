@@ -6,6 +6,7 @@ import {
   search,
   upload,
 } from 'services/articles';
+import queryString from 'query-string';
 
 export default {
 
@@ -26,7 +27,9 @@ export default {
     setup({ dispatch, history }) {
       history.listen((location) => {
         if (location.pathname === '/') { // 主页面
-          dispatch({ type: 'queryArticles' }); // 获取文章列表
+          const { search: searchStr } = queryString.parse(location.search);
+          console.log(location, queryString.parse(location.search))
+          dispatch({ type: 'queryArticles', payload: { search: searchStr } }); // 获取文章列表
           dispatch({ type: 'queryLatestArticles' }); // 获取最新文章
         }
       });
@@ -45,6 +48,7 @@ export default {
         if (match !== null) { // 主页面
           dispatch({ type: 'queryByTag', payload: { tag: match[1] } }); // 获取文章列表
           dispatch({ type: 'queryLatestArticles' }); // 获取最新文章
+          dispatch({ type: 'updateState', payload: { article: {} } }); // 置空文章
         }
       });
     },
@@ -52,6 +56,7 @@ export default {
 
   effects: {
     *queryArticles({ payload = {} }, { call, put }) {  // eslint-disable-line
+      console.log(payload, 'payload')
       const response = yield call(queryArticles, payload);
       if (response.success) { // success
         yield put({
