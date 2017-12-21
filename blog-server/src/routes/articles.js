@@ -36,14 +36,16 @@ articles.get('/', async (ctx, next) => {
  * 当请求为/articles/page时，获得所有文章列表
  */
 articles.get('/articles/page', async (ctx) => {
-  const { pageSize = 10, current = 1 } = ctx.query;
+  const { pageSize = 10, current = 1, search = '' } = ctx.query;
+  const searchStr = `%${search}%`;
   const rows = await Pool.query(
     "SELECT articles.*, GROUP_CONCAT(concat_ws(',', tags.id, tags.name,tags.value) ORDER BY tags.id SEPARATOR '|') AS articleTags  FROM articles " +
     'LEFT JOIN tag2article ON tag2article.article_id = articles.id ' +
     'LEFT JOIN tags ON tag2article.tag_id = tags.id ' +
+    'WHERE content LIKE ? OR title LIKE ? OR abstraction LIKE ? ' +
     'GROUP BY articles.id ' +
     'LIMIT ?, ?',
-    [(current - 1) * pageSize, current * pageSize],
+    [searchStr, searchStr, searchStr, (current - 1) * pageSize, current * pageSize],
   );
   const data = Array.from(rows);
   const resData = data.map((item) => {
@@ -104,6 +106,20 @@ articles.get('/articles/tags/:tag/page', async (ctx) => {
   ctx.body = response;
 });
 
+/**
+ * 获取最新的文章信息
+ * ps:只返回名称和id
+ */
+articles.get('/articles/latest', async (ctx) => {
+  const { pageSize = 10 } = ctx.query;
+  const rows = await Pool.query('SELECT id, title FROM articles ORDER BY created_time limit 0, ?', [pageSize]);
+  response.data = rows;
+  ctx.body = response;
+});
+
+/**
+ * 上传图片
+ */
 articles.post('/article/image/upload', upload.single('titleImage'), async (ctx) => {
   ctx.body = {
     filename: ctx.req.file.path, // 返回文件名
