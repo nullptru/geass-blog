@@ -10,8 +10,10 @@
     "install-node": "6.11.1"
   },
   "dependencies": {
+    "axios": "^0.17.1",
     "codemirror": "^5.32.0",
     "dva": "^2.1.0",
+    "path-to-regexp": "^2.1.0",
     "pixi-live2d": "^1.2.1",
     "pixi.js": "^4.6.1",
     "rc-form": "^2.1.3",

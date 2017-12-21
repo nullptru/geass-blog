@@ -2,7 +2,7 @@ import React from 'react';
 import { Link } from 'dva/router';
 import PropTypes from 'prop-types';
 import ReactMarkdown from 'react-markdown';
-import { HighLight } from 'components';
+import { HighLight, Icon } from 'components';
 import styles from './index.less';
 
 class Detail extends React.PureComponent {
@@ -23,11 +23,11 @@ class Detail extends React.PureComponent {
           <HighLight className={styles.content}>
             <ReactMarkdown source={article.content} escapeHtml={false} />
           </HighLight>
-          <section className={styles.tags}>
-            <i className={`icon iconfont icon-tag ${styles.tagIcon}`} />
+          {tags && tags.length > 0 && <section className={styles.tags}>
+            <Icon type="tags" />
             { tags.map(tag =>
               <Link className={styles.tag} key={tag.value} to={`/tags/${tag.value}`}>{ tag.label }</Link>) }
-          </section>
+          </section>}
         </article>
         <div className={styles.btnGroup}>
           {article.pre ? <Link to={`/article/${article.pre}` || '/'} className={styles.pre}><span>Previous Post</span></Link> : <span className={styles.noMore}>没有更多</span>}

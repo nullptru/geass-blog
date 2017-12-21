@@ -1,6 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { Link } from 'dva/router';
+import { Icon } from 'components';
 import styles from './index.less';
 import logo from '../../assets/logo.png';
 
@@ -24,11 +25,11 @@ export default class ArticleItem extends React.PureComponent {
         </header>
         <div className={styles.contentContainer}>
           <div className={styles.abstraction}>{ article.abstraction }</div>
-          <div className={styles.tags}>
-            <i className={`icon iconfont icon-tag ${styles.tag}`} />
+          {article.tags && article.tags.length > 0 && <div className={styles.tags}>
+            <Icon type="tags" />
             { article.tags.map(tag =>
-              <Link className={styles.tag} key={tag.value} to={`/tags/${tag.value}`}>{ tag.label }</Link>) }
-          </div>
+              <Link className={styles.tag} key={tag.value} to={`/tags/${tag.value}`}>{ tag.name }</Link>) }
+          </div>}
         </div>
       </section>
     );

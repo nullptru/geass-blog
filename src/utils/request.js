@@ -1,4 +1,5 @@
-import fetch from 'dva/fetch';
+import axios from 'axios';
+import pathToRegexp from 'path-to-regexp';
 
 function parseJSON(response) {
   return response.json();
@@ -14,6 +15,57 @@ function checkStatus(response) {
   throw error;
 }
 
+const fetchRequest = (options) => {
+  let { url } = options;
+  const { data } = options;
+  const { method = 'get' } = options;
+
+  const cloneData = { ...data };
+
+  try {
+    let domin = '';
+    if (url.match(/[a-zA-z]+:\/\/[^/]*/)) {
+      [domin] = url.match(/[a-zA-z]+:\/\/[^/]*/);
+      url = url.slice(domin.length);
+    }
+    const match = pathToRegexp.parse(url);
+    for (const item of match) {
+      if (item instanceof Object && !(item.name in data)) {
+        data[item.name] = '*empty*';
+      }
+    }
+    url = pathToRegexp.compile(url)(data);
+    for (const item of match) {
+      if (item instanceof Object && item.name in cloneData) {
+        delete cloneData[item.name];
+      }
+    }
+    url = url.replace(/\*empty\*/g, '');
+    url = domin + url;
+  } catch (e) {
+    throw e;
+  }
+
+  switch (method.toLowerCase()) {
+    case 'get':
+      return axios.get(url, {
+        params: cloneData,
+      });
+    case 'delete':
+      return axios.delete(url, {
+        data: cloneData,
+      });
+    case 'post':
+      return axios.post(url, cloneData);
+    case 'put':
+      return axios.put(url, cloneData);
+    case 'patch':
+      return axios.patch(url, cloneData);
+    default:
+      return axios(options);
+  }
+};
+
 /**
  * Requests a URL, returning a promise.
  *
@@ -21,12 +73,9 @@ function checkStatus(response) {
  * @param  {object} [options] The options we want to pass to "fetch"
  * @return {object}           An object containing either "data" or "err"
  */
-export default function request(params) {
-  const { url, data, ...rest } = params;
-  const options = { credentials: 'include', body: data, ...rest };
-  return fetch(url, options)
+export default function request(options) {
+  return fetchRequest(options)
     .then(checkStatus)
-    .then(parseJSON)
-    .then(resData => ({ resData }))
+    .then(resData => resData.data)
     .catch(err => ({ err }));
 }

@@ -7,6 +7,8 @@ export default {
       delete: `${api}articles/:id`,
       update: `${api}article`,
       query: `${api}articles/page`,
+      querySingle: `${api}article/:id`,
+      queryLatest: `${api}articles/latest`,
       queryByTag: `${api}articles/tags/page`,
     },
   },
