@@ -39,7 +39,8 @@ articles.get('/articles/page', async (ctx) => {
   const { pageSize = 10, current = 1, search = '' } = ctx.query;
   const searchStr = `%${search}%`;
   const rows = await Pool.query(
-    "SELECT articles.*, GROUP_CONCAT(concat_ws(',', tags.id, tags.name,tags.value) ORDER BY tags.id SEPARATOR '|') AS articleTags  FROM articles " +
+    'SELECT articles.id, articles.title, articles.created_time, articles.abstraction, articles.image_url, ' +
+    "GROUP_CONCAT(concat_ws(',', tags.id, tags.name,tags.value) ORDER BY tags.id SEPARATOR '|') AS articleTags  FROM articles " +
     'LEFT JOIN tag2article ON tag2article.article_id = articles.id ' +
     'LEFT JOIN tags ON tag2article.tag_id = tags.id ' +
     'WHERE content LIKE ? OR title LIKE ? OR abstraction LIKE ? ' +
@@ -78,6 +79,8 @@ articles.get('/article/:id', async (ctx) => {
     return newItem;
   });
   [response.data] = resData;
+  // 转义
+  response.data.content = response.data.content.replace(/\\n/g, '\n');
   ctx.body = response;
 });
 
@@ -87,7 +90,8 @@ articles.get('/article/:id', async (ctx) => {
 articles.get('/articles/tags/:tag/page', async (ctx) => {
   const { pageSize = 10, current = 1 } = ctx.query;
   const rows = await Pool.query(
-    "SELECT articles.*, GROUP_CONCAT(concat_ws(',', tags.id, tags.name,tags.value) ORDER BY tags.id SEPARATOR '|') AS articleTags  FROM articles " +
+    'SELECT articles.id, articles.title, articles.created_time, articles.abstraction, articles.image_url, ' +
+    "GROUP_CONCAT(concat_ws(',', tags.id, tags.name,tags.value) ORDER BY tags.id SEPARATOR '|') AS articleTags  FROM articles " +
     'LEFT JOIN tag2article ON tag2article.article_id = articles.id ' +
     'LEFT JOIN tags ON tag2article.tag_id = tags.id ' +
     'WHERE articles.id IN (SELECT id FROM articles, tag2article WHERE tag2article.tag_id = ? AND tag2article.article_id = articles.id) ' +
