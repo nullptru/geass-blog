@@ -39,20 +39,25 @@ articles.get('/articles/page', async (ctx) => {
   const { pageSize = 10, current = 1, search = '' } = ctx.query;
   const searchStr = `%${search}%`;
   const rows = await Pool.query(
-    'SELECT articles.id, articles.title, articles.created_time, articles.abstraction, articles.image_url, ' +
+    'SELECT (SELECT count(*) FROM articles WHERE content LIKE ? OR title LIKE ? OR abstraction LIKE ? ) AS total, articles.id, articles.title, articles.created_time, articles.abstraction, articles.image_url, ' +
     "GROUP_CONCAT(concat_ws(',', tags.id, tags.name,tags.value) ORDER BY tags.id SEPARATOR '|') AS articleTags  FROM articles " +
     'LEFT JOIN tag2article ON tag2article.article_id = articles.id ' +
     'LEFT JOIN tags ON tag2article.tag_id = tags.id ' +
     'WHERE content LIKE ? OR title LIKE ? OR abstraction LIKE ? ' +
     'GROUP BY articles.id ' +
     'LIMIT ?, ?',
-    [searchStr, searchStr, searchStr, (current - 1) * pageSize, current * pageSize],
+    [searchStr, searchStr, searchStr, searchStr, searchStr, searchStr, (current - 1) * pageSize, current * pageSize],
   );
   const data = Array.from(rows);
+  // pagination
+  response.total = data[0] !== undefined ? (data[0].total || 0) : 0;
+  response.pageSize = pageSize;
+  response.current = current;
   const resData = data.map((item) => {
     const newItem = { ...item };
     newItem.tags = getTags(newItem.articleTags);
     delete newItem.articleTags;
+    delete newItem.total;
     return newItem;
   });
   response.data = resData;
@@ -90,20 +95,25 @@ articles.get('/article/:id', async (ctx) => {
 articles.get('/articles/tags/:tag/page', async (ctx) => {
   const { pageSize = 10, current = 1 } = ctx.query;
   const rows = await Pool.query(
-    'SELECT articles.id, articles.title, articles.created_time, articles.abstraction, articles.image_url, ' +
+    'SELECT (SELECT count(*) FROM articles, tag2article, tags WHERE tag2article.tag_id = tags.id AND tag2article.article_id = articles.id AND tags.value = ?) AS total, articles.id, articles.title, articles.created_time, articles.abstraction, articles.image_url, ' +
     "GROUP_CONCAT(concat_ws(',', tags.id, tags.name,tags.value) ORDER BY tags.id SEPARATOR '|') AS articleTags  FROM articles " +
     'LEFT JOIN tag2article ON tag2article.article_id = articles.id ' +
     'LEFT JOIN tags ON tag2article.tag_id = tags.id ' +
-    'WHERE articles.id IN (SELECT id FROM articles, tag2article WHERE tag2article.tag_id = ? AND tag2article.article_id = articles.id) ' +
+    'WHERE articles.id IN ( SELECT articles.id FROM articles, tag2article, tags WHERE tag2article.tag_id = tags.id AND tag2article.article_id = articles.id AND tags.value = ?) ' +
     'GROUP BY articles.id ' +
     'LIMIT ?, ?',
-    [ctx.params.tag, (current - 1) * pageSize, current * pageSize],
+    [ctx.params.tag, ctx.params.tag, (current - 1) * pageSize, current * pageSize],
   );
   const data = Array.from(rows);
+  // pagination
+  response.total = data[0] !== undefined ? (data[0].total || 0) : 0;
+  response.pageSize = pageSize;
+  response.current = current;
   const resData = data.map((item) => {
     const newItem = { ...item };
-    newItem.tags = getTags(newItem.tags);
+    newItem.tags = getTags(newItem.articleTags);
     delete newItem.articleTags;
+    delete newItem.total;
     return newItem;
   });
   response.data = resData;

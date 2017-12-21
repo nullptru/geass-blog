@@ -5,13 +5,16 @@ const container = () => {
   let pool;
 
   const getPool = () => {
-    return pool || mysql.createPool({
-      connectionLimit: 10,
-      host: config.dbHost,
-      user: config.dbUser,
-      password: config.dbPwd,
-      database: config.dbName,
-    });
+    if (pool === undefined) {
+      pool = mysql.createPool({
+        connectionLimit: 10,
+        host: config.dbHost,
+        user: config.dbUser,
+        password: config.dbPwd,
+        database: config.dbName,
+      });
+    }
+    return pool;
   };
   return {
     query: (sql, params) => {
@@ -73,6 +76,7 @@ const container = () => {
                     } else {
                       exec(i + 1);
                     }
+                    connection.release();
                   });
                   console.log(query.sql);
                 };
@@ -86,5 +90,4 @@ const container = () => {
     getPool,
   };
 };
-
 export default container();
