@@ -30,7 +30,7 @@ class Head extends React.PureComponent {
             <Link className={styles.logo} to="/">废宅的小窝</Link>
           </section>
           <section className={styles.right}>
-            <Menu items={items} onClick={this.onMenuClick.bind(this)} />
+            <Menu items={items} onClick={this.onMenuClick.bind(this)} hasBackground={false} />
           </section>
         </nav>
       </header>

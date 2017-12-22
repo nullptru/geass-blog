@@ -2,6 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { routerRedux } from 'dva/router';
 import { connect } from 'dva';
+import queryString from 'query-string';
 import Article from 'components/ArticleItem';
 import { Search, Pagination } from 'components';
 import LatestPostCard from './components/LatestPostCard';
@@ -9,9 +10,10 @@ import TagsCard from './components/TagsCard';
 import './index.less';
 
 const Home = ({
-  dispatch, articles, tagList,
+  dispatch, articles, tagList, location,
 }) => {
   const { list, latestPosts, pagination } = articles;
+  const { search: searchQuery } = queryString.parse(location.search);
 
   const onArticleClick = (id) => {
     dispatch(routerRedux.push({
@@ -55,7 +57,7 @@ const Home = ({
           <Pagination pagination={pagination} />
         </div>
         <div className="col-md-4 col-sm-12">
-          <Search withBox onSearch={onSearch} />
+          <Search withBox onSearch={onSearch} query={searchQuery} />
           <LatestPostCard latestPosts={latestPosts} />
           <TagsCard tags={tagList} />
         </div>
@@ -66,6 +68,7 @@ const Home = ({
 
 Home.propTypes = {
   dispatch: PropTypes.func.isRequired,
+  location: PropTypes.object.isRequired,
   articles: PropTypes.object.isRequired,
   tagList: PropTypes.array,
 };
@@ -74,5 +77,5 @@ Home.defaultProps = {
   tagList: [],
 };
 
-export default connect(({ dispatch, articles, tags: { list: tagList } }) =>
-  ({ dispatch, articles, tagList }))(Home);
+export default connect(({ articles, tags: { list: tagList } }) =>
+  ({ articles, tagList }))(Home);

@@ -1,5 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+import { Icon } from 'components';
 import styles from './index.less';
 
 export default class Search extends React.PureComponent {
@@ -33,7 +34,7 @@ export default class Search extends React.PureComponent {
       <div className={`${styles.search} ${withBox && styles.box}`}>
         <div className={styles.input}>
           <input type="text" placeholder="Search..." value={this.state.query} className={styles.searchInput} onKeyDown={this.onKeyDown} onChange={this.onChange} />
-          <i className={`${styles.searchIcon} icon iconfont icon-search`} onClick={this.onSearch} />
+          <Icon className={styles.searchIcon} type="search" onClick={this.onSearch} />
         </div>
       </div>
     );

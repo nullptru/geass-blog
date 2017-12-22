@@ -26,6 +26,8 @@ export default class Menu extends React.PureComponent {
         { items.map((item) => {
           const itemClass = menuItemClassList.slice(0);
           itemClass.push(this.state.activeKey === item.key ? styles.active : '');
+          itemClass.push(this.props.hasBackground ? '' : styles.noBackground);
+          
           return (
             <li
               key={item.key}
@@ -45,10 +47,12 @@ Menu.propTypes = {
   items: PropTypes.array,
   onClick: PropTypes.func,
   mode: PropTypes.string,
+  hasBackground: PropTypes.bool,
 };
 
 Menu.defaultProps = {
   items: [],
   onClick: () => {},
   mode: 'horizontal',
+  hasBackground: true,
 };

@@ -1,16 +1,17 @@
 import fs from 'fs';
 import multer from 'koa-multer';
 
+const disk = '/Users/Geass/Desktop/Project/personal/front-end/blog/blog-server/imgs';
 export default (() => {
   const storage = multer.diskStorage({
     destination(req, file, cb) {
-      const exists = fs.existsSync('/tmp/my-uploads');
+      const exists = fs.existsSync('');
       if (!exists) {
-        fs.mkdir('/tmp/my-uploads', () => {
-          cb(null, '/tmp/my-uploads');
+        fs.mkdir(disk, () => {
+          cb(null, disk);
         });
       } else {
-        cb(null, '/tmp/my-uploads');
+        cb(null, disk);
       }
     },
     filename(req, file, cb) {

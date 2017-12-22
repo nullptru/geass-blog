@@ -28,8 +28,8 @@ class Detail extends React.PureComponent {
           </section>}
         </article>
         <div className={styles.btnGroup}>
-          {article.pre ? <Link to={`/article/${article.pre}` || '/'} className={styles.pre}><span>Previous Post</span></Link> : <span className={styles.noMore}>没有更多</span>}
-          {article.next ? <Link to={`/article/${article.next}` || '/'} className={styles.next}><span>Next Post</span></Link> : <span className={styles.noMore}>没有更多</span>}
+          {article.pre ? <Link to={`/article/${article.pre.id}` || '/'} className={styles.pre}><span>Previous</span><span className={styles.title}>{article.pre.title}</span></Link> : <span className={styles.noMore}>没有更多</span>}
+          {article.next ? <Link to={`/article/${article.next.id}` || '/'} className={styles.next}><span>Next</span><span className={styles.title}>{article.next.title}</span></Link> : <span className={styles.noMore}>没有更多</span>}
         </div>
       </div>
     );
