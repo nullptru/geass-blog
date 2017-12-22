@@ -5,6 +5,7 @@ import IndexPage from './routes/IndexPage';
 import AdminIndex from './routes/Admin/index';
 import Home from './routes/Home';
 import Tags from './routes/Tags';
+import About from './routes/About';
 import ArticleDetail from './routes/DetailPage';
 
 const routers = [{
@@ -35,6 +36,11 @@ const routers = [{
     exact: true,
     name: "geass's blog",
     component: ArticleDetail,
+  }, {
+    path: '/about',
+    exact: true,
+    name: 'About me',
+    component: About,
   }],
 }];
 

@@ -5,6 +5,7 @@ import PropTypes from 'prop-types';
 import Menu from '../Menu';
 import styles from './index.less';
 import bg from '../../../assets/bg.jpg';
+import bgAbout from '../../../assets/bg_about.jpg';
 
 class Head extends React.PureComponent {
   constructor(props) {
@@ -20,6 +21,11 @@ class Head extends React.PureComponent {
         title: 'All Tags',
         subtitle: '',
         bg,
+      },
+      '/about': {
+        title: 'About Me',
+        subtitle: '',
+        bg: bgAbout,
       },
     };
   }
@@ -58,15 +64,7 @@ class Head extends React.PureComponent {
     const currentTitle = headTitle[location.pathname] || { bg };
     const defaultActiveKey = this.getDefaultActiveKey(location.pathname);
     return (
-      <header className={styles.header}>
-        <div style={{ position: 'relative' }}>
-          <img className={styles.bgImage} src={article.img === undefined ? currentTitle.bg : article.img} alt="bg" />
-          { article.title === undefined &&
-          <div className={styles.headTitle}>
-            <span className={styles.title}>{currentTitle.title}</span>
-            <span className={styles.subtitle}>{currentTitle.subtitle}</span>
-          </div>}
-        </div>
+      <header className={styles.header} style={{ backgroundImage: `url(${article.img === undefined ? currentTitle.bg : article.img})` }}>
         <nav>
           <section className={styles.left}>
             <Link className={styles.logo} to="/">废宅的小窝</Link>
@@ -75,6 +73,13 @@ class Head extends React.PureComponent {
             <Menu items={items} onClick={this.onMenuClick.bind(this)} defaultActiveKey={defaultActiveKey || items[0].key} hasBackground={false} />
           </section>
         </nav>
+        <div>
+          { article.title === undefined &&
+          <div className={styles.headTitle}>
+            <span className={styles.title}>{currentTitle.title}</span>
+            <span className={styles.subtitle}>{currentTitle.subtitle}</span>
+          </div>}
+        </div>
       </header>
     );
   }
