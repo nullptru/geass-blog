@@ -30,6 +30,15 @@ class Head extends React.PureComponent {
     }));
   };
 
+  getDefaultActiveKey = (path) => {
+    switch (path) {
+      case '/':
+      case '/tagslist':
+      case '/about': return path;
+      default: return undefined;
+    }
+  };
+
   render() {
     const {
       items, article, location, tagsList = [],
@@ -44,8 +53,10 @@ class Head extends React.PureComponent {
     headTitle[`/tags/${selectedTag}`] = {
       title: 'Tag',
       subtitle: tag.name,
+      bg,
     };
     const currentTitle = headTitle[location.pathname] || { bg };
+    const defaultActiveKey = this.getDefaultActiveKey(location.pathname);
     return (
       <header className={styles.header}>
         <div style={{ position: 'relative' }}>
@@ -61,7 +72,7 @@ class Head extends React.PureComponent {
             <Link className={styles.logo} to="/">废宅的小窝</Link>
           </section>
           <section className={styles.right}>
-            <Menu items={items} onClick={this.onMenuClick.bind(this)} hasBackground={false} />
+            <Menu items={items} onClick={this.onMenuClick.bind(this)} defaultActiveKey={defaultActiveKey || items[0].key} hasBackground={false} />
           </section>
         </nav>
       </header>

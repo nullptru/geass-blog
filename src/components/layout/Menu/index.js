@@ -7,7 +7,7 @@ export default class Menu extends React.PureComponent {
     super(props);
     this.onClick = this.onClick.bind(this);
     this.state = {
-      activeKey: this.props.items[0].key,
+      activeKey: this.props.defaultActiveKey,
     };
   }
 
