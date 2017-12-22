@@ -56,7 +56,6 @@ export default {
 
   effects: {
     *queryArticles({ payload = {} }, { call, put }) {  // eslint-disable-line
-      console.log(payload, 'payload')
       const response = yield call(queryArticles, payload);
       if (response.success) { // success
         yield put({
@@ -106,9 +105,12 @@ export default {
       }
     },
 
+    // eslint-disable-next-line
     *uploadImage({ payload = {} }, { call, put }) {
+      // eslint-disable-next-line
       console.log(payload, 'enter upload');
       const response = yield call(upload, payload);
+      // eslint-disable-next-line
       console.log(response);
     },
 

@@ -1,6 +1,7 @@
 import mysql from 'mysql';
 import config from '../config';
 
+/* eslint-disable no-console */
 const container = () => {
   let pool;
 

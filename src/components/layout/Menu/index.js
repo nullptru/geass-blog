@@ -27,7 +27,7 @@ export default class Menu extends React.PureComponent {
           const itemClass = menuItemClassList.slice(0);
           itemClass.push(this.state.activeKey === item.key ? styles.active : '');
           itemClass.push(this.props.hasBackground ? '' : styles.noBackground);
-          
+
           return (
             <li
               key={item.key}

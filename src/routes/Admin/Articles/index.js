@@ -10,6 +10,7 @@ import 'themes/index.less';
 import 'rc-select/assets/index.css';
 import styles from './index.less';
 
+/* eslint-disable */
 class Article extends React.PureComponent {
   constructor(props) {
     super(props);

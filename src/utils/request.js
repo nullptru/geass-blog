@@ -1,10 +1,6 @@
 import axios from 'axios';
 import pathToRegexp from 'path-to-regexp';
 
-function parseJSON(response) {
-  return response.json();
-}
-
 function checkStatus(response) {
   if (response.status >= 200 && response.status < 300) {
     return response;
