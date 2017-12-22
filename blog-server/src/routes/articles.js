@@ -71,15 +71,22 @@ articles.get('/articles/page', async (ctx) => {
  * 当请求为/articles/:id时，获得对应id文章列表
  */
 articles.get('/article/:id', async (ctx) => {
-  const rows = await Pool.query(
-    "SELECT articles.*, GROUP_CONCAT(concat_ws(',', tags.id, tags.name,tags.value) ORDER BY tags.id SEPARATOR '|') AS articleTags  FROM articles " +
+  const querys = [{
+    sql: "SELECT articles.*, GROUP_CONCAT(concat_ws(',', tags.id, tags.name,tags.value) ORDER BY tags.id SEPARATOR '|') AS articleTags  FROM articles " +
     'LEFT JOIN tag2article ON tag2article.article_id = articles.id ' +
     'LEFT JOIN tags ON tag2article.tag_id = tags.id ' +
     'WHERE articles.id = ? ' +
     'GROUP BY articles.id',
-    [ctx.params.id],
-  );
-  const data = Array.from(rows);
+    params: [ctx.params.id],
+  }, { // 上一篇
+    sql: 'SELECT id, title FROM articles WHERE id = ( SELECT max( id ) FROM articles WHERE id < ? )',
+    params: [ctx.params.id],
+  }, { // 下一篇
+    sql: 'SELECT id, title FROM articles WHERE id = ( SELECT min( id ) FROM articles WHERE id > ? )',
+    params: [ctx.params.id],
+  }];
+  const rows = await Pool.startTransaction(querys);
+  const data = Array.from(rows[0]);
   const resData = data.map((item) => {
     const newItem = { ...item };
     newItem.tags = getTags(newItem.articleTags);
@@ -87,6 +94,7 @@ articles.get('/article/:id', async (ctx) => {
     return newItem;
   });
   [response.data] = resData;
+  [, [response.data.pre], [response.data.next]] = rows;
   // 转义
   response.data.content = response.data.content.replace(/\\n/g, '\n');
   response.data.createdTime = dateFormat(response.data.created_time, 'yyyy-MM-dd');
@@ -152,36 +160,22 @@ articles.post('/article/image/upload', upload.single('titleImage'), async (ctx) 
  */
 articles.post('/article', async (ctx) => {
   const {
-    title, content, abstraction, imageUrl = '', next, tagIds,
+    title, content, abstraction, author, imageUrl = '', next, tagIds,
   } = ctx.request.body;
   /**
-   * insert a article by 4 step
-   * 1. select the latest article
-   * 2. insert a new article link to the previous article
-   * 3. insert article's tags infomation into table named tag2article
-   * 4. update the article in step 1 link to the next article
+   * insert a article by 2 step
+   * 1. insert a new article link to the previous article
+   * 2. insert article's tags infomation into table named tag2article
    */
   const querys = [{
-    sql: 'SELECT id from articles ORDER BY created_time DESC LIMIT 0,1',
-  }, {
-    sql: 'INSERT INTO articles(title, content, abstraction, image_url, pre, next) VALUES (?, ?, ?, ?, ? ,?)',
-    params: (results) => {
-      const preId = results[0][0].id;
-      return [title, content, abstraction, imageUrl, preId, next];
-    },
+    sql: 'INSERT INTO articles(title, content, author, abstraction, image_url) VALUES (?, ?, ?, ?, ?)',
+    params: [title, content, author, abstraction, imageUrl],
   }, {
     sql: 'INSERT INTO tag2article(article_id, tag_id) VALUES ?',
     params: (results) => {
       const { insertId } = results[1];
       const params = tagIds.map(tagId => [insertId, tagId]);
       return [params];
-    },
-  }, {
-    sql: 'UPDATE articles SET next = ? WHERE id = ?',
-    params: (results) => {
-      const preId = results[0][0].id;
-      const { insertId } = results[1];
-      return [insertId, preId];
     },
   }];
   const rows = await Pool.startTransaction(querys);

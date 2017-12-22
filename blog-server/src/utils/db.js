@@ -68,15 +68,16 @@ const container = () => {
                       connection.commit((commitErr) => {
                         if (err) {
                           return connection.rollback(() => {
+                            connection.release();
                             reject(commitErr);
                           });
                         }
+                        connection.release();
                         resolve(resultArray);
                       });
                     } else {
                       exec(i + 1);
                     }
-                    connection.release();
                   });
                   console.log(query.sql);
                 };
