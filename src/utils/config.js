@@ -10,6 +10,7 @@ export default {
       querySingle: `${api}article/:id`,
       queryLatest: `${api}articles/latest`,
       queryByTag: `${api}articles/tags/:tag/page`,
+      queryTagsArticles: `${api}articles/tags`,
     },
     tags: {
       query: `${api}tags/page`,

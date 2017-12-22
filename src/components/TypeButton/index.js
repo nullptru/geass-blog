@@ -9,26 +9,31 @@ export default class TypeButton extends React.PureComponent {
   }
 
   render() {
-    const { text, to, type } = this.props;
+    const {
+      item, to, type, commonLink, ...rest
+    } = this.props;
     const classList = [styles.typeButton];
     classList.push(styles[type]);
-    return (
-      <Link className={classList.join(' ')} to={to} onClick={this.onClick.bind(this)}>{text}</Link>
-    );
+    const dom = commonLink ? <a className={classList.join(' ')} href={to} key={item.value} onClick={this.onClick.bind(this)} {...rest} >{item.name}</a>
+      : <Link className={classList.join(' ')} to={to} key={item.value} onClick={this.onClick.bind(this)} {...rest} >{item.name}</Link>;
+
+    return dom;
   }
 }
 
 TypeButton.propTypes = {
-  text: PropTypes.string,
+  item: PropTypes.object,
   to: PropTypes.string,
   onClick: PropTypes.func,
   type: PropTypes.string,
+  commonLink: PropTypes.bool,
 };
 
 TypeButton.defaultProps = {
-  text: 'PlaceHolder',
+  item: {},
   to: '/',
   type: 'default',
   onClick: () => {},
+  commonLink: false,
 };
 

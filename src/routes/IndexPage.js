@@ -5,6 +5,7 @@ import { Switch, Route } from 'dva/router';
 import { Head, Footer, Live2D } from 'components';
 import { CSSTransition } from 'react-transition-group';
 import Home from './Home';
+import Tags from './Tags';
 import ArticleDetail from './DetailPage';
 import './IndexPage.less';
 
@@ -35,6 +36,7 @@ class IndexPage extends React.PureComponent {
             <Switch>
               <Route path="/" exact component={Home} location={this.props.location} />
               <Route path="/tags/:tag" exact component={Home} location={this.props.location} />
+              <Route path="/tagslist" exact component={Tags} location={this.props.location} />
               <Route path="/article/:id" exact render={props => <ArticleDetail {...props} article={article} location={this.props.location} />} />
             </Switch>
           </div>

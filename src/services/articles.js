@@ -73,3 +73,11 @@ export function remove(params) {
     data: params,
   });
 }
+
+export function queryTagsArticles(params) {
+  return request({
+    url: articles.queryTagsArticles,
+    method: 'get',
+    data: params,
+  });
+}

@@ -1,6 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { Card, Tag } from 'components';
+import { Card, TypeButton } from 'components';
 
 export default class TagsCard extends React.PureComponent {
   render() {
@@ -8,7 +8,7 @@ export default class TagsCard extends React.PureComponent {
     return (
       <Card title="Tags">
         { tags.map(item => (
-          <Tag key={item.value} tag={item} />
+          <TypeButton key={item.value} item={item} to={`/tags/${item.value}`} type="tag" />
         )) }
       </Card>
     );

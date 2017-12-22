@@ -30,19 +30,19 @@ const Home = ({
 
   // const getTypeButtons = () => {
   //   const typeBtns = [{
-  //     text: '所有',
+  //     name: '所有',
   //     to: '/',
   //   }, {
-  //     text: '充电站',
+  //     name: '充电站',
   //     to: '/type/charging',
   //   }, {
-  //     text: '储藏室',
+  //     name: '储藏室',
   //     to: '/type/storeroom',
   //   }, {
-  //     text: '心情随想',
+  //     name: '心情随想',
   //     to: '/type/motions',
   //   }];
-  //   const dom = typeBtns.map(btn => <TypeButton key={btn.to} text={btn.text} to={btn.to} type={btn.to === location.pathname ? 'active' : ''} />);
+  //   const dom = typeBtns.map(btn => <TypeButton key={btn.to} item={btn} to={btn.to} type={btn.to === location.pathname ? 'active' : ''} />);
   //   return dom;
   // };
   return (

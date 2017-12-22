@@ -11,15 +11,8 @@ export default {
   subscriptions: {
     setup({ dispatch, history }) {
       history.listen((location) => {
-        if (location.pathname === '/') { // 主页面
-          dispatch({ type: 'queryTags' }); // 获取标签
-        }
-      });
-    },
-    tags({ dispatch, history }) {
-      history.listen((location) => {
-        const match = location.pathname.match(/\/tags\/(\w+)/);
-        if (match !== null) { // 主页面
+        if (location.pathname === '/' || location.pathname.match(/\/tags\/(\w+)/) !== null
+        || location.pathname === '/tagslist') { // 主页面
           dispatch({ type: 'queryTags' }); // 获取标签
         }
       });

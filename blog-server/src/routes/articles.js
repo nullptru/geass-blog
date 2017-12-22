@@ -67,6 +67,42 @@ articles.get('/articles/page', async (ctx) => {
   ctx.body = response;
 });
 
+
+/**
+ * 当请求为/articles/page时，获得所有文章列表
+ */
+articles.get('/articles/tags', async (ctx) => {
+  const tagsArticles = {};
+  const rows = await Pool.query(
+    'SELECT articles.id, articles.title, articles.created_time, articles.abstraction, ' +
+    "GROUP_CONCAT(concat_ws(',', tags.id, tags.name,tags.value) ORDER BY tags.id SEPARATOR '|') AS articleTags  FROM articles " +
+    'LEFT JOIN tag2article ON tag2article.article_id = articles.id ' +
+    'LEFT JOIN tags ON tag2article.tag_id = tags.id ' +
+    'GROUP BY articles.id ',
+    [],
+  );
+  const data = Array.from(rows);
+  // get all tags
+  const tagRows = await Pool.query('SELECT * FROM tags', []);
+  const tagsArray = Array.from(tagRows);
+  tagsArray.forEach((tag) => {
+    tagsArticles[tag.value] = [];
+  });
+
+  data.forEach((item) => {
+    const newItem = { ...item };
+    newItem.tags = getTags(newItem.articleTags);
+    newItem.createdTime = dateFormat(newItem.created_time, 'yyyy-MM-dd');
+    delete newItem.articleTags;
+    delete newItem.created_time;
+    newItem.tags.forEach((tag) => {
+      tagsArticles[tag.value].push(newItem);
+    });
+  });
+  response.data = tagsArticles;
+  ctx.body = response;
+});
+
 /**
  * 当请求为/articles/:id时，获得对应id文章列表
  */
