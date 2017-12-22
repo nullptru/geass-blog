@@ -7,6 +7,23 @@ import styles from './index.less';
 import bg from '../../../assets/bg.jpg';
 
 class Head extends React.PureComponent {
+  constructor(props) {
+    super(props);
+
+    this.title = {
+      '/': {
+        title: 'Stay Hungry, Stay Foolish',
+        subtitle: 'Geass Blog',
+        bg,
+      },
+      '/tagslist': {
+        title: 'All Tags',
+        subtitle: '',
+        bg,
+      },
+    };
+  }
+
   onMenuClick = (key) => {
     this.props.dispatch(routerRedux.push({
       pathname: key,
@@ -14,15 +31,29 @@ class Head extends React.PureComponent {
   };
 
   render() {
-    const { items, article } = this.props;
+    const {
+      items, article, location, tagsList = [],
+    } = this.props;
+    const headTitle = { ...this.title };
+    const match = location.pathname.match(/\/tags\/(.*)/);
+    let selectedTag = '';
+    if (match) {
+      [, selectedTag] = match;
+    }
+    const tag = tagsList.filter(item => item.value === selectedTag)[0] || {};
+    headTitle[`/tags/${selectedTag}`] = {
+      title: 'Tag',
+      subtitle: tag.name,
+    };
+    const currentTitle = headTitle[location.pathname] || { bg };
     return (
       <header className={styles.header}>
         <div style={{ position: 'relative' }}>
-          <img className={styles.bgImage} src={article.img === undefined ? bg : article.img} alt="bg" />
+          <img className={styles.bgImage} src={article.img === undefined ? currentTitle.bg : article.img} alt="bg" />
           { article.title === undefined &&
           <div className={styles.headTitle}>
-            <span className={styles.title}>Stay Hungry, Stay Foolish</span>
-            <span className={styles.subtitle}>Geass Blog</span>
+            <span className={styles.title}>{currentTitle.title}</span>
+            <span className={styles.subtitle}>{currentTitle.subtitle}</span>
           </div>}
         </div>
         <nav>
@@ -44,6 +75,11 @@ Head.propTypes = {
   article: PropTypes.object,
 };
 
+Head.contextTypes = {
+  routers: PropTypes.array,
+  getRouteData: PropTypes.func,
+};
+
 Head.defaultProps = {
   article: {},
   items: [{
@@ -58,4 +94,6 @@ Head.defaultProps = {
   }],
 };
 
-export default connect()(Head);
+export default connect(state => ({
+  tagsList: state.tags.list,
+}))(Head);

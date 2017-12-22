@@ -1,5 +1,6 @@
 import React from 'react';
 import { Link } from 'dva/router';
+import { connect } from 'dva';
 import PropTypes from 'prop-types';
 import ReactMarkdown from 'react-markdown';
 import { HighLight, Icon } from 'components';
@@ -44,5 +45,4 @@ Detail.defaultProps = {
   article: { type: {}, tags: [] },
 };
 
-export default Detail;
-
+export default connect(({ articles: { article } }) => ({ article }))(Detail);
