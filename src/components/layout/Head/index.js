@@ -1,6 +1,6 @@
 import React from 'react';
 import { connect } from 'dva';
-import { routerRedux } from 'dva/router';
+import { routerRedux, Link } from 'dva/router';
 import PropTypes from 'prop-types';
 import Menu from '../Menu';
 import styles from './index.less';
@@ -27,7 +27,7 @@ class Head extends React.PureComponent {
         </div>
         <nav>
           <section className={styles.left}>
-            <a className={styles.logo} href="/">废宅的小窝</a>
+            <Link className={styles.logo} to="/">废宅的小窝</Link>
           </section>
           <section className={styles.right}>
             <Menu items={items} onClick={this.onMenuClick.bind(this)} />

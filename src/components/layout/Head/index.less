@@ -9,7 +9,7 @@
         justify-content: space-between;
         width: 100vw;
         height: @header_height;
-        background: grey;
+        background: transparent;
     }
 
     .logo {
@@ -17,7 +17,10 @@
         line-height: @header_height;
         vertical-align: middle;
         text-decoration: none;
-        color: rgba(255,255,255,.87);
+        color: rgb(255,255,255);
+        &:hover {
+            color: rgba(255,255,255, 0.7);
+        }
     }
 
     .left {
@@ -46,14 +49,15 @@
     .title {
         display: block;
         color: @transparent-white;
-        font-size: 36px;
+        font-size: @font-tille-size;
         font-weight: bold;
         font-style: italic;
     }
     .subtitle {
         display: block;
+        margin-top: 8px;
         color: @transparent-white;
-        font-size: 28px;
+        font-size: 2em;
         text-align: center;
         font-weight: bold;
         font-style: italic;
@@ -61,7 +65,7 @@
 
   .meta {
     margin-top: 12px;
-    font-size: 24px;
+    font-size: @font-meta-size;
     color: @transparent-white;
     font-weight: bold;
     font-style: italic;

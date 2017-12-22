@@ -8,9 +8,9 @@
     background-color: @transparent-white;;
     border-radius: 5px;
     transform: translateZ(0);
-    box-shadow: rgba(0, 0, 0, 0.12) 0px 1px 6px, rgba(0, 0, 0, 0.12) 0px 1px 4px;
+    box-shadow: rgba(0, 0, 0, 0.1) 0px 1px 2px;
     &:hover {
-        box-shadow:0 3px 10px rgba(0,0,0,.156863),0 3px 10px rgba(0,0,0,.227451);
+        box-shadow:0 2px 4px rgba(0,0,0,.156863);
     }
     .headerContainer {
         position: relative;
@@ -31,14 +31,14 @@
     }
     .title {
         display: block;
-        font-size: 24px;
+        font-size: @font-subtille-size;
         font-weight: bold;
         line-height: 1.5em;
         color: @transparent-white;
     }
     .time {
         display: block;
-        font-size: 14px;
+        font-size: @font-base-size;
         color: @transparent-white;
     }
     .contentContainer {
@@ -46,7 +46,7 @@
         padding: 8px 16px;
         .tag {
             margin-right: 8px;
-            font-size: 14px;
+            font-size: @font-base-size;
             color: @tag-color;
 
             &:hover {
@@ -59,7 +59,7 @@
         }
         .abstraction {
             height: 72px;
-            font-size: 14px;
+            font-size: @font-base-size;
             margin-right: 8px;
         }
     }

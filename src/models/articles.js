@@ -28,9 +28,9 @@ export default {
       history.listen((location) => {
         if (location.pathname === '/') { // 主页面
           const { search: searchStr } = queryString.parse(location.search);
-          console.log(location, queryString.parse(location.search))
           dispatch({ type: 'queryArticles', payload: { search: searchStr } }); // 获取文章列表
           dispatch({ type: 'queryLatestArticles' }); // 获取最新文章
+          dispatch({ type: 'updateState', payload: { article: {} } }); // 置空文章
         }
       });
     },
