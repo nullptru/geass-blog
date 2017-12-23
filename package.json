@@ -22,6 +22,7 @@
     "rc-select": "^7.3.2",
     "rc-upload": "^2.4.4",
     "react": "^16.1.1",
+    "react-document-title": "^2.0.3",
     "react-dom": "^16.1.1",
     "react-markdown": "^3.0.2",
     "react-transition-group": "^2.2.1"
