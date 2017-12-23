@@ -178,7 +178,7 @@ articles.get('/articles/tags/:tag/page', async (ctx) => {
  */
 articles.get('/articles/latest', async (ctx) => {
   const { pageSize = 10 } = ctx.query;
-  const rows = await Pool.query('SELECT id, title FROM articles ORDER BY created_time WHERE status=1  limit 0, ?', [pageSize]);
+  const rows = await Pool.query('SELECT id, title FROM articles WHERE status=1 ORDER BY created_time limit 0, ?', [pageSize]);
   response.data = rows;
   ctx.body = response;
 });

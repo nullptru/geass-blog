@@ -73,11 +73,11 @@ class Head extends React.PureComponent {
             <Menu items={items} onClick={this.onMenuClick.bind(this)} defaultActiveKey={defaultActiveKey || items[0].key} hasBackground={false} />
           </section>
         </nav>
-        <div>
+        <div className={styles.headTitle}>
           { article.title === undefined &&
-          <div className={styles.headTitle}>
-            <span className={styles.title}>{currentTitle.title}</span>
-            <span className={styles.subtitle}>{currentTitle.subtitle}</span>
+          <div>
+            <span className={styles.title}>{currentTitle.title || ''}</span>
+            <span className={styles.subtitle}>{currentTitle.subtitle || ''}</span>
           </div>}
         </div>
       </header>
