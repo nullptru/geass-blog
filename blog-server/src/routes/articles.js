@@ -44,7 +44,7 @@ articles.get('/articles/page', async (ctx) => {
     "GROUP_CONCAT(concat_ws(',', tags.id, tags.name,tags.value) ORDER BY tags.id SEPARATOR '|') AS articleTags  FROM articles " +
     'LEFT JOIN tag2article ON tag2article.article_id = articles.id ' +
     'LEFT JOIN tags ON tag2article.tag_id = tags.id ' +
-    'WHERE content LIKE ? OR title LIKE ? OR abstraction LIKE ? ' +
+    'WHERE content LIKE ? OR title LIKE ? OR abstraction LIKE ? AND status=1 ' +
     'GROUP BY articles.id ' +
     'LIMIT ?, ?',
     [searchStr, searchStr, searchStr, searchStr, searchStr, searchStr, (current - 1) * pageSize, current * pageSize],
@@ -78,6 +78,7 @@ articles.get('/articles/tags', async (ctx) => {
     "GROUP_CONCAT(concat_ws(',', tags.id, tags.name,tags.value) ORDER BY tags.id SEPARATOR '|') AS articleTags  FROM articles " +
     'LEFT JOIN tag2article ON tag2article.article_id = articles.id ' +
     'LEFT JOIN tags ON tag2article.tag_id = tags.id ' +
+    'WHERE status=1 ' +
     'GROUP BY articles.id ',
     [],
   );
@@ -111,7 +112,7 @@ articles.get('/article/:id', async (ctx) => {
     sql: "SELECT articles.*, GROUP_CONCAT(concat_ws(',', tags.id, tags.name,tags.value) ORDER BY tags.id SEPARATOR '|') AS articleTags  FROM articles " +
     'LEFT JOIN tag2article ON tag2article.article_id = articles.id ' +
     'LEFT JOIN tags ON tag2article.tag_id = tags.id ' +
-    'WHERE articles.id = ? ' +
+    'WHERE articles.id = ?  AND status=1 ' +
     'GROUP BY articles.id',
     params: [ctx.params.id],
   }, { // 上一篇
@@ -148,7 +149,7 @@ articles.get('/articles/tags/:tag/page', async (ctx) => {
     "GROUP_CONCAT(concat_ws(',', tags.id, tags.name,tags.value) ORDER BY tags.id SEPARATOR '|') AS articleTags  FROM articles " +
     'LEFT JOIN tag2article ON tag2article.article_id = articles.id ' +
     'LEFT JOIN tags ON tag2article.tag_id = tags.id ' +
-    'WHERE articles.id IN ( SELECT articles.id FROM articles, tag2article, tags WHERE tag2article.tag_id = tags.id AND tag2article.article_id = articles.id AND tags.value = ?) ' +
+    'WHERE articles.id IN ( SELECT articles.id FROM articles, tag2article, tags WHERE tag2article.tag_id = tags.id AND tag2article.article_id = articles.id AND tags.value = ? AND status=1 ) ' +
     'GROUP BY articles.id ' +
     'LIMIT ?, ?',
     [ctx.params.tag, ctx.params.tag, (current - 1) * pageSize, current * pageSize],
@@ -177,7 +178,7 @@ articles.get('/articles/tags/:tag/page', async (ctx) => {
  */
 articles.get('/articles/latest', async (ctx) => {
   const { pageSize = 10 } = ctx.query;
-  const rows = await Pool.query('SELECT id, title FROM articles ORDER BY created_time limit 0, ?', [pageSize]);
+  const rows = await Pool.query('SELECT id, title FROM articles ORDER BY created_time WHERE status=1  limit 0, ?', [pageSize]);
   response.data = rows;
   ctx.body = response;
 });
@@ -186,9 +187,8 @@ articles.get('/articles/latest', async (ctx) => {
  * 上传图片
  */
 articles.post('/article/image/upload', upload.single('titleImage'), async (ctx) => {
-  ctx.body = {
-    filename: ctx.req.file.path, // 返回文件名
-  };
+  response.data = { filename: ctx.req.file.path };
+  ctx.body = response;
 });
 
 /**
@@ -196,7 +196,7 @@ articles.post('/article/image/upload', upload.single('titleImage'), async (ctx) 
  */
 articles.post('/article', async (ctx) => {
   const {
-    title, content, abstraction, author, imageUrl = '', next, tagIds,
+    title, content, abstraction, author, imageUrl = '', tagIds, status,
   } = ctx.request.body;
   /**
    * insert a article by 2 step
@@ -204,18 +204,18 @@ articles.post('/article', async (ctx) => {
    * 2. insert article's tags infomation into table named tag2article
    */
   const querys = [{
-    sql: 'INSERT INTO articles(title, content, author, abstraction, image_url) VALUES (?, ?, ?, ?, ?)',
-    params: [title, content, author, abstraction, imageUrl],
+    sql: 'INSERT INTO articles(title, content, author, abstraction, image_url, status) VALUES (?, ?, ?, ?, ?, ?)',
+    params: [title, content, author, abstraction, imageUrl, status],
   }, {
     sql: 'INSERT INTO tag2article(article_id, tag_id) VALUES ?',
     params: (results) => {
-      const { insertId } = results[1];
+      const { insertId } = results[0];
       const params = tagIds.map(tagId => [insertId, tagId]);
       return [params];
     },
   }];
   const rows = await Pool.startTransaction(querys);
-  response.data = { insertId: rows[1].insertId };
+  response.data = { insertId: rows[0].insertId };
   ctx.body = response;
 });
 

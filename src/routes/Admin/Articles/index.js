@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 import { connect } from 'dva';
 import ReactMarkdown from 'react-markdown';
 import Select, { Option } from 'rc-select';
+import copy from 'copy-to-clipboard';
 import { createForm } from 'rc-form';
 import Upload from 'rc-upload';
 import { Input, Icon, HighLight, CodeMirrorEditor } from 'components';
@@ -25,7 +26,10 @@ class Article extends React.PureComponent {
         formData.append('titleImage', upload.file);
         props.dispatch({
           type: 'articles/uploadImage',
-          payload: formData,
+          payload: {
+            formData,
+            type: 'title',
+          },
         });
       },
     };
@@ -34,13 +38,20 @@ class Article extends React.PureComponent {
 
   onEditorChange = text => this.setState({ editorText: text });
 
-  onSubmit = () => {
+  onSubmit = (status) => {
     const { getFieldsValue } = this.props.form;
     const data = {
       ...getFieldsValue(),
       content: this.state.editorText,
+      imageUrl: this.props.updatedTitleImage,
+      author: 'Geass',
+      status,
     };
     console.log(data);
+    this.props.dispatch({
+      type: 'articles/create',
+      payload: { ...data },
+    })
   }
 
   getFieldDecorator = (name) => {
@@ -58,10 +69,12 @@ class Article extends React.PureComponent {
     const markdownProps = {
       mode: 'markdown',
       theme: 'monokai',
+      lineWrapping: true,
       onChange: this.onEditorChange,
       value: this.state.editorText,
     };
     const { getFieldDecorator } = this.props.form;
+    const { updatedTitleImage, articleImages, list } = this.props;
     return (
       <div className={styles.markdownArticlePanel}>
         <form>
@@ -72,20 +85,28 @@ class Article extends React.PureComponent {
               <Upload {...this.uploaderProps} className={styles.upload}>
                 <Icon type="upload" />
               </Upload>
-              <Icon type="save" onClick={this.onSubmit} className={styles.iconBtn} />
+              <Icon type="save" onClick={this.onSubmit.bind(this, 0)} className={styles.iconBtn} />
+              <Icon type="export" onClick={this.onSubmit.bind(this, 1)} className={styles.iconBtn} />
               <div className={styles.right}>
-                {getFieldDecorator('tags')(<Select multiple className={styles.tagSelect} placeholder="选择所属分类" >
-                  <Option value="a" key="a">a</Option>
-                  <Option value="b" key="b">b</Option>
-                  <Option value="c" key="c">c</Option>
+                {getFieldDecorator('tagIds')(<Select multiple className={styles.tagSelect} placeholder="选择所属分类" >
+                  {list.map(tag =><Option key={tag.id}>{tag.name}</Option>)}
                 </Select>)}
               </div>
             </div>
             {getFieldDecorator('abstraction')(<Input className={styles.abstraction} multiple />)}
+            <div className={styles.imgPanel}>
+              { updatedTitleImage.length > 0 &&
+                <span>标题图片: <img src={updatedTitleImage} alt="标题图片" className={styles.pasterImage} onClick={(i) => copy(i.target.src)} /></span>
+              }
+              { articleImages.length > 0 && 
+                <span>文章图片: {articleImages.map(img =>
+                  <img src={img} alt="文章图片" className={styles.pasterImage} onClick={(i) => copy(i.target.src)} />)}
+                </span>
+              }
+            </div>
             {/* markdown */}
             <div className={styles.codePanel}>
               <CodeMirrorEditor {...markdownProps} />
-
               <HighLight className={styles.markdownContainer}>
                 <ReactMarkdown source={this.state.editorText} escapeHtml={false} />
               </HighLight>
@@ -99,6 +120,12 @@ class Article extends React.PureComponent {
 
 Article.propTypes = {
   dispatch: PropTypes.func.isRequired,
+  tags: PropTypes.object,
 };
 
-export default connect()(createForm()(Article));
+Article.defaultProps = {
+  tags: {},
+};
+
+export default connect(({ tags: { list }, articles: { updatedTitleImage, articleImages } }) =>
+({ list, updatedTitleImage, articleImages }))(createForm()(Article));

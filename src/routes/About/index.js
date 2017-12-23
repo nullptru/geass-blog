@@ -3,9 +3,9 @@ import ReactMarkdown from 'react-markdown';
 import { HighLight } from 'components';
 
 export default () => {
-  const content = "\n# Live demo\n\nChanges are automatically rendered as you type.\n\n* Implements [GitHub Flavored Markdown](https://github.github.com/gfm/)\n* Renders actual, \"native\" React DOM elements\n* Allows you to escape or skip HTML (try toggling the checkboxes above)\n* If you escape or skip the HTML, no `dangerouslySetInnerHTML` is used! Yay!\n\n## HTML block below\n\n<blockquote>\n  This blockquote will change based on the HTML settings above.\n</blockquote>\n\n## How about some code?\n```js\nvar React = require('react');\nvar Markdown = require('react-markdown');\n\nReact.render(\n  <Markdown source=\"# Your markdown here\" />,\n  document.getElementById('content')\n);\n```\n\nPretty neat, eh?\n\n## Tables?\n\n| Feature | Support |\n| ------ | ----------- |\n| tables | ✔ |\n| alignment | ✔ |\n| wewt | ✔ |\n\n## More info?\n\nRead usage information and more on [GitHub](//github.com/rexxars/react-markdown)\n\n---------------\n\nA component by [VaffelNinja](http://vaffel.ninja) / Espen Hovlandsdal\n";
+  const content = '> 人生は一度きりなんです、がっついていこう \n\n先给自己贴标签： 伪二次元、前端新手、拖延癌、日常咸鱼....\n\n虽然是个咸鱼却总想着搞事情，看了下时间，没错，还可以自称为应届大学生。\n\n博客的日常应该是主要分享一些技术上的想法和学习的记录，穿插一些日常生活的感悟和一些杂七杂八的东西。\n\n希望自己能够催促自己保持博客的活力，也欢迎交流各种问题～\n\n联系方式就先丢个QQ：1006755794';
   return (
-    <div className="row" style={{ color: 'black' }}>
+    <div className="row" style={{ color: 'black', fontSize: '16px', margin: '24px auto', minHeight: '420px' } }>
       <div className="col-md-8 col-sm-12 col-md-push-2">
         <HighLight>
           <ReactMarkdown source={content} escapeHtml={false} />

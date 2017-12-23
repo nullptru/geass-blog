@@ -12,7 +12,7 @@ export default {
     setup({ dispatch, history }) {
       history.listen((location) => {
         if (location.pathname === '/' || location.pathname.match(/\/tags\/(\w+)/) !== null
-        || location.pathname === '/tagslist') { // 主页面
+        || location.pathname === '/tagslist' || location.pathname === '/admin') { // 主页面
           dispatch({ type: 'queryTags' }); // 获取标签
         }
       });

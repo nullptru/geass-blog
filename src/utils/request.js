@@ -14,7 +14,7 @@ function checkStatus(response) {
 const fetchRequest = (options) => {
   let { url } = options;
   const { data } = options;
-  const { method = 'get' } = options;
+  const { method = 'get', type = undefined } = options;
 
   const cloneData = { ...data };
 
@@ -27,7 +27,7 @@ const fetchRequest = (options) => {
     const match = pathToRegexp.parse(url);
     for (const item of match) {
       if (item instanceof Object && !(item.name in data)) {
-        data[item.name] = '*empty*';
+        cloneData[item.name] = '*empty*';
       }
     }
     url = pathToRegexp.compile(url)(data);
@@ -42,6 +42,14 @@ const fetchRequest = (options) => {
     throw e;
   }
 
+  console.log(type, 'type')
+  if (type === 'formData') {
+    const headers = {
+      'Content-Type': 'application/x-www-form-urlencoded',
+    };
+    console.log('enter')
+    return axios.post(url, data, headers);
+  }
   switch (method.toLowerCase()) {
     case 'get':
       return axios.get(url, {

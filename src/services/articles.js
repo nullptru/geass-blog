@@ -47,6 +47,7 @@ export function upload(params) {
     url: articles.upload,
     method: 'post',
     data: params,
+    type: 'formData',
   });
 }
 

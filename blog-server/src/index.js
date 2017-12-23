@@ -1,6 +1,7 @@
 import Koa from 'koa';
 import logger from 'koa-logger';
 import KoaBody from 'koa-body';
+import staticServer from 'koa-static';
 import Router from 'koa-router';
 import cors from 'koa2-cors';
 import articles from './routes/articles';
@@ -12,6 +13,7 @@ const app = new Koa();
 // request logger
 app.use(logger());
 app.use(KoaBody());
+app.use(staticServer(`${__dirname}/imgs`));
 
 // 具体参数我们在后面进行解释
 app.use(cors({

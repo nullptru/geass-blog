@@ -3,6 +3,7 @@ import {
   querySingleArticle,
   queryLatestArticles,
   queryByTag,
+  create,
   search,
   upload,
 } from 'services/articles';
@@ -21,6 +22,9 @@ export default {
       pageSize: 10,
       total: 1,
     },
+    // create
+    updatedTitleImage: '',
+    articleImages: [],
   },
 
   subscriptions: {
@@ -105,13 +109,26 @@ export default {
       }
     },
 
-    // eslint-disable-next-line
-    *uploadImage({ payload = {} }, { call, put }) {
-      // eslint-disable-next-line
-      console.log(payload, 'enter upload');
-      const response = yield call(upload, payload);
-      // eslint-disable-next-line
-      console.log(response);
+    *uploadImage({ payload = {} }, { select, call, put }) {
+      const { articleImages } = yield select(({ articles }) => articles);
+      const { type, formData } = payload;
+      const response = yield call(upload, formData);
+      if (response.success) {
+        if (type === 'title') {
+          yield put({ type: 'updateState', payload: { updatedTitleImage: response.data.filename } });
+        } else {
+          const newImages = [...articleImages];
+          newImages.push(response.data.filename);
+          yield put({ type: 'updateState', payload: { articleImages: newImages } });
+        }
+      }
+    },
+
+    *create({ payload = {} }, { call }) {
+      const response = yield call(create, payload);
+      if (response.success) {
+        console.log('success');
+      }
     },
 
     *search({ payload = {} }, { call, put }) {

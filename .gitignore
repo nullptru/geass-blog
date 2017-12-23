@@ -24,3 +24,5 @@ npm-debug.log*
 
 # config
 /blog-server/**/config.js
+
+/**/imgs

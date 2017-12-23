@@ -12,6 +12,7 @@
   "dependencies": {
     "axios": "^0.17.1",
     "codemirror": "^5.32.0",
+    "copy-to-clipboard": "^3.0.8",
     "dva": "^2.1.0",
     "path-to-regexp": "^2.1.0",
     "pixi-live2d": "^1.2.1",
