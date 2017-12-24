@@ -42,12 +42,10 @@ const fetchRequest = (options) => {
     throw e;
   }
 
-  console.log(type, 'type')
   if (type === 'formData') {
     const headers = {
       'Content-Type': 'application/x-www-form-urlencoded',
     };
-    console.log('enter')
     return axios.post(url, data, headers);
   }
   switch (method.toLowerCase()) {

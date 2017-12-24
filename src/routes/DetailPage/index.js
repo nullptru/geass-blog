@@ -3,16 +3,17 @@ import { Link } from 'dva/router';
 import { connect } from 'dva';
 import PropTypes from 'prop-types';
 import ReactMarkdown from 'react-markdown';
-import { HighLight, Icon } from 'components';
+import { HighLight, Icon, Loading } from 'components';
 import styles from './index.less';
 
 class Detail extends React.PureComponent {
   render() {
-    const { article } = this.props;
+    const { article, loading } = this.props;
     const tags = article.tags || [];
     return (
       <div className={styles.detailContainer}>
         <article className={styles.detail}>
+          <Loading spinning={loading.effects['articles/querySingleArticle']} />
           <header>
             <div className={styles.title}>{ article.title }</div>
             <div className={styles.meta}>
@@ -39,10 +40,11 @@ class Detail extends React.PureComponent {
 
 Detail.propTypes = {
   article: PropTypes.object,
+  loading: PropTypes.object.isRequired,
 };
 
 Detail.defaultProps = {
   article: { type: {}, tags: [] },
 };
 
-export default connect(({ articles: { article } }) => ({ article }))(Detail);
+export default connect(({ loading, articles: { article } }) => ({ loading, article }))(Detail);

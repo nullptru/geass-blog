@@ -4,13 +4,13 @@ import { routerRedux } from 'dva/router';
 import { connect } from 'dva';
 import queryString from 'query-string';
 import Article from 'components/ArticleItem';
-import { Search, Pagination } from 'components';
+import { Search, Pagination, Loading } from 'components';
 import LatestPostCard from './components/LatestPostCard';
 import TagsCard from './components/TagsCard';
 import './index.less';
 
 const Home = ({
-  dispatch, articles, tagList, location,
+  dispatch, articles, tagList, location, loading,
 }) => {
   const { list, latestPosts, pagination } = articles;
   const { search: searchQuery } = queryString.parse(location.search);
@@ -28,32 +28,15 @@ const Home = ({
     }));
   };
 
-  // const getTypeButtons = () => {
-  //   const typeBtns = [{
-  //     name: '所有',
-  //     to: '/',
-  //   }, {
-  //     name: '充电站',
-  //     to: '/type/charging',
-  //   }, {
-  //     name: '储藏室',
-  //     to: '/type/storeroom',
-  //   }, {
-  //     name: '心情随想',
-  //     to: '/type/motions',
-  //   }];
-  //   const dom = typeBtns.map(btn => <TypeButton key={btn.to} item={btn} to={btn.to} type={btn.to === location.pathname ? 'active' : ''} />);
-  //   return dom;
-  // };
   return (
     <div>
-      {/* <div className="center">
-        {getTypeButtons()}
-      </div> */}
-      <div className="row">
+      <div className="row" style={{ marginTop: '4px' }} >
         <div className="col-md-8 col-sm-12">
-          {list.map(article =>
-            <Article article={article} key={article.id} onClick={onArticleClick.bind(null, article.id)} />)}
+          <div style={{ position: 'relative', minHeight: '300px' }}>
+            <Loading spinning={loading.effects['articles/queryArticles']} />
+            {list.map(article =>
+              <Article article={article} key={article.id} onClick={onArticleClick.bind(null, article.id)} />)}
+          </div>
           <Pagination pagination={pagination} />
         </div>
         <div className="col-md-4 col-sm-12">
@@ -70,6 +53,7 @@ Home.propTypes = {
   dispatch: PropTypes.func.isRequired,
   location: PropTypes.object.isRequired,
   articles: PropTypes.object.isRequired,
+  loading: PropTypes.object.isRequired,
   tagList: PropTypes.array,
 };
 
@@ -77,5 +61,5 @@ Home.defaultProps = {
   tagList: [],
 };
 
-export default connect(({ articles, tags: { list: tagList } }) =>
-  ({ articles, tagList }))(Home);
+export default connect(({ loading, articles, tags: { list: tagList } }) =>
+  ({ loading, articles, tagList }))(Home);

@@ -18,7 +18,7 @@ app.use(staticServer(`${__dirname}/imgs`));
 // 具体参数我们在后面进行解释
 app.use(cors({
   origin() {
-    return 'http://localhost:8000'; // 允许来自所有域名请求
+    return 'http://159.203.110.127'; // 允许来自所有域名请求
   },
   maxAge: 5,
   credentials: true,

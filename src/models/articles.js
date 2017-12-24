@@ -125,10 +125,11 @@ export default {
     },
 
     *create({ payload = {} }, { call }) {
-      const response = yield call(create, payload);
-      if (response.success) {
-        console.log('success');
-      }
+      // const response = yield call(create, payload);
+      yield call(create, payload);
+      // if (response.success) {
+      //   console.log('success');
+      // }
     },
 
     *search({ payload = {} }, { call, put }) {
