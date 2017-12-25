@@ -15,7 +15,7 @@ export default class ArticleItem extends React.PureComponent {
     return (
       <section className={`${styles.article}`}>
         <header className={styles.headerContainer} onClick={this.onClick.bind(this, article.id)}>
-          <img className={styles.image} src={logo} alt="article" />
+          <img className={styles.image} src={article.image_url ? article.image_url : logo} alt="article" />
           <div className={styles.header}>
             <div>
               <span className={styles.title}>{ article.title }</span>

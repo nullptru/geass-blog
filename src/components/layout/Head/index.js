@@ -64,7 +64,7 @@ class Head extends React.PureComponent {
     const currentTitle = headTitle[location.pathname] || { bg };
     const defaultActiveKey = this.getDefaultActiveKey(location.pathname);
     return (
-      <header className={styles.header} style={{ backgroundImage: `url(${article.img === undefined ? currentTitle.bg : article.img})` }}>
+      <header className={styles.header} style={{ backgroundImage: `url(${article.image_url === undefined ? currentTitle.bg : article.image_url})` }}>
         <nav>
           <section className={styles.left}>
             <Link className={styles.logo} to="/">废宅的小窝</Link>
