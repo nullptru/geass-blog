@@ -4,10 +4,12 @@ import {
   queryLatestArticles,
   queryByTag,
   create,
+  update,
   search,
   upload,
 } from 'services/articles';
 import queryString from 'query-string';
+import { message } from 'components';
 
 export default {
 
@@ -114,6 +116,7 @@ export default {
       const { type, formData } = payload;
       const response = yield call(upload, formData);
       if (response.success) {
+        message.info('图片上传成功');
         if (type === 'title') {
           yield put({ type: 'updateState', payload: { updatedTitleImage: response.data.filename } });
         } else {
@@ -121,15 +124,25 @@ export default {
           newImages.push(response.data.filename);
           yield put({ type: 'updateState', payload: { articleImages: newImages } });
         }
+      } else {
+        message.info('图片上传失败');
       }
     },
 
-    *create({ payload = {} }, { call }) {
-      // const response = yield call(create, payload);
-      yield call(create, payload);
-      // if (response.success) {
-      //   console.log('success');
-      // }
+    *updateArticle({ payload = {} }, { call, put }) {
+      const { status, id } = payload;
+      let response;
+      if (id) {
+        response = yield call(update, payload);
+      } else {
+        response = yield call(create, payload);
+      }
+      if (response.success) {
+        message.info(status === 0 ? '草稿保存成功' : '文章创建成功');
+        yield put({ type: 'updateState', payload: { article: response.data } });
+      } else {
+        message.info('创建失败');
+      }
     },
 
     *search({ payload = {} }, { call, put }) {

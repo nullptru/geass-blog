@@ -196,7 +196,7 @@ articles.post('/article/image/upload', upload.single('titleImage'), async (ctx) 
  */
 articles.post('/article', async (ctx) => {
   const {
-    title, content, abstraction, author, imageUrl = '', tagIds, status,
+    title, content, abstraction, author, imageUrl = '', tagIds = [], status,
   } = ctx.request.body;
   /**
    * insert a article by 2 step
@@ -206,16 +206,36 @@ articles.post('/article', async (ctx) => {
   const querys = [{
     sql: 'INSERT INTO articles(title, content, author, abstraction, image_url, status) VALUES (?, ?, ?, ?, ?, ?)',
     params: [title, content, author, abstraction, imageUrl, status],
-  }, {
-    sql: 'INSERT INTO tag2article(article_id, tag_id) VALUES ?',
+  }];
+  if (tagIds.length > 0) {
+    querys.push({
+      sql: 'INSERT INTO tag2article(article_id, tag_id) VALUES ?',
+      params: (results) => {
+        const { insertId } = results[0];
+        const params = tagIds.map(tagId => [insertId, tagId]);
+        return [params];
+      },
+    });
+  }
+  querys.push({
+    sql: "SELECT articles.*, GROUP_CONCAT(concat_ws(',', tags.id, tags.name,tags.value) ORDER BY tags.id SEPARATOR '|') AS articleTags  FROM articles " +
+    'LEFT JOIN tag2article ON tag2article.article_id = articles.id ' +
+    'LEFT JOIN tags ON tag2article.tag_id = tags.id ' +
+    'WHERE articles.id = ?  AND status=1 ' +
+    'GROUP BY articles.id',
     params: (results) => {
       const { insertId } = results[0];
-      const params = tagIds.map(tagId => [insertId, tagId]);
-      return [params];
+      return [insertId];
     },
-  }];
+  });
   const rows = await Pool.startTransaction(querys);
-  response.data = { insertId: rows[0].insertId };
+  const resData = rows[querys.length - 1].map((item) => {
+    const newItem = { ...item };
+    newItem.tags = getTags(newItem.articleTags);
+    delete newItem.articleTags;
+    return newItem;
+  });
+  [response.data] = resData;
   ctx.body = response;
 });
 
@@ -256,8 +276,22 @@ articles.put('/article', async (ctx) => {
         params: [params],
       }]);
     }
+    querys.push({
+      sql: "SELECT articles.*, GROUP_CONCAT(concat_ws(',', tags.id, tags.name,tags.value) ORDER BY tags.id SEPARATOR '|') AS articleTags  FROM articles " +
+      'LEFT JOIN tag2article ON tag2article.article_id = articles.id ' +
+      'LEFT JOIN tags ON tag2article.tag_id = tags.id ' +
+      'WHERE articles.id = ?  AND status=1 ' +
+      'GROUP BY articles.id',
+      params: [body.id],
+    });
     const rows = await Pool.startTransaction(querys);
-    response.data = { affectedRows: rows[0].affectedRows };
+    const resData = rows[querys.length - 1].map((item) => {
+      const newItem = { ...item };
+      newItem.tags = getTags(newItem.articleTags);
+      delete newItem.articleTags;
+      return newItem;
+    });
+    [response.data] = resData;
     ctx.body = response;
   }
 });

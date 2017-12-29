@@ -16,7 +16,7 @@ class Article extends React.PureComponent {
   constructor(props) {
     super(props);
     this.state = {
-      editorText: '# Heading\n\nSome **bold** and _italic_ text\nBy [Jed Watson](https://github.com/JedWatson)',
+      editorText: props.article.content || '# Heading\n\nSome **bold** and _italic_ text\nBy [Jed Watson](https://github.com/JedWatson)',
     };
     this.uploaderProps = {
       multiple: true,
@@ -47,7 +47,6 @@ class Article extends React.PureComponent {
       author: 'Geass',
       status,
     };
-    console.log(data);
     this.props.dispatch({
       type: 'articles/create',
       payload: { ...data },
@@ -74,13 +73,13 @@ class Article extends React.PureComponent {
       value: this.state.editorText,
     };
     const { getFieldDecorator } = this.props.form;
-    const { updatedTitleImage, articleImages, list } = this.props;
+    const { updatedTitleImage, articleImages, list, article } = this.props;
     return (
       <div className={styles.markdownArticlePanel}>
         <form>
           <div className={styles.articlePanel}>
             {/* common form item */}
-            {getFieldDecorator('title')(<Input className={styles.title} />)}
+            {getFieldDecorator('title', { initialValue: article.title })(<Input className={styles.title} />)}
             <div className={styles.toolPanel}>
               <Upload {...this.uploaderProps} className={styles.upload}>
                 <Icon type="upload" />
@@ -88,12 +87,12 @@ class Article extends React.PureComponent {
               <Icon type="save" onClick={this.onSubmit.bind(this, 0)} className={styles.iconBtn} />
               <Icon type="export" onClick={this.onSubmit.bind(this, 1)} className={styles.iconBtn} />
               <div className={styles.right}>
-                {getFieldDecorator('tagIds')(<Select multiple className={styles.tagSelect} placeholder="选择所属分类" >
+                {getFieldDecorator('tagIds',  { initialValue: [1]})(<Select multiple className={styles.tagSelect} placeholder="选择所属分类" >
                   {list.map(tag =><Option key={tag.id}>{tag.name}</Option>)}
                 </Select>)}
               </div>
             </div>
-            {getFieldDecorator('abstraction')(<Input className={styles.abstraction} multiple />)}
+            {getFieldDecorator('abstraction', { initialValue: article.title })(<Input className={styles.abstraction} multiple />)}
             <div className={styles.imgPanel}>
               { updatedTitleImage.length > 0 &&
                 <span>标题图片: <img src={updatedTitleImage} alt="标题图片" className={styles.pasterImage} onClick={(i) => copy(i.target.src)} /></span>
@@ -127,5 +126,5 @@ Article.defaultProps = {
   tags: {},
 };
 
-export default connect(({ tags: { list }, articles: { updatedTitleImage, articleImages } }) =>
-({ list, updatedTitleImage, articleImages }))(createForm()(Article));
+export default connect(({ tags: { list }, articles: { updatedTitleImage, articleImages, article } }) =>
+({ list, updatedTitleImage, articleImages, article }))(createForm()(Article));
