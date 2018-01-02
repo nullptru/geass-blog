@@ -63,7 +63,7 @@ class Article extends React.PureComponent {
       status,
     };
     this.props.dispatch({
-      type: 'articles/create',
+      type: 'articles/updateArticle',
       payload: { ...data },
     })
   }
@@ -89,6 +89,7 @@ class Article extends React.PureComponent {
     };
     const { getFieldDecorator } = this.props.form;
     const { updatedTitleImage, articleImages, list, article } = this.props;
+    const tagIds = (article.tags || []).map(tag => tag.id);
     return (
       <div className={styles.markdownArticlePanel}>
         <form>
@@ -105,8 +106,8 @@ class Article extends React.PureComponent {
                 <Upload {...this.uploaderContentProps} className={styles.upload} style={{ marginRight: '4px' }}>
                   <Icon type="upload" /><span>上传文章图片</span>
                 </Upload>
-                {getFieldDecorator('tagIds',  { initialValue: [1]})(<Select multiple className={styles.tagSelect} placeholder="选择所属分类" >
-                  {list.map(tag =><Option key={tag.id}>{tag.name}</Option>)}
+                {getFieldDecorator('tagIds',  { initialValue: tagIds })(<Select multiple optionLabelProp='children' className={styles.tagSelect} placeholder="选择所属分类" >
+                  {list.map(tag =><Option key={tag.id} title={tag.name}>{tag.name}</Option>)}
                 </Select>)}
               </div>
             </div>
@@ -117,7 +118,7 @@ class Article extends React.PureComponent {
               }
               { articleImages.length > 0 && 
                 <span>文章图片: {articleImages.map(img =>
-                  <img src={img} alt="文章图片" className={styles.pasterImage} onClick={(i) => copy(i.target.src)} />)}
+                  <img src={img} alt="文章图片" key={img} className={styles.pasterImage} onClick={(i) => copy(i.target.src)} />)}
                 </span>
               }
             </div>

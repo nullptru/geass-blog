@@ -206,7 +206,6 @@ articles.post('/article/image/upload', upload.fields([
     })(file));
   }
   const resData = await Promise.all(result);
-  console.log(resData);
   response.data = resData.length === 1 ? resData[0] : resData;
   ctx.body = response;
 });
@@ -273,14 +272,16 @@ articles.post('/article', async (ctx) => {
     sql: "SELECT articles.*, GROUP_CONCAT(concat_ws(',', tags.id, tags.name,tags.value) ORDER BY tags.id SEPARATOR '|') AS articleTags  FROM articles " +
     'LEFT JOIN tag2article ON tag2article.article_id = articles.id ' +
     'LEFT JOIN tags ON tag2article.tag_id = tags.id ' +
-    'WHERE articles.id = ?  AND status=1 ' +
+    'WHERE articles.id = ? ' +
     'GROUP BY articles.id',
     params: (results) => {
       const { insertId } = results[0];
       return [insertId];
     },
   });
+  console.log('test');
   const rows = await Pool.startTransaction(querys);
+  console.log(rows);
   const resData = rows[querys.length - 1].map((item) => {
     const newItem = { ...item };
     newItem.tags = getTags(newItem.articleTags);
