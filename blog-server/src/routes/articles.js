@@ -1,7 +1,10 @@
 import Router from 'koa-router';
+import qiniu from 'qiniu';
+import fs from 'fs';
 import Pool from '../utils/db';
 import upload from '../utils/upload';
 import { dateFormat } from '../utils/index';
+import Config from '../config';
 
 const articles = new Router();
 const response = {
@@ -188,8 +191,45 @@ articles.get('/articles/latest', async (ctx) => {
  */
 articles.post('/article/image/upload', upload.single('titleImage'), async (ctx) => {
   response.data = { filename: ctx.req.file.path };
+
+  const res = await uploadToQiniu(ctx.req.file.path, ctx.req.file.originalname);
+  res.filename = Config.defaultDomain + res.key;
+  await deleteTmpFile(ctx.req.file.path);
+  response.data = res;
   ctx.body = response;
 });
+
+const uploadToQiniu = (filepath, key) => {
+  // upload to qiniu
+  const mac = new qiniu.auth.digest.Mac(Config.accessKey, Config.secretKey);
+  const putPolicy = new qiniu.rs.PutPolicy(Config.uploadConfig);
+  const uploadToken = putPolicy.uploadToken(mac);
+  const config = new qiniu.conf.Config();
+  // 空间对应的机房
+  config.zone = qiniu.zone.Zone_z0;
+  const formUploader = new qiniu.form_up.FormUploader(config);
+  const putExtra = new qiniu.form_up.PutExtra();
+  return new Promise((resolved, reject) => {
+    formUploader.putFile(uploadToken, key, filepath, putExtra, (respErr, respBody, respInfo) => {
+      if (respErr) {
+        reject(respErr);
+      }
+      if (respInfo.statusCode === 200) {
+        resolved(respBody);
+      } else {
+        resolved(respBody);
+      }
+    });
+  });
+};
+
+const deleteTmpFile = (filepath) => {
+  const isExist = fs.existsSync(filepath);
+  if (isExist) {
+    return fs.unlinkSync(filepath);
+  }
+  return false;
+};
 
 /**
  * 创建新文章
