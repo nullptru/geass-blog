@@ -117,7 +117,7 @@ export default {
       const response = yield call(upload, formData);
       if (response.success) {
         message.info('图片上传成功');
-        if (type === 'title') {
+        if (type === 'avatar') {
           yield put({ type: 'updateState', payload: { updatedTitleImage: response.data.filename } });
         } else {
           const newImages = [...articleImages];

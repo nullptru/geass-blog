@@ -23,12 +23,27 @@ class Article extends React.PureComponent {
       customRequest(upload) {
         /* eslint-disable no-undef */
         const formData = new FormData();
-        formData.append('titleImage', upload.file);
+        formData.append('avatar', upload.file);
         props.dispatch({
           type: 'articles/uploadImage',
           payload: {
             formData,
-            type: 'title',
+            type: 'avatar',
+          },
+        });
+      },
+    };
+    this.uploaderContentProps = {
+      multiple: true,
+      customRequest(upload) {
+        /* eslint-disable no-undef */
+        const formData = new FormData();
+        formData.append('gallery', upload.file);
+        props.dispatch({
+          type: 'articles/uploadImage',
+          payload: {
+            formData,
+            type: 'gallery',
           },
         });
       },
@@ -87,6 +102,9 @@ class Article extends React.PureComponent {
               <Icon type="save" onClick={this.onSubmit.bind(this, 0)} className={styles.iconBtn} />
               <Icon type="export" onClick={this.onSubmit.bind(this, 1)} className={styles.iconBtn} />
               <div className={styles.right}>
+                <Upload {...this.uploaderContentProps} className={styles.upload} style={{ marginRight: '4px' }}>
+                  <Icon type="upload" /><span>上传文章图片</span>
+                </Upload>
                 {getFieldDecorator('tagIds',  { initialValue: [1]})(<Select multiple className={styles.tagSelect} placeholder="选择所属分类" >
                   {list.map(tag =><Option key={tag.id}>{tag.name}</Option>)}
                 </Select>)}

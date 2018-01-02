@@ -26,6 +26,7 @@ function getMessageInstance(callback) {
 }
 
 function notice(content, duration, onClose) {
+  /* eslint-disable */
   if (typeof duration === 'function') {
     onClose = duration;
     duration = defaultDuration;
