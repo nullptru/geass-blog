@@ -47,7 +47,7 @@ articles.get('/articles/page', async (ctx) => {
     "GROUP_CONCAT(concat_ws(',', tags.id, tags.name,tags.value) ORDER BY tags.id SEPARATOR '|') AS articleTags  FROM articles " +
     'LEFT JOIN tag2article ON tag2article.article_id = articles.id ' +
     'LEFT JOIN tags ON tag2article.tag_id = tags.id ' +
-    'WHERE content LIKE ? OR title LIKE ? OR abstraction LIKE ? AND status=1 ' +
+    'WHERE (content LIKE ? OR title LIKE ? OR abstraction LIKE ?) AND status=1 ' +
     'GROUP BY articles.id ' +
     'LIMIT ?, ?',
     [searchStr, searchStr, searchStr, searchStr, searchStr, searchStr, (current - 1) * pageSize, current * pageSize],
@@ -115,7 +115,7 @@ articles.get('/article/:id', async (ctx) => {
     sql: "SELECT articles.*, GROUP_CONCAT(concat_ws(',', tags.id, tags.name,tags.value) ORDER BY tags.id SEPARATOR '|') AS articleTags  FROM articles " +
     'LEFT JOIN tag2article ON tag2article.article_id = articles.id ' +
     'LEFT JOIN tags ON tag2article.tag_id = tags.id ' +
-    'WHERE articles.id = ?  AND status=1 ' +
+    'WHERE articles.id = ? AND status = 1 ' +
     'GROUP BY articles.id',
     params: [ctx.params.id],
   }, { // 上一篇
