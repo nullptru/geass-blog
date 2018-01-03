@@ -91,47 +91,52 @@ class Article extends React.PureComponent {
     const { updatedTitleImage, articleImages, list, article } = this.props;
     const tagIds = (article.tags || []).map(tag => tag.id);
     return (
-      <div className={styles.markdownArticlePanel}>
-        <form>
-          <div className={styles.articlePanel}>
-            {/* common form item */}
-            {getFieldDecorator('title', { initialValue: article.title })(<Input className={styles.title} />)}
-            <div className={styles.toolPanel}>
-              <Upload {...this.uploaderProps} className={styles.upload}>
-                <Icon type="upload" />
-              </Upload>
-              <Icon type="save" onClick={this.onSubmit.bind(this, 0)} className={styles.iconBtn} />
-              <Icon type="export" onClick={this.onSubmit.bind(this, 1)} className={styles.iconBtn} />
-              <div className={styles.right}>
-                <Upload {...this.uploaderContentProps} className={styles.upload} style={{ marginRight: '4px' }}>
-                  <Icon type="upload" /><span>上传文章图片</span>
+      <React.Fragment>
+        <div>
+          test
+        </div>
+        <div className={styles.markdownArticlePanel}>
+          <form>
+            <div className={styles.articlePanel}>
+              {/* common form item */}
+              {getFieldDecorator('title', { initialValue: article.title })(<Input className={styles.title} />)}
+              <div className={styles.toolPanel}>
+                <Upload {...this.uploaderProps} className={styles.upload}>
+                  <Icon type="upload" />
                 </Upload>
-                {getFieldDecorator('tagIds',  { initialValue: tagIds })(<Select multiple optionLabelProp='children' className={styles.tagSelect} placeholder="选择所属分类" >
-                  {list.map(tag =><Option key={tag.id} title={tag.name}>{tag.name}</Option>)}
-                </Select>)}
+                <Icon type="save" onClick={this.onSubmit.bind(this, 0)} className={styles.iconBtn} />
+                <Icon type="export" onClick={this.onSubmit.bind(this, 1)} className={styles.iconBtn} />
+                <div className={styles.right}>
+                  <Upload {...this.uploaderContentProps} className={styles.upload} style={{ marginRight: '4px' }}>
+                    <Icon type="upload" /><span>上传文章图片</span>
+                  </Upload>
+                  {getFieldDecorator('tagIds',  { initialValue: tagIds })(<Select multiple optionLabelProp='children' className={styles.tagSelect} placeholder="选择所属分类" >
+                    {list.map(tag =><Option key={tag.id} title={tag.name}>{tag.name}</Option>)}
+                  </Select>)}
+                </div>
+              </div>
+              {getFieldDecorator('abstraction', { initialValue: article.title })(<Input className={styles.abstraction} multiple />)}
+              <div className={styles.imgPanel}>
+                { updatedTitleImage.length > 0 &&
+                  <span>标题图片: <img src={updatedTitleImage} alt="标题图片" className={styles.pasterImage} onClick={(i) => copy(i.target.src)} /></span>
+                }
+                { articleImages.length > 0 && 
+                  <span>文章图片: {articleImages.map(img =>
+                    <img src={img} alt="文章图片" key={img} className={styles.pasterImage} onClick={(i) => copy(i.target.src)} />)}
+                  </span>
+                }
+              </div>
+              {/* markdown */}
+              <div className={styles.codePanel}>
+                <CodeMirrorEditor {...markdownProps} />
+                <HighLight className={styles.markdownContainer}>
+                  <ReactMarkdown source={this.state.editorText} escapeHtml={false} />
+                </HighLight>
               </div>
             </div>
-            {getFieldDecorator('abstraction', { initialValue: article.title })(<Input className={styles.abstraction} multiple />)}
-            <div className={styles.imgPanel}>
-              { updatedTitleImage.length > 0 &&
-                <span>标题图片: <img src={updatedTitleImage} alt="标题图片" className={styles.pasterImage} onClick={(i) => copy(i.target.src)} /></span>
-              }
-              { articleImages.length > 0 && 
-                <span>文章图片: {articleImages.map(img =>
-                  <img src={img} alt="文章图片" key={img} className={styles.pasterImage} onClick={(i) => copy(i.target.src)} />)}
-                </span>
-              }
-            </div>
-            {/* markdown */}
-            <div className={styles.codePanel}>
-              <CodeMirrorEditor {...markdownProps} />
-              <HighLight className={styles.markdownContainer}>
-                <ReactMarkdown source={this.state.editorText} escapeHtml={false} />
-              </HighLight>
-            </div>
-          </div>
-        </form>
-      </div>
+          </form>
+        </div>
+      </React.Fragment>
     );
   }
 }

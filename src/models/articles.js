@@ -12,7 +12,6 @@ import queryString from 'query-string';
 import { message } from 'components';
 
 export default {
-
   namespace: 'articles',
 
   state: {
