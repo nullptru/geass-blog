@@ -2,8 +2,8 @@ const HtmlWebpackPlugin = require('html-webpack-plugin');
 const CopyWebpackPlugin = require('copy-webpack-plugin');
 const webpack = require('webpack');
 
-module.exports = (config, env) => {
-  const production = env === 'production';
+module.exports = (config) => {
+  const production = process.env.NODE_ENV === 'production';
   const webpackConfig = { ...config };
   // FilenameHash
   webpackConfig.output.chunkFilename = '[name].[chunkhash].js';
@@ -14,7 +14,7 @@ module.exports = (config, env) => {
       webpackConfig.module.rules.map((t) => {
         const item = { ...t };
         if (String(item.test) === '/\\.less$/' || String(item.test) === '/\\.css/') {
-          item.use.filter(iitem => iitem.loader === 'css')[0].options.localIdentName = '[hash:base64:5]';
+          item.use.filter(iitem => iitem.loader.includes('css-loader'))[0].options.localIdentName = '[hash:base64:5]';
         }
         return item;
       });
@@ -29,12 +29,12 @@ module.exports = (config, env) => {
     new CopyWebpackPlugin([
       {
         from: 'public',
-        to: production ? '../' : webpackConfig.output.outputPath,
+        to: production ? '/' : webpackConfig.output.outputPath,
       },
     ]),
     new HtmlWebpackPlugin({
       template: `${__dirname}/src/index.ejs`,
-      filename: production ? '../index.html' : 'index.html',
+      filename: production ? 'index.html' : 'index.html',
       minify: production ? {
         collapseWhitespace: true,
       } : null,
