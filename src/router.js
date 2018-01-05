@@ -1,18 +1,17 @@
 import React from 'react';
 import { Router, Route, Switch } from 'dva/router';
 import { ScrollTop } from 'components';
+import dynamic from 'dva/dynamic';
 import IndexPage from './routes/IndexPage';
-import AdminIndex from './routes/Admin/index';
-import Home from './routes/Home';
-import Tags from './routes/Tags';
-import About from './routes/About';
-import ArticleDetail from './routes/DetailPage';
 
-const routers = [{
-  path: '/admin',
-  name: '后台管理',
-  component: AdminIndex,
-}, {
+// wrapper of dynamic
+const dynamicWrapper = (app, models, component) => dynamic({
+  app,
+  models: () => models.map(m => import(`./models/${m}.js`)),
+  component,
+});
+
+const getRouter = app => ([{
   path: '/',
   name: "geass's blog",
   component: IndexPage,
@@ -20,44 +19,49 @@ const routers = [{
     path: '/',
     exact: true,
     name: "geass's blog",
-    component: Home,
+    component: dynamicWrapper(app, ['tagsArticles'], () => import('./routes/Home')),
   }, {
     path: '/tags/:tag',
     exact: true,
     name: "geass's blog",
-    component: Home,
+    component: dynamicWrapper(app, ['tagsArticles'], () => import('./routes/Home')),
   }, {
     path: '/tagslist',
     exact: true,
     name: "geass's blog",
-    component: Tags,
+    component: dynamicWrapper(app, ['tagsArticles'], () => import('./routes/Tags')),
   }, {
     path: '/article/:id',
     exact: true,
     name: "geass's blog",
-    component: ArticleDetail,
+    component: dynamicWrapper(app, [], () => import('./routes/DetailPage')),
   }, {
     path: '/about',
     exact: true,
     name: 'About me',
-    component: About,
+    component: dynamicWrapper(app, [], () => import('./routes/About')),
   }],
-}];
+}, {
+  path: '/admin',
+  exact: true,
+  name: 'Blog Admin',
+  component: dynamicWrapper(app, [], () => import('./routes/Admin')),
+}]);
 
-const passProps = {
-  routers,
-  getRouteData: (path) => {
-    return routers.filter(route => route.path === path);
-  },
-};
-
-function RouterConfig({ history }) {
+function RouterConfig({ history, app }) {
+  const routers = getRouter(app);
+  const passProps = {
+    routers,
+    getRouteData: (path) => {
+      return routers.filter(route => route.path === path);
+    },
+  };
   return (
     <Router history={history}>
       <ScrollTop>
         <Switch>
-          <Route path="/admin" render={props => <AdminIndex {...props} {...passProps} />} />
-          <Route path="/" render={props => <IndexPage {...props} name="test" {...passProps} />} />
+          <Route path="/admin" component={routers[1].component} />
+          <Route path="/" render={props => <IndexPage {...props} {...passProps} />} />
         </Switch>
       </ScrollTop>
     </Router>

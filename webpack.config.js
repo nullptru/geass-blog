@@ -1,13 +1,15 @@
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const CopyWebpackPlugin = require('copy-webpack-plugin');
 const webpack = require('webpack');
+const path = require('path');
 
 module.exports = (config) => {
   const production = process.env.NODE_ENV === 'production';
   const webpackConfig = { ...config };
   // FilenameHash
-  webpackConfig.output.chunkFilename = '[name].[chunkhash].js';
-
+  webpackConfig.output = {
+    chunkFilename: '[name].[chunkhash].js',
+  };
   if (production) {
     if (webpackConfig.module) {
       // ClassnameHash

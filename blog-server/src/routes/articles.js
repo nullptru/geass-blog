@@ -119,10 +119,10 @@ articles.get('/article/:id', async (ctx) => {
     'GROUP BY articles.id',
     params: [ctx.params.id],
   }, { // 上一篇
-    sql: 'SELECT id, title FROM articles WHERE id = ( SELECT max( id ) FROM articles WHERE id < ? )',
+    sql: 'SELECT id, title FROM articles WHERE id = ( SELECT max( id ) FROM articles WHERE id < ? AND status = 1)',
     params: [ctx.params.id],
   }, { // 下一篇
-    sql: 'SELECT id, title FROM articles WHERE id = ( SELECT min( id ) FROM articles WHERE id > ? )',
+    sql: 'SELECT id, title FROM articles WHERE id = ( SELECT min( id ) FROM articles WHERE id > ? AND status = 1)',
     params: [ctx.params.id],
   }];
   const rows = await Pool.startTransaction(querys);
