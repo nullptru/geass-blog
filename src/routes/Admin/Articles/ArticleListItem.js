@@ -8,4 +8,4 @@ export default ({ article }) => {
       <div><span>{article.createdTime}</span><span>{article.author}</span></div>
     </div>
   );
-}
+};

@@ -60,7 +60,6 @@ function RouterConfig({ history, app }) {
     <Router history={history}>
       <ScrollTop>
         <Switch>
-          <Route path="/admin" component={routers[1].component} />
           <Route path="/" render={props => <IndexPage {...props} {...passProps} />} />
         </Switch>
       </ScrollTop>
