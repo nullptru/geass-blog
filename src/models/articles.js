@@ -57,6 +57,14 @@ export default {
         }
       });
     },
+    admin({ dispatch, history }) {
+      history.listen((location) => {
+        const match = location.pathname.match(/\/admin(\/\w+)?/);
+        if (match !== null) { // 主页面
+          dispatch({ type: 'queryArticles' }); // 获取文章列表
+        }
+      });
+    },
   },
 
   effects: {

@@ -31,6 +31,14 @@ export default class CodeMirrorEditor extends React.PureComponent {
     this.props.getEditor(this.getEditor());
   }
 
+  componentWillReceiveProps(nextProps) {
+    console.log('enter')
+    if(nextProps.value !== this.props.value) {
+      console.log('changeValue')
+      this.setState({ value: nextProps.value });
+    }
+  }
+
   handleChange(editor) {
     const value = editor.getValue(); // 得到最新值
     if (value !== this.state.value) {

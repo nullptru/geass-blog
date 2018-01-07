@@ -9,6 +9,7 @@ import Upload from 'rc-upload';
 import { Input, Icon, HighLight, CodeMirrorEditor } from 'components';
 import 'themes/index.less';
 import 'rc-select/assets/index.css';
+import ArticlesItem from './ArticleListItem';
 import styles from './index.less';
 
 /* eslint-disable */
@@ -79,6 +80,16 @@ class Article extends React.PureComponent {
     };
   }
 
+  selectEditArticle = (article) => {
+    this.props.dispatch({
+      type: 'articles/querySingleArticle',
+      payload: { id: article.id },
+    }).then(() => {
+      console.log(this.props.article)
+      this.setState({ editorText: this.props.article.content });
+    })
+  }
+
   render() {
     const markdownProps = {
       mode: 'markdown',
@@ -87,13 +98,14 @@ class Article extends React.PureComponent {
       onChange: this.onEditorChange,
       value: this.state.editorText,
     };
+    console.log(markdownProps)
     const { getFieldDecorator } = this.props.form;
-    const { updatedTitleImage, articleImages, list, article } = this.props;
+    const { updatedTitleImage, articleImages, tagList, article, articleList } = this.props;
     const tagIds = (article.tags || []).map(tag => tag.id);
     return (
-      <React.Fragment>
-        <div>
-          test
+      <div className={styles.articleAdminContainer}>
+        <div className={styles.articleList}>
+          {articleList.map(item => <ArticlesItem key={item.id} article={item} onClick={this.selectEditArticle.bind(this, item)} />)}
         </div>
         <div className={styles.markdownArticlePanel}>
           <form>
@@ -111,7 +123,7 @@ class Article extends React.PureComponent {
                     <Icon type="upload" /><span>上传文章图片</span>
                   </Upload>
                   {getFieldDecorator('tagIds',  { initialValue: tagIds })(<Select multiple optionLabelProp='children' className={styles.tagSelect} placeholder="选择所属分类" >
-                    {list.map(tag =><Option key={tag.id} title={tag.name}>{tag.name}</Option>)}
+                    {tagList.map(tag =><Option key={tag.id} title={tag.name}>{tag.name}</Option>)}
                   </Select>)}
                 </div>
               </div>
@@ -136,7 +148,7 @@ class Article extends React.PureComponent {
             </div>
           </form>
         </div>
-      </React.Fragment>
+      </div>
     );
   }
 }
@@ -150,5 +162,5 @@ Article.defaultProps = {
   tags: {},
 };
 
-export default connect(({ tags: { list }, articles: { updatedTitleImage, articleImages, article } }) =>
-({ list, updatedTitleImage, articleImages, article }))(createForm()(Article));
+export default connect(({ tags: { list: tagList }, articles: { updatedTitleImage, articleImages, article, list: articleList } }) =>
+({ tagList, updatedTitleImage, articleImages, article, articleList }))(createForm()(Article));

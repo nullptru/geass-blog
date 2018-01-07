@@ -2,6 +2,7 @@ import React from 'react';
 import { Router, Route, Switch } from 'dva/router';
 import { ScrollTop } from 'components';
 import dynamic from 'dva/dynamic';
+import AdminIndex from './routes/Admin';
 import IndexPage from './routes/IndexPage';
 
 // wrapper of dynamic
@@ -60,6 +61,7 @@ function RouterConfig({ history, app }) {
     <Router history={history}>
       <ScrollTop>
         <Switch>
+          <Route path="/admin" component={AdminIndex} />
           <Route path="/" render={props => <IndexPage {...props} {...passProps} />} />
         </Switch>
       </ScrollTop>

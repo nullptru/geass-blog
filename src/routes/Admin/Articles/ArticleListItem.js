@@ -1,10 +1,11 @@
 import React from 'react';
-import styles from 'index.less';
+import styles from './index.less';
 
-export default ({ article }) => {
+export default ({ article, className, ...props }) => {
+  const classList = [styles.listItem].concat(className || '');
   return (
-    <div className={styles.listItem}>
-      <div>{article.title}</div>
+    <div className={classList.join(' ')} {...props}>
+      <div className={styles.title}>{article.title}</div>
       <div><span>{article.createdTime}</span><span>{article.author}</span></div>
     </div>
   );

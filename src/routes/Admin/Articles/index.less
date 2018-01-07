@@ -1,7 +1,16 @@
 @import '~themes/vars.less';
 
-.markdownArticlePanel {
+.articleAdminContainer {
   margin: -20px;
+  display: flex;
+}
+.articleList {
+  min-width: 100px;
+  max-width: 250px;
+  width: 18vw;
+}
+.markdownArticlePanel {
+  flex: 1 1 0;
 }
 .panel {
   color: black;
@@ -172,6 +181,18 @@ button {
 }
 
 .listItem {
-  border: 1px solid gray;
-  border-width: 1px 0;
+  padding: 8px;
+  border: 0px solid lightgray;
+  border-bottom-width: 1px;
+  background: #efefef;
+  color: black;
+  cursor: pointer;
+
+  .title {
+    font-size: 16px;
+  }
+
+  &.active {
+    background: #cfcfcf;
+  }
 }
