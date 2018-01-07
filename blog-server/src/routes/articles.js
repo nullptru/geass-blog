@@ -3,6 +3,7 @@ import qiniu from 'qiniu';
 import fs from 'fs';
 import Pool from '../utils/db';
 import upload from '../utils/upload';
+import ip from '../utils/ip';
 import { dateFormat } from '../utils/index';
 import Config from '../config';
 
@@ -37,7 +38,7 @@ articles.get('/', async (ctx, next) => {
 });
 
 /**
- * 当请求为/articles/page时，获得所有文章列表
+ * 当请求为/articles/page时，获得所有文章列表 status = 1
  */
 articles.get('/articles/page', async (ctx) => {
   const { pageSize = 10, current = 1, search = '' } = ctx.query;
@@ -70,9 +71,33 @@ articles.get('/articles/page', async (ctx) => {
   ctx.body = response;
 });
 
+/**
+ * 当请求为/articles/all 时，获得所有文章列表
+ */
+articles.get('/articles/all', async (ctx) => {
+  const rows = await Pool.query(
+    'SELECT articles.id, articles.title, articles.created_time, articles.abstraction, articles.image_url, ' +
+    "GROUP_CONCAT(concat_ws(',', tags.id, tags.name,tags.value) ORDER BY tags.id SEPARATOR '|') AS articleTags  FROM articles " +
+    'LEFT JOIN tag2article ON tag2article.article_id = articles.id ' +
+    'LEFT JOIN tags ON tag2article.tag_id = tags.id ' +
+    'GROUP BY articles.id ', []);
+  const data = Array.from(rows);
+  const resData = data.map((item) => {
+    const newItem = { ...item };
+    newItem.tags = getTags(newItem.articleTags);
+    newItem.createdTime = dateFormat(newItem.created_time, 'yyyy-MM-dd');
+    delete newItem.articleTags;
+    delete newItem.total;
+    delete newItem.created_time;
+    return newItem;
+  });
+  response.data = resData;
+  ctx.body = response;
+});
+
 
 /**
- * 当请求为/articles/page时，获得所有文章列表
+ * 当请求为/articles/tags时，获得所有标签下的文章列表
  */
 articles.get('/articles/tags', async (ctx) => {
   const tagsArticles = {};
@@ -108,9 +133,12 @@ articles.get('/articles/tags', async (ctx) => {
 });
 
 /**
- * 当请求为/articles/:id时，获得对应id文章列表
+ * 当请求为/articles/:id时，获得对应id文章
  */
 articles.get('/article/:id', async (ctx) => {
+  const ipAddress = ip.address();
+  const isNew = ip.addCached(ipAddress);
+  console.log(ipAddress, isNew);
   const querys = [{
     sql: "SELECT articles.*, GROUP_CONCAT(concat_ws(',', tags.id, tags.name,tags.value) ORDER BY tags.id SEPARATOR '|') AS articleTags  FROM articles " +
     'LEFT JOIN tag2article ON tag2article.article_id = articles.id ' +
@@ -125,12 +153,20 @@ articles.get('/article/:id', async (ctx) => {
     sql: 'SELECT id, title FROM articles WHERE id = ( SELECT min( id ) FROM articles WHERE id > ? AND status = 1)',
     params: [ctx.params.id],
   }];
+  if (isNew) {
+    querys.unshift({
+      sql: 'UPDATE articles SET visited_count = visited_count + 1 WHERE id = ?',
+      params: [ctx.params.id],
+    });
+  }
   const rows = await Pool.startTransaction(querys);
-  const data = Array.from(rows[0]);
+  const data = Array.from(rows[isNew ? 1 : 0]);
   const resData = data.map((item) => {
     const newItem = { ...item };
     newItem.tags = getTags(newItem.articleTags);
+    newItem.visitedCount = newItem.visited_count;
     delete newItem.articleTags;
+    delete newItem.visited_count;
     return newItem;
   });
   [response.data] = resData;

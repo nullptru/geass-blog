@@ -17,7 +17,8 @@ class Detail extends React.PureComponent {
           <header>
             <div className={styles.title}>{ article.title }</div>
             <div className={styles.meta}>
-              <span className={styles.time}>Posted by { article.author } on { article.createdTime }</span>
+              {loading.effects['articles/querySingleArticle'] ? <span />
+                : <span className={styles.time}>Posted by { article.author } on { article.createdTime }</span>}
             </div>
           </header>
           <HighLight className={styles.content}>
