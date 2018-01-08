@@ -1,5 +1,6 @@
 import {
   queryArticles,
+  queryAll,
   querySingleArticle,
   queryLatestArticles,
   queryByTag,
@@ -61,14 +62,14 @@ export default {
       history.listen((location) => {
         const match = location.pathname.match(/\/admin(\/\w+)?/);
         if (match !== null) { // 主页面
-          dispatch({ type: 'queryArticles' }); // 获取文章列表
+          dispatch({ type: 'queryAllArticles' }); // 获取所有文章列表
         }
       });
     },
   },
 
   effects: {
-    *queryArticles({ payload = {} }, { call, put }) {  // eslint-disable-line
+    *queryArticles({ payload = {} }, { call, put }) {
       const response = yield call(queryArticles, payload);
       if (response.success) { // success
         yield put({
@@ -79,6 +80,18 @@ export default {
               pageSize: payload.pageSize || 10,
               total: response.total || 1,
             },
+            list: response.data,
+          },
+        });
+      }
+    },
+
+    *queryAllArticles({ payload = {} }, { call, put }) {
+      const response = yield call(queryAll, payload);
+      if (response.success) { // success
+        yield put({
+          type: 'updateState',
+          payload: {
             list: response.data,
           },
         });
@@ -146,6 +159,7 @@ export default {
       }
       if (response.success) {
         message.info(status === 0 ? '草稿保存成功' : '文章创建成功');
+        yield put({ type: 'queryAllArticles' });
         yield put({ type: 'updateState', payload: { article: response.data } });
       } else {
         message.info('创建失败');

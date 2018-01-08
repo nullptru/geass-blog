@@ -1,10 +1,11 @@
 import fs from 'fs';
 import multer from 'koa-multer';
+import Config from '../config';
 
 export default (() => {
   const storage = multer.diskStorage({
     destination(req, file, cb) {
-      const disk = '/Users/Geass/Desktop/Project/personal/front-end/blog/blog-server/imgs';
+      const disk = Config.uploadDir;
       const exists = fs.existsSync(disk);
       if (!exists) {
         fs.mkdir(disk, () => {

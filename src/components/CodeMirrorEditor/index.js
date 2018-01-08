@@ -32,9 +32,9 @@ export default class CodeMirrorEditor extends React.PureComponent {
   }
 
   componentWillReceiveProps(nextProps) {
-    console.log('enter')
-    if(nextProps.value !== this.props.value) {
-      console.log('changeValue')
+    console.log(this.props.shouldUpdate(nextProps, this.props))
+    if(this.props.shouldUpdate(nextProps, this.props)) {
+    this.editor.setValue(nextProps.value);
       this.setState({ value: nextProps.value });
     }
   }
@@ -80,6 +80,7 @@ CodeMirrorEditor.propTypes = {
   lineNumbers: PropTypes.bool,
   onChange: PropTypes.func,
   getEditor: PropTypes.func,
+  shouldUpdate: PropTypes.func,
 };
 
 CodeMirrorEditor.defaultProps = {
@@ -91,5 +92,6 @@ CodeMirrorEditor.defaultProps = {
   lineNumbers: true,
   onChange: () => {},
   getEditor: () => {},
+  shouldUpdate: () => true,
 };
 

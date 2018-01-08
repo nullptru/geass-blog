@@ -13,7 +13,7 @@ module.exports = (config) => {
       webpackConfig.module.rules.map((t) => {
         const item = { ...t };
         if (String(item.test) === '/\\.less$/' || String(item.test) === '/\\.css/') {
-          item.use.filter(iitem => iitem.loader.includes('css-loader'))[0].options.localIdentName = '[hash:base64:5]';
+          item.use.filter(iitem => iitem.loader.includes('css'))[0].options.localIdentName = '[hash:base64:5]';
         }
         return item;
       });

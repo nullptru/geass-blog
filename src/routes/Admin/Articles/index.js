@@ -18,6 +18,7 @@ class Article extends React.PureComponent {
     super(props);
     this.state = {
       editorText: props.article.content || '# Heading\n\nSome **bold** and _italic_ text\nBy [Jed Watson](https://github.com/JedWatson)',
+      articleId: props.article.id,
     };
     this.uploaderProps = {
       multiple: true,
@@ -58,6 +59,7 @@ class Article extends React.PureComponent {
     const { getFieldsValue } = this.props.form;
     const data = {
       ...getFieldsValue(),
+      id: this.props.article.id,
       content: this.state.editorText,
       imageUrl: this.props.updatedTitleImage,
       author: 'Geass',
@@ -66,7 +68,7 @@ class Article extends React.PureComponent {
     this.props.dispatch({
       type: 'articles/updateArticle',
       payload: { ...data },
-    })
+    });
   }
 
   getFieldDecorator = (name) => {
@@ -85,8 +87,7 @@ class Article extends React.PureComponent {
       type: 'articles/querySingleArticle',
       payload: { id: article.id },
     }).then(() => {
-      console.log(this.props.article)
-      this.setState({ editorText: this.props.article.content });
+      this.setState({ editorText: this.props.article.content, articleId: article.id });
     })
   }
 
@@ -97,15 +98,19 @@ class Article extends React.PureComponent {
       lineWrapping: true,
       onChange: this.onEditorChange,
       value: this.state.editorText,
+      articleId: this.state.articleId,
+      shouldUpdate(nextProps, props) {
+        console.log(nextProps.articleId, props.articleId);
+        return (nextProps.value !== props.value && nextProps.articleId !== props.articleId);
+      },
     };
-    console.log(markdownProps)
     const { getFieldDecorator } = this.props.form;
     const { updatedTitleImage, articleImages, tagList, article, articleList } = this.props;
     const tagIds = (article.tags || []).map(tag => tag.id);
     return (
       <div className={styles.articleAdminContainer}>
         <div className={styles.articleList}>
-          {articleList.map(item => <ArticlesItem key={item.id} article={item} onClick={this.selectEditArticle.bind(this, item)} />)}
+          {articleList.map(item => <ArticlesItem key={item.id} article={item} onClick={this.selectEditArticle.bind(this, item)} className={item.id === article.id ? styles.active : ''} />)}
         </div>
         <div className={styles.markdownArticlePanel}>
           <form>

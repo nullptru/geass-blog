@@ -5,6 +5,7 @@
   "main": "index.js",
   "scripts": {
     "start": "babel-node src/index.js",
+    "pm": "pm2 start --interpreter babel-node ./src/index.js",
     "build": "babel src -d dist --source-maps",
     "test": "echo \"Error: no test specified\" && exit 1"
   },

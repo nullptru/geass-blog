@@ -10,6 +10,14 @@ export function queryArticles(params) {
   });
 }
 
+export function queryAll() {
+  return request({
+    url: articles.queryAll,
+    method: 'get',
+    data: {},
+  });
+}
+
 export function queryByTag(params) {
   return request({
     url: articles.queryByTag,
