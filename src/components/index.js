@@ -14,4 +14,5 @@ export { default as Menu } from './layout/Menu';
 export { default as Sider } from './layout/Sider';
 export { default as ScrollTop } from './ScrollToTop';
 export { default as Loading } from './Loading';
+export { default as Dialog } from './Dialog';
 export { default as message } from './Message';

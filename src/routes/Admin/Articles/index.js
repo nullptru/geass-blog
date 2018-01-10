@@ -1,4 +1,5 @@
 import React from 'react';
+import ReactDOM from 'react-dom';
 import PropTypes from 'prop-types';
 import { connect } from 'dva';
 import ReactMarkdown from 'react-markdown';
@@ -6,18 +7,22 @@ import Select, { Option } from 'rc-select';
 import copy from 'copy-to-clipboard';
 import { createForm } from 'rc-form';
 import Upload from 'rc-upload';
-import { Input, Icon, HighLight, CodeMirrorEditor } from 'components';
+import { Input, Icon, HighLight, CodeMirrorEditor, Dialog } from 'components';
 import 'themes/index.less';
 import 'rc-select/assets/index.css';
 import ArticlesItem from './ArticleListItem';
+import { isObjEqual } from '../../../utils';
 import styles from './index.less';
 
 class Article extends React.PureComponent {
   constructor(props) {
     super(props);
     this.state = {
-      editorText: props.article.content || '# Heading\n\nSome **bold** and _italic_ text\nBy [Jed Watson](https://github.com/JedWatson)',
+      editorText: props.article.content,
       articleId: props.article.id,
+      confirmModalVisible: false,
+      confirmDeleteModalVisible: false,
+      confirmModalSuccess: () => {},
     };
     this.uploaderProps = {
       multiple: true,
@@ -49,10 +54,19 @@ class Article extends React.PureComponent {
         });
       },
     };
+    this.cachedArticleId = undefined;
     this.onEditorChange = this.onEditorChange.bind(this);
+    this.querySingle = this.querySingle.bind(this);
+    this.removeArticle = this.removeArticle.bind(this);
+    // dialog
+    this.dialogContainer = document.getElementById('dialog');
   }
 
   onEditorChange = text => this.setState({ editorText: text });
+
+  onEditDialogCancel = () => {
+    this.setState({ confirmModalVisible: false });
+  }
 
   onSubmit = (status) => {
     const { getFieldsValue } = this.props.form;
@@ -60,7 +74,7 @@ class Article extends React.PureComponent {
       ...getFieldsValue(),
       id: this.props.article.id,
       content: this.state.editorText,
-      imageUrl: this.props.updatedTitleImage,
+      imageUrl: this.props.article.imageUrl,
       author: 'Geass',
       status,
     };
@@ -81,28 +95,116 @@ class Article extends React.PureComponent {
     };
   }
 
+  checkEditStatus = () => {
+    let isEdit = false;
+    if (Object.keys(this.props.article).length > 0) {
+      const { getFieldsValue } = this.props.form;
+      const currentArticle = {
+        ...getFieldsValue(),
+        content: this.state.editorText,
+      };
+      const originalArticle = {
+        abstraction: this.props.article.abstraction,
+        title: this.props.article.title,
+        tagIds: this.props.article.tags.map(tag => tag.id),
+        content: this.props.article.content,
+      };
+      isEdit = !isObjEqual(originalArticle, currentArticle);
+    }
+    return isEdit;
+  }
   selectEditArticle = (article) => {
+    // confirm if article is edited
+    const isEdit = this.checkEditStatus();
+    if (!isEdit) {
+      this.querySingle(article.id);
+    } else {
+      this.setState({
+        confirmModalVisible: true,
+        confirmModalSuccess() {
+          this.querySingle(this.cachedArticleId, () => {
+            this.setState({ confirmModalVisible: false });
+          });
+        },
+      });
+      this.cachedArticleId = article.id;
+    }
+  }
+
+  querySingle = (id, cb) => {
     this.props.dispatch({
       type: 'articles/querySingleArticle',
-      payload: { id: article.id },
+      payload: { id },
     }).then(() => {
-      this.setState({ editorText: this.props.article.content, articleId: article.id });
+      this.props.form.setFieldsValue({
+        title: this.props.article.title,
+        abstraction: this.props.article.abstraction,
+        tagIds: this.props.article.tags.map(tag => tag.id),
+      });
+      this.setState({ editorText: this.props.article.content, articleId: id });
+      if (cb) cb();
     });
   }
 
-  addNewArticle = () => {
-    this.props.dispatch({
-      type: 'articles/updateState',
-      payload: { article: {} },
+  removeArticle = (id) => {
+    this.setState({
+      confirmDeleteModalVisible: true,
+      confirmModalSuccess() {
+        this.props.dispatch({
+          type: 'articles/removeArticle',
+          payload: { id },
+        }).then(() => {
+          if (!this.props.articles.id) {
+            this.props.form.setFieldsValue({
+              title: '',
+              abstraction: '',
+              tagIds: [],
+            });
+          }
+          this.setState({ confirmDeleteModalVisible: false });
+        });
+      },
     });
-    this.setState({ editorText: '', articleId: undefined });
+  };
+
+  addNewArticle = () => {
+    const isEdit = this.checkEditStatus();
+    if (isEdit) {
+      this.setState({
+        confirmModalVisible: true,
+        confirmModalSuccess() {
+          this.props.dispatch({
+            type: 'articles/updateState',
+            payload: { article: {}},
+          });
+
+          this.props.form.setFieldsValue({
+            title: '',
+            abstraction: '',
+            tagIds: [],
+          });
+          this.setState({ editorText: '', articleId: undefined, confirmModalVisible: false });
+        },
+      });
+    } else {
+      this.props.dispatch({
+        type: 'articles/updateState',
+        payload: { article: {} },
+      });
+
+      this.props.form.setFieldsValue({
+        title: '',
+        abstraction: '',
+        tagIds: [],
+      });
+      this.setState({ editorText: '', articleId: undefined });
+    }
   };
 
   render() {
     const {
-      updatedTitleImage, articleImages, tagList, article, articleList, form: { getFieldDecorator },
+      articleImages, tagList, article, articleList, form: { getFieldDecorator },
     } = this.props;
-
     const markdownProps = {
       mode: 'markdown',
       theme: 'monokai',
@@ -114,18 +216,47 @@ class Article extends React.PureComponent {
         return (nextProps.value !== props.value && nextProps.articleId !== props.articleId);
       },
     };
+
+    const dialog = ReactDOM.createPortal(<Dialog
+      onConfirm={this.state.confirmModalSuccess.bind(this)}
+      onCancel={this.onEditDialogCancel}
+      visible={this.state.confirmModalVisible}
+      title="警告"
+    >
+      当前文章已被更改，是否放弃更改离开。
+    </Dialog>, this.dialogContainer);
+
+
+    const deleteDialog = ReactDOM.createPortal(<Dialog
+      onConfirm={this.state.confirmModalSuccess.bind(this)}
+      onCancel={() => this.setState({ confirmDeleteModalVisible: false })}
+      visible={this.state.confirmDeleteModalVisible}
+      title="警告"
+    >
+      确认删除文章
+    </Dialog>, this.dialogContainer);
+
     const tagIds = (article.tags || []).map(tag => tag.id);
 
     return (
       <div className={styles.articleAdminContainer}>
+        {dialog}
+        {deleteDialog}
         {/* article list */}
         <div className={styles.articleList}>
           <div className={styles.addNewArticleContainer} onClick={this.addNewArticle}>
             <Icon type="plus" />
           </div>
-          {articleList.map(item => <ArticlesItem key={item.id} article={item} onClick={this.selectEditArticle.bind(this, item)} className={item.id === article.id ? styles.active : ''} />)}
+          {articleList.map(item => (
+            <ArticlesItem
+              key={item.id}
+              article={item}
+              onRemove={this.removeArticle.bind(this, item.id)}
+              onClick={this.selectEditArticle.bind(this, item)}
+              className={item.id === article.id ? styles.active : ''}
+            />
+          ))}
         </div>
-
         <div className={styles.markdownArticlePanel}>
           <form>
             <div className={styles.articlePanel}>
@@ -146,10 +277,10 @@ class Article extends React.PureComponent {
                   </Select>)}
                 </div>
               </div>
-              {getFieldDecorator('abstraction', { initialValue: article.title })(<Input className={styles.abstraction} multiple />)}
+              {getFieldDecorator('abstraction', { initialValue: article.abstraction })(<Input className={styles.abstraction} multiple />)}
               <div className={styles.imgPanel}>
-                { updatedTitleImage.length > 0 &&
-                  <span>标题图片: <img src={updatedTitleImage} alt="标题图片" className={styles.pasterImage} onClick={i => copy(i.target.src)} /></span>
+                { article.imageUrl &&
+                  <span>标题图片: <img src={article.imageUrl} alt="标题图片" className={styles.pasterImage} onClick={i => copy(i.target.src)} /></span>
                 }
                 { articleImages.length > 0 &&
                   <span>文章图片: {articleImages.map(img =>
@@ -184,8 +315,8 @@ Article.defaultProps = {
 export default connect(({
   tags: { list: tagList },
   articles: {
-    updatedTitleImage, articleImages, article, list: articleList,
+    articleImages, article, list: articleList,
   },
 }) => ({
-  tagList, updatedTitleImage, articleImages, article, articleList,
+  tagList, articleImages, article, articleList,
 }))(createForm()(Article));

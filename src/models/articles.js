@@ -7,6 +7,7 @@ import {
   create,
   update,
   search,
+  remove,
   upload,
 } from 'services/articles';
 import queryString from 'query-string';
@@ -25,7 +26,6 @@ export default {
       total: 1,
     },
     // create
-    updatedTitleImage: '',
     articleImages: [],
   },
 
@@ -132,13 +132,15 @@ export default {
     },
 
     *uploadImage({ payload = {} }, { select, call, put }) {
-      const { articleImages } = yield select(({ articles }) => articles);
+      const { articleImages, article } = yield select(({ articles }) => articles);
       const { type, formData } = payload;
       const response = yield call(upload, formData);
       if (response.success) {
         message.info('图片上传成功');
         if (type === 'avatar') {
-          yield put({ type: 'updateState', payload: { updatedTitleImage: response.data.filename } });
+          const newArticle = { ...article };
+          newArticle.imageUrl = response.data.filename;
+          yield put({ type: 'updateState', payload: { article: newArticle } });
         } else {
           const newImages = [...articleImages];
           newImages.push(response.data.filename);
@@ -163,6 +165,18 @@ export default {
         yield put({ type: 'updateState', payload: { article: response.data } });
       } else {
         message.info('创建失败');
+      }
+    },
+
+    *removeArticle({ payload = {} }, { call, put }) {
+      const response = yield call(remove, payload);
+
+      if (response.success) {
+        message.info('删除成功');
+        yield put({ type: 'queryAllArticles' });
+        yield put({ type: 'updateState', payload: { article: {} } });
+      } else {
+        message.info('删除失败');
       }
     },
 

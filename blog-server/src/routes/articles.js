@@ -165,8 +165,10 @@ articles.get('/article/:id', async (ctx) => {
     const newItem = { ...item };
     newItem.tags = getTags(newItem.articleTags);
     newItem.visitedCount = newItem.visited_count;
+    newItem.imageUrl = newItem.image_url;
     delete newItem.articleTags;
     delete newItem.visited_count;
+    delete newItem.image_url;
     return newItem;
   });
   [response.data] = resData;

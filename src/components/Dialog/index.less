@@ -1,0 +1,51 @@
+.dialogWrapper {
+  height: 100%;
+  min-width: 100vw;
+  min-height: 100vh;
+  background: rgba(0, 0, 0, 0.7);
+  z-index: 1000;
+}
+
+.dialog {
+  width: 480px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+
+  margin: auto;
+  transform: translateY(50%);
+
+  z-index: 1100;
+  background: white;
+  box-shadow: 0 0 10px rgba(255, 255, 255, 0.5)
+}
+
+.dialogHeader {
+  flex: 0 1 40px;
+  padding: 0 12px;
+  border: 0 solid #eee;
+  border-bottom-width: 1px;
+}
+
+.dialogBody {
+  margin: 8px 0;
+  padding: 0 12px;
+  min-height: 40px;
+  flex: 1 1 auto;
+}
+
+.dialogFooter {
+  flex: 0 1 1.5em;
+  line-height: 1.5em;
+  padding: 4px 12px;
+  border: 0 solid #eee;
+  border-top-width: 1px;
+  text-align: end;
+
+  button {
+    width: 80px;
+    margin: 0 4px;
+  }
+}
+
+
