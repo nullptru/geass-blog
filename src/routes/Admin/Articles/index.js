@@ -12,7 +12,6 @@ import 'rc-select/assets/index.css';
 import ArticlesItem from './ArticleListItem';
 import styles from './index.less';
 
-/* eslint-disable */
 class Article extends React.PureComponent {
   constructor(props) {
     super(props);
@@ -88,10 +87,22 @@ class Article extends React.PureComponent {
       payload: { id: article.id },
     }).then(() => {
       this.setState({ editorText: this.props.article.content, articleId: article.id });
-    })
+    });
   }
 
+  addNewArticle = () => {
+    this.props.dispatch({
+      type: 'articles/updateState',
+      payload: { article: {} },
+    });
+    this.setState({ editorText: '', articleId: undefined });
+  };
+
   render() {
+    const {
+      updatedTitleImage, articleImages, tagList, article, articleList, form: { getFieldDecorator },
+    } = this.props;
+
     const markdownProps = {
       mode: 'markdown',
       theme: 'monokai',
@@ -100,18 +111,21 @@ class Article extends React.PureComponent {
       value: this.state.editorText,
       articleId: this.state.articleId,
       shouldUpdate(nextProps, props) {
-        console.log(nextProps.articleId, props.articleId);
         return (nextProps.value !== props.value && nextProps.articleId !== props.articleId);
       },
     };
-    const { getFieldDecorator } = this.props.form;
-    const { updatedTitleImage, articleImages, tagList, article, articleList } = this.props;
     const tagIds = (article.tags || []).map(tag => tag.id);
+
     return (
       <div className={styles.articleAdminContainer}>
+        {/* article list */}
         <div className={styles.articleList}>
+          <div className={styles.addNewArticleContainer} onClick={this.addNewArticle}>
+            <Icon type="plus" />
+          </div>
           {articleList.map(item => <ArticlesItem key={item.id} article={item} onClick={this.selectEditArticle.bind(this, item)} className={item.id === article.id ? styles.active : ''} />)}
         </div>
+
         <div className={styles.markdownArticlePanel}>
           <form>
             <div className={styles.articlePanel}>
@@ -127,19 +141,19 @@ class Article extends React.PureComponent {
                   <Upload {...this.uploaderContentProps} className={styles.upload} style={{ marginRight: '4px' }}>
                     <Icon type="upload" /><span>上传文章图片</span>
                   </Upload>
-                  {getFieldDecorator('tagIds',  { initialValue: tagIds })(<Select multiple optionLabelProp='children' className={styles.tagSelect} placeholder="选择所属分类" >
-                    {tagList.map(tag =><Option key={tag.id} title={tag.name}>{tag.name}</Option>)}
+                  {getFieldDecorator('tagIds', { initialValue: tagIds })(<Select multiple optionLabelProp="children" className={styles.tagSelect} placeholder="选择所属分类" >
+                    {tagList.map(tag => <Option key={tag.id} title={tag.name}>{tag.name}</Option>)}
                   </Select>)}
                 </div>
               </div>
               {getFieldDecorator('abstraction', { initialValue: article.title })(<Input className={styles.abstraction} multiple />)}
               <div className={styles.imgPanel}>
                 { updatedTitleImage.length > 0 &&
-                  <span>标题图片: <img src={updatedTitleImage} alt="标题图片" className={styles.pasterImage} onClick={(i) => copy(i.target.src)} /></span>
+                  <span>标题图片: <img src={updatedTitleImage} alt="标题图片" className={styles.pasterImage} onClick={i => copy(i.target.src)} /></span>
                 }
-                { articleImages.length > 0 && 
+                { articleImages.length > 0 &&
                   <span>文章图片: {articleImages.map(img =>
-                    <img src={img} alt="文章图片" key={img} className={styles.pasterImage} onClick={(i) => copy(i.target.src)} />)}
+                    <img src={img} alt="文章图片" key={img} className={styles.pasterImage} onClick={i => copy(i.target.src)} />)}
                   </span>
                 }
               </div>
@@ -167,5 +181,11 @@ Article.defaultProps = {
   tags: {},
 };
 
-export default connect(({ tags: { list: tagList }, articles: { updatedTitleImage, articleImages, article, list: articleList } }) =>
-({ tagList, updatedTitleImage, articleImages, article, articleList }))(createForm()(Article));
+export default connect(({
+  tags: { list: tagList },
+  articles: {
+    updatedTitleImage, articleImages, article, list: articleList,
+  },
+}) => ({
+  tagList, updatedTitleImage, articleImages, article, articleList,
+}))(createForm()(Article));

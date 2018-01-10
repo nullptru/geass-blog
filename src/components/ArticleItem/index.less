@@ -1,28 +1,31 @@
 @import '~themes/vars.less';
 
 .article {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+
     position: relative;
     margin: 10px;
-    margin-bottom: 20px;
     text-align: left;
     background-color: @transparent-white;;
     border-radius: 5px;
     transform: translateZ(0);
     box-shadow: rgba(0, 0, 0, 0.1) 0px 1px 2px;
+    transition: all .3s ease-in-out;
+
     &:hover {
         box-shadow:0 2px 4px rgba(0,0,0,.156863);
     }
     .headerContainer {
         position: relative;
-        margin: 5px 0;
         padding: 0;
+        margin: 0;
         cursor: pointer;
         .header {
             width: 100%;
             position: absolute;
             bottom: 0;
-            left: 0;
-            right: 0;
             background: rgba(0, 0, 0, 0.5);
             div {
                 padding: 16px;
@@ -41,22 +44,22 @@
         font-size: @font-base-size;
         color: @transparent-white;
     }
-    .contentContainer {
-        margin-top: 4px;
+    .abstraction {
+        flex: 1;
         padding: 8px 16px;
+        min-height: 60px;
+        font-size: @font-base-size;
+        margin-right: 8px;
+    }
+    .tags {
+        margin: 0 0 8px 8px;
         .tag {
-            margin-right: 8px;
             font-size: @font-base-size;
             color: @tag-color;
 
             &:hover {
                 text-decoration: underline;
             }
-        }
-        .abstraction {
-            min-height: 72px;
-            font-size: @font-base-size;
-            margin-right: 8px;
         }
     }
     

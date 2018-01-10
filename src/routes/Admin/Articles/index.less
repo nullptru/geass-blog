@@ -1,5 +1,17 @@
 @import '~themes/vars.less';
 
+.addNewArticleContainer {
+  padding: 16px;
+  text-align: center;
+  background: rgb(0, 238, 255);
+  cursor: pointer;
+  box-shadow: 0 0 3px rgba(0, 0, 0, 0.5);
+  i {
+    font-size: 28px;
+    color: white;
+  }
+}
+
 .articleAdminContainer {
   margin: -20px;
   display: flex;
@@ -183,11 +195,12 @@ button {
 }
 
 .listItem {
-  padding: 8px;
+  padding: 16px;
   border: 0px solid lightgray;
   border-bottom-width: 1px;
   background: #efefef;
   color: black;
+  box-shadow: 0 0 1px rgba(0, 0, 0, 0.5);
   cursor: pointer;
 
   .title {

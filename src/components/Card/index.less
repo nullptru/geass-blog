@@ -5,7 +5,6 @@
     padding: 10px;
     background-color: @transparent-white;
     border-radius: 5px;
-    min-width: 220px;
     transform: translateZ(0);
 
     header {
@@ -31,5 +30,11 @@
     
     .container {
         text-align: left;
+    }
+}
+
+@media (min-width: 768) {
+    .card {
+        min-width: 220px;
     }
 }

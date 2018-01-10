@@ -23,14 +23,12 @@ export default class ArticleItem extends React.PureComponent {
             </div>
           </div>
         </header>
-        <div className={styles.contentContainer}>
-          <div className={styles.abstraction}>{ article.abstraction }</div>
-          {article.tags && article.tags.length > 0 && <div className={styles.tags}>
-            <Icon type="tags" />
-            { article.tags.map(tag =>
-              <Link className={styles.tag} key={tag.id} to={`/tags/${tag.value}`}>{ tag.name }</Link>) }
-          </div>}
-        </div>
+        <div className={styles.abstraction}>{ article.abstraction }</div>
+        {article.tags && article.tags.length > 0 && <div className={styles.tags}>
+          <Icon type="tags" />
+          { article.tags.map(tag =>
+            <Link className={styles.tag} key={tag.id} to={`/tags/${tag.value}`}>{ tag.name }</Link>) }
+        </div>}
       </section>
     );
   }

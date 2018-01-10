@@ -12,7 +12,6 @@
         color: rgba(0,0,0,.87);
     }
     .searchInput {
-        min-width: 200px;
         padding-right: 30px!important;
         background-color: #f0f4f5;
         margin: 0;
@@ -53,7 +52,6 @@
         white-space: nowrap;
         vertical-align: middle;
         cursor: pointer;
-        padding: 6px 4px;
         color: #e0e4e5;
         &:hover {
             color: rgba(115,115,115,.67)
@@ -62,9 +60,16 @@
 }
 
 .box {
-    min-width: 220px;
     margin: 10px;
     background-color: @transparent-white;;
     border-radius: 5px;
     text-align: left;
+}
+@media (min-width: 768) {
+    .box {
+        min-width: 220px;
+    }
+    .searchInput {
+        min-width: 200px;
+    }
 }

@@ -32,7 +32,6 @@ export default class CodeMirrorEditor extends React.PureComponent {
   }
 
   componentWillReceiveProps(nextProps) {
-    console.log(this.props.shouldUpdate(nextProps, this.props))
     if(this.props.shouldUpdate(nextProps, this.props)) {
     this.editor.setValue(nextProps.value);
       this.setState({ value: nextProps.value });
