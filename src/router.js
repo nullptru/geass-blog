@@ -52,6 +52,11 @@ const getRouter = app => ([{
       exact: true,
       name: 'Admin Article',
       component: dynamicWrapper(app, [], () => import('./routes/Admin/Articles')),
+    }, {
+      path: '/admin/tags',
+      exact: true,
+      name: 'Admin Tags',
+      component: dynamicWrapper(app, [], () => import('./routes/Admin/Tags')),
     },
   ],
 }]);

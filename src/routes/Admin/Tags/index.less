@@ -1,0 +1,37 @@
+.tagsContainer {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+}
+
+.addContainer {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  i {
+    display: inline-block;
+    font-size: 30px;
+  }
+}
+
+.tagCard {
+  border: 1px solid rgba(0, 0, 0, 0.2);
+  box-shadow: 0 0 4px rgba(0, 0, 0, 0.5);
+  padding: 0;
+
+  &:hover {
+    box-shadow: 0 0 8px rgba(0, 0, 0, 0.5);
+  }
+}
+
+.tagName, .tagValue {
+  margin: 16px;
+}
+
+.buttonGrp {
+  button {
+    width: 50%;
+    border-radius: 0;
+    border-bottom: none;
+  }
+}

@@ -29,11 +29,15 @@
 }
 
 .menuItem.active {
+    background: rgba(255,255,255,.08);
     color: rgba(255,255,255,.7);
 }
 
 .menuItem.noBackground {
     &:hover {
+        background: transparent;
+    }
+    &.active {
         background: transparent;
     }
 }

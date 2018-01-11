@@ -20,6 +20,7 @@ class Article extends React.PureComponent {
     this.state = {
       editorText: props.article.content,
       articleId: props.article.id,
+
       confirmModalVisible: false,
       confirmDeleteModalVisible: false,
       confirmModalSuccess: () => {},
@@ -54,18 +55,12 @@ class Article extends React.PureComponent {
         });
       },
     };
-    this.cachedArticleId = undefined;
     this.onEditorChange = this.onEditorChange.bind(this);
     this.querySingle = this.querySingle.bind(this);
     this.removeArticle = this.removeArticle.bind(this);
-    // dialog
+    // dialogContainer
     this.dialogContainer = document.getElementById('dialog');
-  }
-
-  onEditorChange = text => this.setState({ editorText: text });
-
-  onEditDialogCancel = () => {
-    this.setState({ confirmModalVisible: false });
+    this.cachedArticleId = undefined;
   }
 
   onSubmit = (status) => {
@@ -84,16 +79,16 @@ class Article extends React.PureComponent {
     });
   }
 
-  getFieldDecorator = (name) => {
-    const { getFieldDecorator } = this.props.form;
-    return (child) => {
-      const input = React.cloneElement(child, { id: name, className: 'col-md-2' });
-      return (<div className="row margin-base">
-        <label htmlFor={name} className="col-md-1" >{name}:</label>
-        {getFieldDecorator(name)(input)}
-      </div>);
-    };
-  }
+  // getFieldDecorator = (name) => {
+  //   const { getFieldDecorator } = this.props.form;
+  //   return (child) => {
+  //     const input = React.cloneElement(child, { id: name, className: 'col-md-2' });
+  //     return (<div className="row margin-base">
+  //       <label htmlFor={name} className="col-md-1" >{name}:</label>
+  //       {getFieldDecorator(name)(input)}
+  //     </div>);
+  //   };
+  // }
 
   checkEditStatus = () => {
     let isEdit = false;
@@ -113,7 +108,8 @@ class Article extends React.PureComponent {
     }
     return isEdit;
   }
-  selectEditArticle = (article) => {
+
+  listItemSelect = (article) => {
     // confirm if article is edited
     const isEdit = this.checkEditStatus();
     if (!isEdit) {
@@ -146,6 +142,33 @@ class Article extends React.PureComponent {
     });
   }
 
+  addNewArticle = () => {
+    const reset = () => {
+      this.props.dispatch({
+        type: 'articles/updateState',
+        payload: { article: {}},
+      });
+      this.props.form.setFieldsValue({
+        title: '',
+        abstraction: '',
+        tagIds: [],
+      });
+    };
+    const isEdit = this.checkEditStatus();
+    if (isEdit) {
+      this.setState({
+        confirmModalVisible: true,
+        confirmModalSuccess() {
+          reset();
+          this.setState({ editorText: '', articleId: undefined, confirmModalVisible: false });
+        },
+      });
+    } else { // if article isn't edit
+      reset();
+      this.setState({ editorText: '', articleId: undefined });
+    }
+  };
+
   removeArticle = (id) => {
     this.setState({
       confirmDeleteModalVisible: true,
@@ -167,44 +190,13 @@ class Article extends React.PureComponent {
     });
   };
 
-  addNewArticle = () => {
-    const isEdit = this.checkEditStatus();
-    if (isEdit) {
-      this.setState({
-        confirmModalVisible: true,
-        confirmModalSuccess() {
-          this.props.dispatch({
-            type: 'articles/updateState',
-            payload: { article: {}},
-          });
-
-          this.props.form.setFieldsValue({
-            title: '',
-            abstraction: '',
-            tagIds: [],
-          });
-          this.setState({ editorText: '', articleId: undefined, confirmModalVisible: false });
-        },
-      });
-    } else {
-      this.props.dispatch({
-        type: 'articles/updateState',
-        payload: { article: {} },
-      });
-
-      this.props.form.setFieldsValue({
-        title: '',
-        abstraction: '',
-        tagIds: [],
-      });
-      this.setState({ editorText: '', articleId: undefined });
-    }
-  };
+  onEditorChange = text => this.setState({ editorText: text });
 
   render() {
     const {
       articleImages, tagList, article, articleList, form: { getFieldDecorator },
     } = this.props;
+    const tagIds = (article.tags || []).map(tag => tag.id);
     const markdownProps = {
       mode: 'markdown',
       theme: 'monokai',
@@ -219,13 +211,12 @@ class Article extends React.PureComponent {
 
     const dialog = ReactDOM.createPortal(<Dialog
       onConfirm={this.state.confirmModalSuccess.bind(this)}
-      onCancel={this.onEditDialogCancel}
+      onCancel={() => this.setState({ confirmModalVisible: false })}
       visible={this.state.confirmModalVisible}
       title="警告"
     >
       当前文章已被更改，是否放弃更改离开。
     </Dialog>, this.dialogContainer);
-
 
     const deleteDialog = ReactDOM.createPortal(<Dialog
       onConfirm={this.state.confirmModalSuccess.bind(this)}
@@ -235,8 +226,6 @@ class Article extends React.PureComponent {
     >
       确认删除文章
     </Dialog>, this.dialogContainer);
-
-    const tagIds = (article.tags || []).map(tag => tag.id);
 
     return (
       <div className={styles.articleAdminContainer}>
@@ -252,7 +241,7 @@ class Article extends React.PureComponent {
               key={item.id}
               article={item}
               onRemove={this.removeArticle.bind(this, item.id)}
-              onClick={this.selectEditArticle.bind(this, item)}
+              onClick={this.listItemSelect.bind(this, item)}
               className={item.id === article.id ? styles.active : ''}
             />
           ))}

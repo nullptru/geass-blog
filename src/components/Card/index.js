@@ -4,13 +4,17 @@ import styles from './index.less';
 
 export default class Card extends React.PureComponent {
   render() {
-    const { title, children } = this.props;
+    const {
+      title, children, footer, className, ...rest
+    } = this.props;
+    const classList = [styles.card].concat(className);
     return (
-      <section className={styles.card}>
-        <header><span className={styles.header}>{ title }</span></header>
+      <section className={classList.join(' ')} {...rest}>
+        {title && <header><span className={styles.header}>{ title }</span></header>}
         <div className={styles.container}>
           { children }
         </div>
+        { footer && <div>{footer}</div> }
       </section>
     );
   }
@@ -18,9 +22,13 @@ export default class Card extends React.PureComponent {
 
 Card.propTypes = {
   title: PropTypes.string,
+  className: PropTypes.string,
   children: PropTypes.any.isRequired,
+  footer: PropTypes.any,
 };
 
 Card.defaultProps = {
-  title: 'title',
+  title: undefined,
+  footer: undefined,
+  className: '',
 };

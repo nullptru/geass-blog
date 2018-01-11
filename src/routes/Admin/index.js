@@ -1,19 +1,30 @@
 import React from 'react';
 import { Sider } from 'components';
-import { Route, Switch, Redirect } from 'dva/router';
+import { connect } from 'dva';
+import { Route, Switch, Redirect, routerRedux } from 'dva/router';
 import styles from './index.less';
 
 class AdminIndex extends React.PureComponent {
+  constructor(props) {
+    super(props);
+    this.handleMenuClick = this.handleMenuClick.bind(this);
+  }
+
+  handleMenuClick = (key) => {
+    this.props.dispatch(routerRedux.push({
+      pathname: key,
+    }));
+  }
   render() {
     const { getRouteData } = this.props;
     const [routers] = getRouteData('/admin');
     const items = [
-      { title: 'test', key: '/' },
-      { title: 'test2', key: '/test' },
+      { title: '文章管理', key: '/admin/articles' },
+      { title: '标签管理', key: '/admin/tags' },
     ];
     return (
       <div className={styles.container}>
-        <Sider items={items} />
+        <Sider items={items} onMenuClick={this.handleMenuClick} />
         <div>
           <Switch>
             {routers.children.map(route => <Route key={route.path} path={route.path} component={route.component} exact={route.exact} />)}
@@ -25,4 +36,4 @@ class AdminIndex extends React.PureComponent {
   }
 }
 
-export default AdminIndex;
+export default connect()(AdminIndex);
