@@ -10,6 +10,14 @@ class AdminIndex extends React.PureComponent {
     this.handleMenuClick = this.handleMenuClick.bind(this);
   }
 
+  componentDidMount() {
+    if (!this.props.login.isLogin) {
+      this.props.dispatch(routerRedux.push({
+        pathname: '/admin/iwantologin',
+      }));
+    }
+  }
+
   handleMenuClick = (key) => {
     this.props.dispatch(routerRedux.push({
       pathname: key,
@@ -36,4 +44,4 @@ class AdminIndex extends React.PureComponent {
   }
 }
 
-export default connect()(AdminIndex);
+export default connect(({ login }) => ({ login }))(AdminIndex);

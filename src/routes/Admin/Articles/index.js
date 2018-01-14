@@ -90,6 +90,8 @@ class Article extends React.PureComponent {
   //   };
   // }
 
+  onEditorChange = text => this.setState({ editorText: text });
+
   checkEditStatus = () => {
     let isEdit = false;
     if (Object.keys(this.props.article).length > 0) {
@@ -146,7 +148,7 @@ class Article extends React.PureComponent {
     const reset = () => {
       this.props.dispatch({
         type: 'articles/updateState',
-        payload: { article: {}},
+        payload: { article: {} },
       });
       this.props.form.setFieldsValue({
         title: '',
@@ -189,8 +191,6 @@ class Article extends React.PureComponent {
       },
     });
   };
-
-  onEditorChange = text => this.setState({ editorText: text });
 
   render() {
     const {
@@ -267,7 +267,7 @@ class Article extends React.PureComponent {
                 </div>
               </div>
               {getFieldDecorator('abstraction', { initialValue: article.abstraction })(<Input className={styles.abstraction} multiple />)}
-              <div className={styles.imgPanel}>
+              { (article.imageUrl || articleImages.length > 0) && <div className={styles.imgPanel}>
                 { article.imageUrl &&
                   <span>标题图片: <img src={article.imageUrl} alt="标题图片" className={styles.pasterImage} onClick={i => copy(i.target.src)} /></span>
                 }
@@ -276,7 +276,7 @@ class Article extends React.PureComponent {
                     <img src={img} alt="文章图片" key={img} className={styles.pasterImage} onClick={i => copy(i.target.src)} />)}
                   </span>
                 }
-              </div>
+              </div>}
               {/* markdown */}
               <div className={styles.codePanel}>
                 <CodeMirrorEditor {...markdownProps} />

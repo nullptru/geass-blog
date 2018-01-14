@@ -2,14 +2,14 @@ import React from 'react';
 import { Card } from 'components';
 import styles from './index.less';
 
-const AdminTagCard = ({ tag }) => {
+const AdminTagCard = ({ tag, onEdit, onDelete }) => {
   return (
     <Card
       className={styles.tagCard}
       footer={
         <div className={styles.buttonGrp}>
-          <button>编辑</button>
-          <button>删除</button>
+          <button onClick={onEdit}>编辑</button>
+          <button onClick={onDelete}>删除</button>
         </div>
       }
     >

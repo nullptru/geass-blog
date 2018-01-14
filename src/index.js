@@ -3,6 +3,7 @@ import createHistory from 'history/createBrowserHistory';
 import createLoading from 'dva-loading';
 import Articles from './models/articles';
 import Tags from './models/tags';
+import Login from './models/login';
 import Router from './router';
 import './index.less';
 
@@ -18,6 +19,7 @@ app.use(createLoading());
 // 3. Model
 app.model(Articles);
 app.model(Tags);
+app.model(Login);
 
 // 4. Router
 app.router(Router);

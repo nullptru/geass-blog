@@ -9,3 +9,27 @@ export function queryTags(params) {
     data: params,
   });
 }
+
+export function create(params) {
+  return request({
+    url: tags.create,
+    method: 'post',
+    data: params,
+  });
+}
+
+export function update(params) {
+  return request({
+    url: tags.update,
+    method: 'put',
+    data: params,
+  });
+}
+
+export function remove(params) {
+  return request({
+    url: tags.delete,
+    method: 'delete',
+    data: params,
+  });
+}

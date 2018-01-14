@@ -4,3 +4,64 @@
   margin-left: 220px;
   padding: 20px;
 }
+
+.form {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 400px;
+  height: 400px;
+  padding: 40px;
+  transform: translate(-50%, -50%);
+
+  button {
+    width: 100%;
+    border-radius: 2px;
+    box-shadow: 5px 5px 10px rgba(46, 181, 164, 0.1)
+    //background-color: #4688ff;
+    //&:hover{
+    //  background-color: #579cff;
+    //}
+    //&:active{
+    //  background-color: #1e68ee;
+    //}
+  }
+
+  input {
+    padding-left: 50px!important;
+  }
+
+  p {
+    color: rgb(204, 204, 204);
+    text-align: center;
+    margin-top: 16px;
+
+    span {
+      &:first-child {
+        margin-right: 16px;
+      }
+    }
+  }
+  img {
+    margin-top: -3px;
+  }
+}
+
+.logo {
+  text-align: center;
+  height: 40px;
+  line-height: 40px;
+  cursor: pointer;
+  margin-bottom: 24px;
+
+  img {
+    margin-right: 8px;
+  }
+
+  span {
+    vertical-align: text-bottom;
+    font-size: 16px;
+    text-transform: uppercase;
+    display: inline-block;
+  }
+}

@@ -59,6 +59,11 @@ const getRouter = app => ([{
       component: dynamicWrapper(app, [], () => import('./routes/Admin/Tags')),
     },
   ],
+}, {
+  path: '/admin/iwantologin',
+  exact: true,
+  name: 'Admin Login',
+  component: dynamicWrapper(app, [], () => import('./routes/Admin/Login')),
 }]);
 
 function RouterConfig({ history, app }) {
@@ -73,6 +78,7 @@ function RouterConfig({ history, app }) {
     <Router history={history}>
       <ScrollTop>
         <Switch>
+          <Route path="/admin/iwantologin" component={routers[2].component} />
           <Route path="/admin" render={props => <AdminIndex {...props} {...passProps} />} />
           <Route path="/" render={props => <IndexPage {...props} {...passProps} />} />
         </Switch>
