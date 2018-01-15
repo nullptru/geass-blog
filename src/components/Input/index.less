@@ -27,9 +27,10 @@
 .input() {
   position: relative;
   display: inline-block;
+  box-sizing: border-box;
   padding: 4px 8px;
   width: 100%;
-  height: @input-height-base;
+  height: ~'calc(@{input-height-base} + 16px)';
   font-size: 12px;
   line-height: @line-height-base;
   color: @input-color;

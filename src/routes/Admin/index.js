@@ -10,11 +10,10 @@ class AdminIndex extends React.PureComponent {
     this.handleMenuClick = this.handleMenuClick.bind(this);
   }
 
-  componentDidMount() {
-    if (!this.props.login.isLogin) {
-      this.props.dispatch(routerRedux.push({
-        pathname: '/admin/iwantologin',
-      }));
+  componentWillMount() {
+    /* eslint-disable no-undef */
+    if (!window.sessionStorage.getItem('isLogin', false)) {
+      window.location = '/iwanttologin';
     }
   }
 
@@ -22,21 +21,23 @@ class AdminIndex extends React.PureComponent {
     this.props.dispatch(routerRedux.push({
       pathname: key,
     }));
-  }
+  };
+
   render() {
     const { getRouteData } = this.props;
     const [routers] = getRouteData('/admin');
-    const items = [
-      { title: '文章管理', key: '/admin/articles' },
-      { title: '标签管理', key: '/admin/tags' },
-    ];
+    const items = routers.children.map(item => ({ title: item.name, key: item.path }));
+    // 防止为登陆看到数据
+    if (!window.sessionStorage.getItem('isLogin', false)) {
+      return null;
+    }
     return (
       <div className={styles.container}>
         <Sider items={items} onMenuClick={this.handleMenuClick} />
         <div>
           <Switch>
             {routers.children.map(route => <Route key={route.path} path={route.path} component={route.component} exact={route.exact} />)}
-            <Redirect from="/admin" to="/admin/articles" />
+            <Redirect from="/admin" to={routers.children[0].path} />
           </Switch>
         </div>
       </div>

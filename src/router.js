@@ -50,17 +50,17 @@ const getRouter = app => ([{
     {
       path: '/admin/articles',
       exact: true,
-      name: 'Admin Article',
+      name: '文章管理',
       component: dynamicWrapper(app, [], () => import('./routes/Admin/Articles')),
     }, {
       path: '/admin/tags',
       exact: true,
-      name: 'Admin Tags',
+      name: '标签管理',
       component: dynamicWrapper(app, [], () => import('./routes/Admin/Tags')),
     },
   ],
 }, {
-  path: '/admin/iwantologin',
+  path: '/iwanttologin',
   exact: true,
   name: 'Admin Login',
   component: dynamicWrapper(app, [], () => import('./routes/Admin/Login')),
@@ -74,11 +74,12 @@ function RouterConfig({ history, app }) {
       return routers.filter(route => route.path === path);
     },
   };
+  const [loginRouter] = passProps.getRouteData('/iwanttologin');
   return (
     <Router history={history}>
       <ScrollTop>
         <Switch>
-          <Route path="/admin/iwantologin" component={routers[2].component} />
+          <Route path="/iwanttologin" component={loginRouter.component} />
           <Route path="/admin" render={props => <AdminIndex {...props} {...passProps} />} />
           <Route path="/" render={props => <IndexPage {...props} {...passProps} />} />
         </Switch>
