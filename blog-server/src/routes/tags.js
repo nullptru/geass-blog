@@ -10,7 +10,8 @@ const response = {
 /**
  * 当请求进入tag时，记录相应信息，调用next()保证不直接返回而继续匹配路由
  */
-tags.get('/', async (ctx, next) => {
+tags.all('/', async (ctx, next) => {
+  response.success = true;
   await next();
 });
 

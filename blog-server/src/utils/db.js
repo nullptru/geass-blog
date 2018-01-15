@@ -24,14 +24,13 @@ const container = () => {
           if (err) {
             reject(err);
           } else {
-            const query = connection.query(sql, params, (errs, results) => {
+            connection.query(sql, params, (errs, results) => {
               connection.release();
               if (errs) {
                 reject(errs);
               }
               resolve(results);
             });
-            console.log(query.sql);
           }
         });
       });
@@ -80,7 +79,6 @@ const container = () => {
                       exec(i + 1);
                     }
                   });
-                  console.log(query.sql);
                 };
                 exec(0);
               }

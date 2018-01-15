@@ -1,5 +1,7 @@
 /* eslint-disable */
-import { hex_sha1 } from 'utils/sha1.js';
+import { queryLogin } from 'services/login';
+import { message } from 'components';
+import { hexSha1 } from 'utils/sha1.js';
 
 export default {
   namespace: 'login',
@@ -9,13 +11,15 @@ export default {
   },
 
   effects: {
-    /* eslint-disable */
     *login({ payload }, { call, put }) {
-      console.log(hex_sha1(1))
-      console.log(payload.name === 'geass', hex_sha1(1) === hex_sha1(1), hex_sha1(payload.password) === hex_sha1(1))
-      if (payload.name === 'geass' && hex_sha1(payload.password) === hex_sha1('1')) {
+      console.log(hexSha1(1))
+      payload.password = hexSha1(payload.password);
+      const response = yield call(queryLogin, payload);
+      if (response.success) {
         yield put({ type: 'updateState', payload: { isLogin: true } });
         window.sessionStorage.setItem('isLogin', true);
+      } else {
+        message.info('用户名密码错误');
       }
     },
   },

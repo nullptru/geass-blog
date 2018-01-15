@@ -6,6 +6,7 @@ import Router from 'koa-router';
 import cors from 'koa2-cors';
 import articles from './routes/articles';
 import tags from './routes/tags';
+import login from './routes/login';
 import config from './config';
 
 const app = new Koa();
@@ -22,13 +23,14 @@ app.use(cors({
   },
   maxAge: 5,
   allowMethods: ['GET', 'POST', 'PUT', 'DELETE'],
-  allowHeaders: ['Content-Type', 'Authorization', 'Accept'],
+  allowHeaders: ['Content-Type', 'Authorization', 'Accept', 'Host', 'X-Real-IP', 'X-Forwarded-For'],
 }));
 
 // 装载所有子路由
 const router = new Router();
 router.use(articles.routes()).use(articles.allowedMethods());
 router.use(tags.routes()).use(tags.allowedMethods());
+router.use(login.routes()).use(login.allowedMethods());
 
 app.use(async (ctx, next) => {
   try {

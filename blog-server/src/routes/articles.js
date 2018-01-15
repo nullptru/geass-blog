@@ -33,7 +33,8 @@ const getTags = (tagStr) => {
 /**
  * 当请求进入article时，记录相应信息，调用next()保证不直接返回而继续匹配路由
  */
-articles.get('/', async (ctx, next) => {
+articles.all('/', async (ctx, next) => {
+  response.success = true;
   await next();
 });
 
@@ -137,8 +138,8 @@ articles.get('/articles/tags', async (ctx) => {
  */
 articles.get('/article/:id', async (ctx) => {
   const ipAddress = ip.address();
-  const isNew = ip.addCached(ipAddress);
-  console.log(ipAddress, isNew);
+  const isNew = ip.addCached(ctx.req.socket.remoteAddress || ipAddress);
+  console.log(ctx.req.socket.remoteAddress, ctx.req.socket.remoteFamily, ctx.req.socket.remotePort);
   const querys = [{
     sql: "SELECT articles.*, GROUP_CONCAT(concat_ws(',', tags.id, tags.name,tags.value) ORDER BY tags.id SEPARATOR '|') AS articleTags  FROM articles " +
     'LEFT JOIN tag2article ON tag2article.article_id = articles.id ' +
@@ -317,9 +318,7 @@ articles.post('/article', async (ctx) => {
       return [insertId];
     },
   });
-  console.log('test');
   const rows = await Pool.startTransaction(querys);
-  console.log(rows);
   const resData = rows[querys.length - 1].map((item) => {
     const newItem = { ...item };
     newItem.tags = getTags(newItem.articleTags);

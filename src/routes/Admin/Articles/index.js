@@ -179,7 +179,7 @@ class Article extends React.PureComponent {
           type: 'articles/removeArticle',
           payload: { id },
         }).then(() => {
-          if (!this.props.articles.id) {
+          if (!this.props.article.id) {
             this.props.form.setFieldsValue({
               title: '',
               abstraction: '',
@@ -209,28 +209,32 @@ class Article extends React.PureComponent {
       },
     };
 
-    const dialog = ReactDOM.createPortal(<Dialog
-      onConfirm={this.state.confirmModalSuccess.bind(this)}
-      onCancel={() => this.setState({ confirmModalVisible: false })}
-      visible={this.state.confirmModalVisible}
-      title="警告"
-    >
-      当前文章已被更改，是否放弃更改离开。
-    </Dialog>, this.dialogContainer);
+    const dialogs = [];
+    if (this.state.confirmModalVisible) {
+      dialogs.push(ReactDOM.createPortal(<Dialog
+        onConfirm={this.state.confirmModalSuccess.bind(this)}
+        onCancel={() => this.setState({ confirmModalVisible: false })}
+        visible={this.state.confirmModalVisible}
+        title="警告"
+      >
+        当前文章已被更改，是否放弃更改离开。
+      </Dialog>, this.dialogContainer));
+    }
 
-    const deleteDialog = ReactDOM.createPortal(<Dialog
-      onConfirm={this.state.confirmModalSuccess.bind(this)}
-      onCancel={() => this.setState({ confirmDeleteModalVisible: false })}
-      visible={this.state.confirmDeleteModalVisible}
-      title="警告"
-    >
-      确认删除文章
-    </Dialog>, this.dialogContainer);
+    if (this.state.confirmDeleteModalVisible) {
+      dialogs.push(ReactDOM.createPortal(<Dialog
+        onConfirm={this.state.confirmModalSuccess.bind(this)}
+        onCancel={() => this.setState({ confirmDeleteModalVisible: false })}
+        visible={this.state.confirmDeleteModalVisible}
+        title="警告"
+      >
+        确认删除文章
+      </Dialog>, this.dialogContainer));
+    }
 
     return (
       <div className={styles.articleAdminContainer}>
-        {dialog}
-        {deleteDialog}
+        {dialogs}
         {/* article list */}
         <div className={styles.articleList}>
           <div className={styles.addNewArticleContainer} onClick={this.addNewArticle}>
