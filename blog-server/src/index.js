@@ -7,6 +7,7 @@ import cors from 'koa2-cors';
 import articles from './routes/articles';
 import tags from './routes/tags';
 import login from './routes/login';
+import comments from './routes/comments';
 import config from './config';
 
 const app = new Koa();
@@ -29,6 +30,7 @@ app.use(cors({
 // 装载所有子路由
 const router = new Router();
 router.use(articles.routes()).use(articles.allowedMethods());
+router.use(comments.routes()).use(comments.allowedMethods());
 router.use(tags.routes()).use(tags.allowedMethods());
 router.use(login.routes()).use(login.allowedMethods());
 
