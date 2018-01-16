@@ -35,7 +35,7 @@ const getRouter = app => ([{
     path: '/article/:id',
     exact: true,
     name: "geass's blog",
-    component: dynamicWrapper(app, [], () => import('./routes/DetailPage')),
+    component: dynamicWrapper(app, ['comments'], () => import('./routes/DetailPage')),
   }, {
     path: '/about',
     exact: true,
