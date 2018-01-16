@@ -63,9 +63,11 @@ articles.get('/articles/page', async (ctx) => {
     const newItem = { ...item };
     newItem.tags = getTags(newItem.articleTags);
     newItem.createdTime = dateFormat(newItem.created_time, 'yyyy-MM-dd');
+    newItem.imageUrl = newItem.image_url;
     delete newItem.articleTags;
     delete newItem.total;
     delete newItem.created_time;
+    delete newItem.image_url;
     return newItem;
   });
   response.data = resData;
@@ -76,8 +78,7 @@ articles.get('/articles/page', async (ctx) => {
  * 当请求为/articles/all 时，获得所有文章列表
  */
 articles.get('/articles/all', async (ctx) => {
-  const rows = await Pool.query(
-    'SELECT articles.id, articles.title, articles.created_time, articles.abstraction, articles.image_url, ' +
+  const rows = await Pool.query('SELECT articles.id, articles.title, articles.created_time, articles.abstraction, articles.image_url, ' +
     "GROUP_CONCAT(concat_ws(',', tags.id, tags.name,tags.value) ORDER BY tags.id SEPARATOR '|') AS articleTags  FROM articles " +
     'LEFT JOIN tag2article ON tag2article.article_id = articles.id ' +
     'LEFT JOIN tags ON tag2article.tag_id = tags.id ' +

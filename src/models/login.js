@@ -12,7 +12,6 @@ export default {
 
   effects: {
     *login({ payload }, { call, put }) {
-      console.log(hexSha1(1))
       payload.password = hexSha1(payload.password);
       const response = yield call(queryLogin, payload);
       if (response.success) {

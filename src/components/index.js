@@ -16,3 +16,4 @@ export { default as ScrollTop } from './ScrollToTop';
 export { default as Loading } from './Loading';
 export { default as Dialog } from './Dialog';
 export { default as message } from './Message';
+export { default as ThrottleButton } from './ThrottleButton';

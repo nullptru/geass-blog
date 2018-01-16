@@ -18,7 +18,6 @@ login.post('/login', async (ctx) => {
   } = ctx.request.body;
   const rows = await Pool.query('SELECT count(*) as count FROM user WHERE name = ? AND password = ?', [name, password]);
   response.data = rows[0].count;
-  console.log(rows, rows[0], rows[0].count, response);
   if (response.data === 0) {
     response.success = false;
   }
