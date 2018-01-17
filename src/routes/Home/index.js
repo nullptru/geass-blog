@@ -9,11 +9,12 @@ import LatestPostCard from './components/LatestPostCard';
 import TagsCard from './components/TagsCard';
 import './index.less';
 
+/* eslint-disable no-extra-boolean-cast */
 const Home = ({
   dispatch, articles, tagList, location, loading,
 }) => {
   const { list, latestPosts, pagination } = articles;
-  const { search: searchQuery } = queryString.parse(location.search);
+  const queryParams = queryString.parse(location.search);
 
   const onArticleClick = (id) => {
     dispatch(routerRedux.push({
@@ -22,9 +23,24 @@ const Home = ({
   };
 
   const onSearch = (query) => {
+    let searchStr = '';
+    if (!!query) {
+      searchStr = `search=${query}`;
+    }
     dispatch(routerRedux.push({
       pathname: '/',
-      search: `search=${query}`,
+      search: searchStr,
+    }));
+  };
+
+  const handlePaginationChange = ({ current }) => {
+    let searchStr = '';
+    if (!!queryParams.search) {
+      searchStr += `search=${queryParams.search}&`;
+    }
+    dispatch(routerRedux.push({
+      pathname: '/',
+      search: `${searchStr}page=${current}`,
     }));
   };
 
@@ -37,10 +53,10 @@ const Home = ({
             {list.map(article =>
               <Article article={article} key={article.id} onClick={onArticleClick.bind(null, article.id)} />)}
           </div>
-          <Pagination pagination={pagination} />
+          <Pagination pagination={pagination} onSelect={handlePaginationChange} />
         </div>
         <div className="col-md-4 col-sm-12">
-          <Search withBox onSearch={onSearch} query={searchQuery} />
+          <Search withBox onSearch={onSearch} query={queryParams.search} />
           <LatestPostCard latestPosts={latestPosts} />
           <TagsCard tags={tagList} />
         </div>

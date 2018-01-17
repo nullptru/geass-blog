@@ -33,8 +33,8 @@ export default {
     setup({ dispatch, history }) {
       history.listen((location) => {
         if (location.pathname === '/') { // 主页面
-          const { search: searchStr } = queryString.parse(location.search);
-          dispatch({ type: 'queryArticles', payload: { search: searchStr } }); // 获取文章列表
+          const { search: searchStr, page: current = 1 } = queryString.parse(location.search);
+          dispatch({ type: 'queryArticles', payload: { search: searchStr, current: Number(current) } }); // 获取文章列表
           dispatch({ type: 'queryLatestArticles' }); // 获取最新文章
           dispatch({ type: 'updateState', payload: { article: {} } }); // 置空文章
         }

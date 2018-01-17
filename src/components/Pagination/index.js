@@ -15,6 +15,10 @@ export default class Pagination extends React.PureComponent {
     this.onSelect = this.onSelect.bind(this);
   }
 
+  componentWillReceiveProps(nextProps) {
+    this.setState(nextProps.pagination);
+  }
+
   onSelect(page) {
     this.setState({ current: page }, () => {
       this.props.onSelect(this.state);
