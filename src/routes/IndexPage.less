@@ -30,7 +30,6 @@
   }
 }
 
-
 button {
   position: relative;
   display: inline-block;
@@ -66,4 +65,23 @@ button {
 // == when hoverd
 .hover(@color: @input-hover-border-color) {
   border-color: @color;
+}
+
+.footerIcon {
+  a {
+    display: inline-block;
+    margin: 16px 12px;
+    margin-bottom: 0;
+    cursor: pointer;
+    transition: color .3s ease;
+
+  }
+  i {
+    font-size: 48px;
+    color: whitesmoke;
+
+    &:hover {
+      color: #dfdfdf;
+    }
+  }
 }

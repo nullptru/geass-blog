@@ -3,8 +3,8 @@ import { connect } from 'dva';
 import PropTypes from 'prop-types';
 import { Switch, Route } from 'dva/router';
 import DocumentTitle from 'react-document-title';
-import { Head, Footer, Live2D } from 'components';
-import './IndexPage.less';
+import { Head, Footer, Live2D, Icon } from 'components';
+import styles from './IndexPage.less';
 
 class IndexPage extends React.PureComponent {
   getChildContext() {
@@ -53,7 +53,13 @@ class IndexPage extends React.PureComponent {
             </Switch>
           </div>
           <Live2D />
-          <Footer copyright="@CopyRight 2017 Blog of Geass" />
+          <Footer copyright="@CopyRight 2017 Blog of Geass">
+            <div className={styles.footerIcon}>
+              <a href="https://github.com/nullptru"><Icon type="github" /></a>
+              <a href="https://weibo.com/5349121795/profile?topnav=1&wvr=6"><Icon type="weibo" /></a>
+              <a href="https://twitter.com/nullptru"><Icon type="twitter" /></a>
+            </div>
+          </Footer>
         </div>
       </DocumentTitle>
     );

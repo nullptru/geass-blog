@@ -43,7 +43,6 @@ class Article extends React.PureComponent {
     this.uploaderContentProps = {
       multiple: true,
       customRequest(upload) {
-        /* eslint-disable no-undef */
         const formData = new FormData();
         formData.append('gallery', upload.file);
         props.dispatch({
