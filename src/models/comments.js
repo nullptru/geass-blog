@@ -7,6 +7,16 @@ export default {
     list: [],
     createErr: false,
   },
+  subscriptions: {
+    detail({ dispatch, history }) {
+      history.listen((location) => {
+        const match = location.pathname.match(/\/article\/(\w+)/);
+        if (match !== null) {
+          dispatch({ type: 'query', payload: { id: match[1] } }); // 获取文章评论
+        }
+      });
+    },
+  },
 
   effects: {
     *query({ payload = {} }, { call, put }) {
@@ -18,7 +28,8 @@ export default {
     *create({ payload = {} }, { call, put }) {
       const response = yield call(create, payload);
       if (response.success) {
-        yield put({ type: 'query', payload: { list: response.data, createErr: false } });
+        yield put({ type: 'updateState', payload: { createErr: false } });
+        yield put({ type: 'query', payload: { id: payload.id } });
       } else {
         yield put({ type: 'updateState', payload: { createErr: true } });
       }
@@ -30,5 +41,4 @@ export default {
       return { ...state, ...payload };
     },
   },
-
 };

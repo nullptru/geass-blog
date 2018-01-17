@@ -5,18 +5,17 @@ import { createForm } from 'rc-form';
 import styles from './index.less';
 
 class Comment extends React.PureComponent {
-  componentWillMount() {
-    const { articleId, dispatch } = this.props;
-    dispatch({
-      type: 'comments/query',
+  componentWillUnmount() {
+    this.props.dispatch({
+      type: 'comments/updateState',
       payload: {
-        articleId,
+        list: [],
       },
     });
   }
 
   handleCommentCreate = () => {
-    const { dispatch, form: { validateFields, getFieldsValue, setFieldsValue } } = this.props;
+    const { dispatch, articleId, form: { validateFields, getFieldsValue, setFieldsValue } } = this.props;
     validateFields((errors) => {
       if (errors) {
         dispatch({
@@ -31,6 +30,7 @@ class Comment extends React.PureComponent {
         type: 'comments/create',
         payload: {
           ...getFieldsValue(),
+          id: articleId,
         },
       }).then(() => {
         if (!this.props.comments.createErr) {
@@ -44,35 +44,19 @@ class Comment extends React.PureComponent {
   };
 
   render() {
-    const { comments: { list, createErr }, form: { getFieldDecorator } } = this.props;
-    const tmp = [{
-      id: '1',
-      message: 'test1',
-      ip: '123.**.**.93',
-      commentTime: '2017-12-15',
-    }, {
-      id: '2',
-      message: 'test2test2test2test2test2test2test2test2test2test2test2test2test2test2test2test2test2test2test2test2test2test2test2test2test2test2test2test2test2test2test2test2test2test2test2test2test2test2test2test2test2test2test2test2test2test2test2test2test2test2test2test2test2test2',
-      ip: '123.**.**.93',
-      commentTime: '2017-12-15',
-    }, {
-      id: '3',
-      message: 'test3',
-      ip: '123.**.**.93',
-      commentTime: '2017-12-15',
-    }];
-    const comments = list.length > 0 ? list : tmp;
+    const { comments: { list: commentsList, createErr }, form: { getFieldDecorator } } = this.props;
+
     return (
       <div className={styles.commentContainer}>
-        {comments.length > 0 && (
+        {commentsList.length > 0 && (
           <React.Fragment>
             <div className={styles.header}>评论区：</div>
             <div className={styles.list}>
-              {comments.map(comment => (
+              {commentsList.map(comment => (
                 <section key={comment.id} className={styles.commentItem}>
                   <header>
-                    <span className={styles.name}>{comment.ip}</span>
-                    <span className={styles.time}>{comment.commentTime}</span>
+                    <span className={styles.name}>{comment.author}</span>
+                    {comment.created_time && <span className={styles.time}>{comment.created_time.substr(0, 10)}</span>}
                   </header>
                   <div className={styles.commentMessage}><span>{comment.message}</span></div>
                 </section>

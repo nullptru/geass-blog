@@ -295,8 +295,8 @@ articles.post('/article', async (ctx) => {
    * 2. insert article's tags infomation into table named tag2article
    */
   const querys = [{
-    sql: 'INSERT INTO articles(title, content, author, abstraction, image_url, status) VALUES (?, ?, ?, ?, ?, ?)',
-    params: [title, content, author, abstraction, imageUrl, status],
+    sql: 'INSERT INTO articles(id, title, content, author, abstraction, image_url, status) VALUES (?, ?, ?, ?, ?, ?, ?)',
+    params: [new Date().getTime(), title, content, author, abstraction, imageUrl, status],
   }];
   if (tagIds.length > 0) {
     querys.push({

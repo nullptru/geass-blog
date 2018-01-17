@@ -15,18 +15,19 @@ comments.all('/', async (ctx, next) => {
   await next();
 });
 
-
 comments.get('/comments/article/:id', async (ctx) => {
-  const rows = await Pool.query('SELECT * FROM comments WHERE article_id = ?', [ctx.params.id]);
+  const rows = await Pool.query('SELECT * FROM comments WHERE article_id = ? ORDER BY created_time', [ctx.params.id]);
   response.data = rows;
   ctx.body = response;
 });
 
 comments.post('/comment/article/:id', async (ctx) => {
   const { message, author } = ctx.request.body;
-  const id = ctx.params.id;
+  const { id } = ctx.params;
   const ip = ctx.req.socket.remoteAddress;
   const rows = await Pool.query('INSERT INTO comments(author, message, ip, article_id) VALUES (?, ?, ?, ?)', [author, message, ip, id]);
   response.data = { insertId: rows.insertId };
   ctx.body = response;
 });
+
+export default comments;

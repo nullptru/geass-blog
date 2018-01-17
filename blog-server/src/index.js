@@ -29,8 +29,8 @@ app.use(cors({
 
 // 装载所有子路由
 const router = new Router();
-router.use(articles.routes()).use(articles.allowedMethods());
 router.use(comments.routes()).use(comments.allowedMethods());
+router.use(articles.routes()).use(articles.allowedMethods());
 router.use(tags.routes()).use(tags.allowedMethods());
 router.use(login.routes()).use(login.allowedMethods());
 
