@@ -1,9 +1,9 @@
 import Koa from 'koa';
 import logger from 'koa-logger';
 import KoaBody from 'koa-body';
-import staticServer from 'koa-static';
 import Router from 'koa-router';
 import cors from 'koa2-cors';
+import session from 'koa-session-minimal';
 import articles from './routes/articles';
 import tags from './routes/tags';
 import login from './routes/login';
@@ -12,20 +12,28 @@ import config from './config';
 
 const app = new Koa();
 
+app.keys = ['some secret hurr'];
+
+app.use(cors({
+  origin: (ctx) => {
+    if (ctx.url === '/test') {
+      return false;
+    }
+    return config.origin;
+  },
+  exposeHeaders: ['WWW-Authenticate', 'Server-Authorization'],
+  maxAge: 5,
+  credentials: true,
+  allowMethods: ['GET', 'PUT', 'POST', 'DELETE'],
+  allowHeaders: ['Content-Type', 'Authorization', 'Accept'],
+}));
+app.use(session({
+  key: 'SESSIONID', // cookie 中存储 session-id 时的键名, 默认为 koa:sess
+}));
+
 // request logger
 app.use(logger());
 app.use(KoaBody());
-app.use(staticServer(`${__dirname}/imgs`));
-
-// 具体参数我们在后面进行解释
-app.use(cors({
-  origin() {
-    return '*'; // 允许来自所有域名请求
-  },
-  maxAge: 5,
-  allowMethods: ['GET', 'POST', 'PUT', 'DELETE'],
-  allowHeaders: ['Content-Type', 'Authorization', 'Accept', 'Host', 'X-Real-IP', 'X-Forwarded-For'],
-}));
 
 // 装载所有子路由
 const router = new Router();

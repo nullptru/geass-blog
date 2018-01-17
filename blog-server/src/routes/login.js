@@ -1,5 +1,6 @@
 import Router from 'koa-router';
 import Pool from '../utils/db';
+import { createToken, checkToken } from '../utils/token';
 
 const login = new Router();
 const response = {
@@ -20,7 +21,15 @@ login.post('/login', async (ctx) => {
   response.data = rows[0].count;
   if (response.data === 0) {
     response.success = false;
+  } else {
+    const token = createToken(name);
+    ctx.session.token = token;
   }
+  ctx.body = response;
+});
+
+login.get('/login/status', checkToken, async (ctx) => {
+  response.data.isLogin = true;
   ctx.body = response;
 });
 

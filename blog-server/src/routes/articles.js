@@ -1,6 +1,7 @@
 import Router from 'koa-router';
 import qiniu from 'qiniu';
 import fs from 'fs';
+import { checkToken } from '../utils/token';
 import Pool from '../utils/db';
 import upload from '../utils/upload';
 import ip from '../utils/ip';
@@ -51,6 +52,7 @@ articles.get('/articles/page', async (ctx) => {
     'LEFT JOIN tags ON tag2article.tag_id = tags.id ' +
     'WHERE (content LIKE ? OR title LIKE ? OR abstraction LIKE ?) AND status=1 ' +
     'GROUP BY articles.id ' +
+    'ORDER BY created_time DESC ' +
     'LIMIT ?, ?',
     [searchStr, searchStr, searchStr, searchStr, searchStr, searchStr, (current - 1) * pageSize, current * pageSize],
   );
@@ -82,7 +84,8 @@ articles.get('/articles/all', async (ctx) => {
     "GROUP_CONCAT(concat_ws(',', tags.id, tags.name,tags.value) ORDER BY tags.id SEPARATOR '|') AS articleTags  FROM articles " +
     'LEFT JOIN tag2article ON tag2article.article_id = articles.id ' +
     'LEFT JOIN tags ON tag2article.tag_id = tags.id ' +
-    'GROUP BY articles.id ', []);
+    'GROUP BY articles.id ' +
+    'ORDER BY created_time DESC ', []);
   const data = Array.from(rows);
   const resData = data.map((item) => {
     const newItem = { ...item };
@@ -109,7 +112,8 @@ articles.get('/articles/tags', async (ctx) => {
     'LEFT JOIN tag2article ON tag2article.article_id = articles.id ' +
     'LEFT JOIN tags ON tag2article.tag_id = tags.id ' +
     'WHERE status=1 ' +
-    'GROUP BY articles.id ',
+    'GROUP BY articles.id ' +
+    'ORDER BY created_time DESC ',
     [],
   );
   const data = Array.from(rows);
@@ -194,6 +198,7 @@ articles.get('/articles/tags/:tag/page', async (ctx) => {
     'LEFT JOIN tags ON tag2article.tag_id = tags.id ' +
     'WHERE articles.id IN ( SELECT articles.id FROM articles, tag2article, tags WHERE tag2article.tag_id = tags.id AND tag2article.article_id = articles.id AND tags.value = ? AND status=1 ) ' +
     'GROUP BY articles.id ' +
+    'ORDER BY created_time DESC ' +
     'LIMIT ?, ?',
     [ctx.params.tag, ctx.params.tag, (current - 1) * pageSize, current * pageSize],
   );
@@ -221,7 +226,7 @@ articles.get('/articles/tags/:tag/page', async (ctx) => {
  */
 articles.get('/articles/latest', async (ctx) => {
   const { pageSize = 10 } = ctx.query;
-  const rows = await Pool.query('SELECT id, title FROM articles WHERE status=1 ORDER BY created_time limit 0, ?', [pageSize]);
+  const rows = await Pool.query('SELECT id, title FROM articles WHERE status=1 ORDER BY created_time DESC limit 0, ?', [pageSize]);
   response.data = rows;
   ctx.body = response;
 });
@@ -229,7 +234,7 @@ articles.get('/articles/latest', async (ctx) => {
 /**
  * 上传图片
  */
-articles.post('/article/image/upload', upload.fields([
+articles.post('/article/image/upload', checkToken, upload.fields([
   { name: 'avatar', maxCount: 1 },
   { name: 'gallery', maxCount: 10 },
 ]), async (ctx) => {
@@ -285,7 +290,7 @@ const deleteTmpFile = (filepath) => {
 /**
  * 创建新文章
  */
-articles.post('/article', async (ctx) => {
+articles.post('/article', checkToken, async (ctx) => {
   const {
     title, content, abstraction, author, imageUrl = '', tagIds = [], status,
   } = ctx.request.body;
@@ -334,7 +339,7 @@ articles.post('/article', async (ctx) => {
 /**
  * 更新文章
  */
-articles.put('/article', async (ctx) => {
+articles.put('/article', checkToken, async (ctx) => {
   const columns = ['title', 'content', 'abstraction', 'image_url'];
   const { body } = ctx.request;
   const { tagIds = [] } = body;
@@ -390,7 +395,7 @@ articles.put('/article', async (ctx) => {
 /**
  * 删除文章
  */
-articles.del('/article/:id', async (ctx) => {
+articles.del('/article/:id', checkToken, async (ctx) => {
   const { id } = ctx.params;
   const rows = await Pool.query(
     'DELETE FROM articles WHERE id = ?',
