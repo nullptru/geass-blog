@@ -1,5 +1,6 @@
 import Router from 'koa-router';
-import { checkToken } from '../utils/token';
+import jwt from 'jsonwebtoken';
+import { createToken, checkToken } from '../utils/token';
 import Pool from '../utils/db';
 
 const tags = new Router();
@@ -12,6 +13,11 @@ const response = {
  * 当请求进入tag时，记录相应信息，调用next()保证不直接返回而继续匹配路由
  */
 tags.all('/', async (ctx, next) => {
+  if (ctx.session.token) {
+    const tokenObj = jwt.verify(ctx.session.token, 'geass_blog');
+    const token = createToken(tokenObj.userId);
+    ctx.session.token = token;
+  }
   response.success = true;
   await next();
 });

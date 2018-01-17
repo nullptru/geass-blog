@@ -1,7 +1,8 @@
 import Router from 'koa-router';
 import qiniu from 'qiniu';
 import fs from 'fs';
-import { checkToken } from '../utils/token';
+import jwt from 'jsonwebtoken';
+import { createToken, checkToken } from '../utils/token';
 import Pool from '../utils/db';
 import upload from '../utils/upload';
 import ip from '../utils/ip';
@@ -35,6 +36,11 @@ const getTags = (tagStr) => {
  * 当请求进入article时，记录相应信息，调用next()保证不直接返回而继续匹配路由
  */
 articles.all('/', async (ctx, next) => {
+  if (ctx.session.token) {
+    const tokenObj = jwt.verify(ctx.session.token, 'geass_blog');
+    const token = createToken(tokenObj.userId);
+    ctx.session.token = token;
+  }
   response.success = true;
   await next();
 });
