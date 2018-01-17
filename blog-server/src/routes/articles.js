@@ -329,6 +329,10 @@ articles.post('/article', checkToken, async (ctx) => {
     const newItem = { ...item };
     newItem.tags = getTags(newItem.articleTags);
     delete newItem.articleTags;
+    newItem.createdTime = dateFormat(newItem.created_time, 'yyyy-MM-dd');
+    newItem.imageUrl = newItem.image_url;
+    delete newItem.created_time;
+    delete newItem.image_url;
     return newItem;
   });
   [response.data] = resData;
@@ -384,6 +388,10 @@ articles.put('/article', checkToken, async (ctx) => {
     const resData = rows[querys.length - 1].map((item) => {
       const newItem = { ...item };
       newItem.tags = getTags(newItem.articleTags);
+      newItem.createdTime = dateFormat(newItem.created_time, 'yyyy-MM-dd');
+      newItem.imageUrl = newItem.image_url;
+      delete newItem.created_time;
+      delete newItem.image_url;
       delete newItem.articleTags;
       return newItem;
     });

@@ -29,7 +29,7 @@ login.post('/login', async (ctx) => {
 });
 
 login.get('/login/status', checkToken, async (ctx) => {
-  response.data.isLogin = true;
+  response.data = { isLogin: true };
   ctx.body = response;
 });
 

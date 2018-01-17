@@ -1,4 +1,5 @@
 import Router from 'koa-router';
+import { checkToken } from '../utils/token';
 import Pool from '../utils/db';
 
 const tags = new Router();
@@ -37,7 +38,7 @@ tags.get('/tag/:id', async (ctx) => {
 /**
  * 创建新标签
  */
-tags.post('/tag', async (ctx) => {
+tags.post('/tag', checkToken, async (ctx) => {
   const {
     name, value,
   } = ctx.request.body;
@@ -49,7 +50,7 @@ tags.post('/tag', async (ctx) => {
 /**
  * 更新标签
  */
-tags.put('/tag', async (ctx) => {
+tags.put('/tag', checkToken, async (ctx) => {
   const columns = ['name', 'value'];
   const { body } = ctx.request;
   const updateObj = {};
@@ -77,7 +78,7 @@ tags.put('/tag', async (ctx) => {
 /**
  * 删除标签
  */
-tags.delete('/tag/:id', async (ctx) => {
+tags.delete('/tag/:id', checkToken, async (ctx) => {
   const { id } = ctx.params;
   const rows = await Pool.query(
     'DELETE FROM tags WHERE id = ?',

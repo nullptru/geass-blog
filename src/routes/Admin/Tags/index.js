@@ -101,7 +101,7 @@ class TagAdmin extends React.PureComponent {
           tag={item}
         />))}
         <Card className={addTagClassList.join(' ')} onClick={this.showAddDialog}>
-          <Icon type="plus" />
+          <Icon type="add" />
         </Card>
       </div>
     );

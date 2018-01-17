@@ -16,7 +16,7 @@ comments.all('/', async (ctx, next) => {
 });
 
 comments.get('/comments/article/:id', async (ctx) => {
-  const rows = await Pool.query('SELECT * FROM comments WHERE article_id = ? ORDER BY created_time', [ctx.params.id]);
+  const rows = await Pool.query('SELECT id, author, message, created_time as createdTime FROM comments WHERE article_id = ? ORDER BY created_time', [ctx.params.id]);
   response.data = rows;
   ctx.body = response;
 });

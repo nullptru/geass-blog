@@ -236,7 +236,7 @@ class Article extends React.PureComponent {
         {/* article list */}
         <div className={styles.articleList}>
           <div className={styles.addNewArticleContainer} onClick={this.addNewArticle}>
-            <Icon type="plus" />
+            <Icon type="add" />
           </div>
           {articleList.map(item => (
             <ArticlesItem
@@ -258,7 +258,7 @@ class Article extends React.PureComponent {
                   <Icon type="upload" />
                 </Upload>
                 <Icon type="save" onClick={this.onSubmit.bind(this, 0)} className={styles.iconBtn} />
-                <Icon type="export" onClick={this.onSubmit.bind(this, 1)} className={styles.iconBtn} />
+                <Icon type="publish" onClick={this.onSubmit.bind(this, 1)} className={styles.iconBtn} />
                 <div className={styles.right}>
                   <Upload {...this.uploaderContentProps} className={styles.upload} style={{ marginRight: '4px' }}>
                     <Icon type="upload" /><span>上传文章图片</span>

@@ -23,16 +23,16 @@ class ThrottleButton extends React.PureComponent {
   }
 
   handleClick = () => {
-    const result = this.props.onClick() || true;
-    if (result instanceof Promise) {
-      result.then((res) => {
-        if (!res) {
-          this.clear(); // if result is err, then stop tick operation
-        }
-      });
-    }
-    if (!result) return;
     if (!this.state.disable) {
+      const result = this.props.onClick() || true;
+      if (result instanceof Promise) {
+        result.then((res) => {
+          if (!res) {
+            this.clear(); // if result is err, then stop tick operation
+          }
+        });
+      }
+      if (!result) return;
       this.setState({
         disable: true,
       });

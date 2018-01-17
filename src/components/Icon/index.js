@@ -3,7 +3,7 @@ import './index.less';
 
 const Icon = (props) => {
   const { type, className = '', ...rest } = props;
-  const classList = ['anticon', 'icon', `icon-${type}`, className];
+  const classList = ['iconfont', `icon-${type}`, className];
   return <i {...rest} className={classList.join(' ')} />;
 };
 
