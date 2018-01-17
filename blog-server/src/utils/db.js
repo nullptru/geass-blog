@@ -79,6 +79,7 @@ const container = () => {
                       exec(i + 1);
                     }
                   });
+                  console.log(query.sql)
                 };
                 exec(0);
               }

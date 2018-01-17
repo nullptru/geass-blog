@@ -337,7 +337,7 @@ articles.post('/article', async (ctx) => {
 articles.put('/article', async (ctx) => {
   const columns = ['title', 'content', 'abstraction', 'image_url'];
   const { body } = ctx.request;
-  const { tagIds } = body;
+  const { tagIds = [] } = body;
   const updateObj = {};
   let updated = false;
   columns.forEach((column) => {
@@ -357,7 +357,7 @@ articles.put('/article', async (ctx) => {
       sql: 'UPDATE articles SET ? WHERE id = ?',
       params: [updateObj, body.id],
     }];
-    if (tagIds !== undefined) {
+    if (tagIds.length > 0) {
       const params = tagIds.map(tagId => [body.id, tagId]);
       querys = querys.concat([{
         sql: 'DELETE FROM tag2article WHERE article_id = ?',

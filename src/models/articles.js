@@ -160,7 +160,7 @@ export default {
         response = yield call(create, payload);
       }
       if (response.success) {
-        message.info(status === 0 ? '草稿保存成功' : '文章创建成功');
+        message.info(status === 0 ? '草稿保存成功' : '文章发布成功');
         yield put({ type: 'queryAllArticles' });
         yield put({ type: 'updateState', payload: { article: response.data } });
       } else {

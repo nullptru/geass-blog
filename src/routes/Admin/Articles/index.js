@@ -18,7 +18,7 @@ class Article extends React.PureComponent {
   constructor(props) {
     super(props);
     this.state = {
-      editorText: props.article.content,
+      editorText: props.article.content || '',
       articleId: props.article.id,
 
       confirmModalVisible: false,
@@ -94,20 +94,18 @@ class Article extends React.PureComponent {
 
   checkEditStatus = () => {
     let isEdit = false;
-    if (Object.keys(this.props.article).length > 0) {
-      const { getFieldsValue } = this.props.form;
-      const currentArticle = {
-        ...getFieldsValue(),
-        content: this.state.editorText,
-      };
-      const originalArticle = {
-        abstraction: this.props.article.abstraction,
-        title: this.props.article.title,
-        tagIds: this.props.article.tags.map(tag => tag.id),
-        content: this.props.article.content,
-      };
-      isEdit = !isObjEqual(originalArticle, currentArticle);
-    }
+    const { getFieldsValue } = this.props.form;
+    const currentArticle = {
+      ...getFieldsValue(),
+      content: this.state.editorText,
+    };
+    const originalArticle = {
+      abstraction: this.props.article.abstraction || '',
+      title: this.props.article.title || '',
+      tagIds: this.props.article.tags ? this.props.article.tags.map(tag => tag.id) : [],
+      content: this.props.article.content || '',
+    };
+    isEdit = !isObjEqual(originalArticle, currentArticle);
     return isEdit;
   }
 
@@ -156,7 +154,7 @@ class Article extends React.PureComponent {
         tagIds: [],
       });
     };
-    const isEdit = this.checkEditStatus();
+    const isEdit = this.checkEditStatus(true);
     if (isEdit) {
       this.setState({
         confirmModalVisible: true,
@@ -205,7 +203,7 @@ class Article extends React.PureComponent {
       value: this.state.editorText,
       articleId: this.state.articleId,
       shouldUpdate(nextProps, props) {
-        return (nextProps.value !== props.value && nextProps.articleId !== props.articleId);
+        return (nextProps.value !== props.value && (nextProps.articleId !== props.articleId || !nextProps.articleId));
       },
     };
 
@@ -254,7 +252,7 @@ class Article extends React.PureComponent {
           <form>
             <div className={styles.articlePanel}>
               {/* common form item */}
-              {getFieldDecorator('title', { initialValue: article.title })(<Input className={styles.title} />)}
+              {getFieldDecorator('title', { initialValue: article.title || '' })(<Input className={styles.title} />)}
               <div className={styles.toolPanel}>
                 <Upload {...this.uploaderProps} className={styles.upload}>
                   <Icon type="upload" />
@@ -270,7 +268,7 @@ class Article extends React.PureComponent {
                   </Select>)}
                 </div>
               </div>
-              {getFieldDecorator('abstraction', { initialValue: article.abstraction })(<Input className={styles.abstraction} multiple />)}
+              {getFieldDecorator('abstraction', { initialValue: article.abstraction || '' })(<Input className={styles.abstraction} multiple />)}
               { (article.imageUrl || articleImages.length > 0) && <div className={styles.imgPanel}>
                 { article.imageUrl &&
                   <span>标题图片: <img src={article.imageUrl} alt="标题图片" className={styles.pasterImage} onClick={i => copy(i.target.src)} /></span>
