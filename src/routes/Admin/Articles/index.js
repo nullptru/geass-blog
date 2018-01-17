@@ -194,36 +194,40 @@ class Article extends React.PureComponent {
     const {
       articleImages, tagList, article, articleList, form: { getFieldDecorator },
     } = this.props;
+    const {
+      editorText, articleId, confirmModalVisible, confirmDeleteModalVisible, confirmModalSuccess,
+    } = this.state;
+
     const tagIds = (article.tags || []).map(tag => tag.id);
     const markdownProps = {
       mode: 'markdown',
       theme: 'monokai',
       lineWrapping: true,
       onChange: this.onEditorChange,
-      value: this.state.editorText,
-      articleId: this.state.articleId,
+      value: editorText,
+      articleId,
       shouldUpdate(nextProps, props) {
-        return (nextProps.value !== props.value && (nextProps.articleId !== props.articleId || !nextProps.articleId));
+        return (nextProps.value !== props.value && (nextProps.articleId !== props.articleId || (!nextProps.articleId && nextProps.value === '')));
       },
     };
 
     const dialogs = [];
-    if (this.state.confirmModalVisible) {
+    if (confirmModalVisible) {
       dialogs.push(ReactDOM.createPortal(<Dialog
-        onConfirm={this.state.confirmModalSuccess.bind(this)}
+        onConfirm={confirmModalSuccess.bind(this)}
         onCancel={() => this.setState({ confirmModalVisible: false })}
-        visible={this.state.confirmModalVisible}
+        visible={confirmModalVisible}
         title="警告"
       >
         当前文章已被更改，是否放弃更改离开。
       </Dialog>, this.dialogContainer));
     }
 
-    if (this.state.confirmDeleteModalVisible) {
+    if (confirmDeleteModalVisible) {
       dialogs.push(ReactDOM.createPortal(<Dialog
-        onConfirm={this.state.confirmModalSuccess.bind(this)}
+        onConfirm={confirmModalSuccess.bind(this)}
         onCancel={() => this.setState({ confirmDeleteModalVisible: false })}
-        visible={this.state.confirmDeleteModalVisible}
+        visible={confirmDeleteModalVisible}
         title="警告"
       >
         确认删除文章
