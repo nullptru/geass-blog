@@ -10,6 +10,7 @@ import {
   remove,
   upload,
 } from 'services/articles';
+import { decrypt } from 'utils/crypto';
 import queryString from 'query-string';
 import { message } from 'components';
 
@@ -33,7 +34,7 @@ export default {
     setup({ dispatch, history }) {
       history.listen((location) => {
         if (location.pathname === '/') { // 主页面
-          const { search: searchStr, page: current = 1 } = queryString.parse(location.search);
+          const { search: searchStr = '', current = 1 } = (decrypt(queryString.parse(location.search).params) || {});
           dispatch({ type: 'queryArticles', payload: { search: searchStr, current: Number(current) } }); // 获取文章列表
           dispatch({ type: 'queryLatestArticles' }); // 获取最新文章
           dispatch({ type: 'updateState', payload: { article: {} } }); // 置空文章

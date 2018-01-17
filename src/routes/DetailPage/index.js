@@ -37,7 +37,7 @@ class Detail extends React.PureComponent {
             {article.next ? <Link to={`/article/${article.next.id}` || '/'} className={styles.next}><span>Next</span><span className={styles.title}>{article.next.title}</span></Link> : <span className={styles.noMore}>没有更多</span>}
           </div>
         </div>
-        <CommentComponent articleId={article.id} />
+        {article.id && <CommentComponent articleId={article.id} />}
       </React.Fragment>
     );
   }

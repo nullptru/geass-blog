@@ -206,7 +206,6 @@ class Article extends React.PureComponent {
       value: editorText,
       articleId,
       shouldUpdate(nextProps, props) {
-        console.log(nextProps.articleId, nextProps.value, props.value);
         return (nextProps.value !== props.value && (nextProps.articleId !== props.articleId || (!nextProps.articleId && nextProps.value === '')));
       },
     };

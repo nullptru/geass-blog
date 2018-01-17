@@ -2,6 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { routerRedux } from 'dva/router';
 import { connect } from 'dva';
+import { decrypt, encrypt } from 'utils/crypto';
 import queryString from 'query-string';
 import Article from 'components/ArticleItem';
 import { Search, Pagination, Loading } from 'components';
@@ -14,7 +15,7 @@ const Home = ({
   dispatch, articles, tagList, location, loading,
 }) => {
   const { list, latestPosts, pagination } = articles;
-  const queryParams = queryString.parse(location.search);
+  const queryParams = decrypt(queryString.parse(location.search).params) || {};
 
   const onArticleClick = (id) => {
     dispatch(routerRedux.push({
@@ -23,24 +24,24 @@ const Home = ({
   };
 
   const onSearch = (query) => {
-    let searchStr = '';
+    const searchData = {};
     if (!!query) {
-      searchStr = `search=${query}`;
+      searchData.search = query;
     }
     dispatch(routerRedux.push({
       pathname: '/',
-      search: searchStr,
+      search: `params=${encrypt(searchData)}`,
     }));
   };
 
   const handlePaginationChange = ({ current }) => {
-    let searchStr = '';
+    const searchData = { current };
     if (!!queryParams.search) {
-      searchStr += `search=${queryParams.search}&`;
+      searchData.search = queryParams.search;
     }
     dispatch(routerRedux.push({
       pathname: '/',
-      search: `${searchStr}page=${current}`,
+      search: `params=${encrypt(searchData)}`,
     }));
   };
 
