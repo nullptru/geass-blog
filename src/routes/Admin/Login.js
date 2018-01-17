@@ -41,7 +41,7 @@ class Login extends React.PureComponent {
       </div>
     );
   }
-};
+}
 
 Login.propTypes = {
   form: PropTypes.object.isRequired,

@@ -57,9 +57,9 @@ class Dialog extends React.PureComponent {
           </section>
         </div>
       </div>
-    ) : '' ;
+    ) : '';
   }
-};
+}
 
 Dialog.propTypes = {
   title: PropTypes.any,
