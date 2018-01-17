@@ -1,11 +1,19 @@
 import axios from 'axios';
 import pathToRegexp from 'path-to-regexp';
+import { message } from 'components';
 
+axios.defaults.withCredentials = true;
+
+/* eslint-disable no-undef */
 function checkStatus(response) {
   if (response.status >= 200 && response.status < 300) {
     return response;
   }
-
+  if (response.status === 401) {
+    message.info('请重新登陆');
+    window.location = '/iwanttologin';
+    return response;
+  }
   const error = new Error(response.statusText);
   error.response = response;
   throw error;
@@ -79,5 +87,12 @@ export default function request(options) {
   return fetchRequest(options)
     .then(checkStatus)
     .then(resData => resData.data)
-    .catch(err => ({ err }));
+    .catch((err) => {
+      const { response } = err;
+      if (response.status === 401) {
+        message.info('请重新登陆');
+        window.location = '/iwanttologin';
+      }
+      return { response };
+    });
 }

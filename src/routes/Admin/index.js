@@ -11,10 +11,10 @@ class AdminIndex extends React.PureComponent {
   }
 
   componentWillMount() {
-    /* eslint-disable no-undef */
-    if (!window.sessionStorage.getItem('isLogin', false)) {
-      window.location = '/iwanttologin';
-    }
+    // 查询登陆状态
+    this.props.dispatch({
+      type: 'login/isLogin',
+    });
   }
 
   handleMenuClick = (key) => {
@@ -24,11 +24,11 @@ class AdminIndex extends React.PureComponent {
   };
 
   render() {
-    const { getRouteData } = this.props;
+    const { getRouteData, login } = this.props;
     const [routers] = getRouteData('/admin');
     const items = routers.children.map(item => ({ title: item.name, key: item.path }));
     // 防止为登陆看到数据
-    if (!window.sessionStorage.getItem('isLogin', false)) {
+    if (!login.isLogin) {
       return null;
     }
     return (

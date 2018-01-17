@@ -9,3 +9,11 @@ export function queryLogin(params) {
     data: params,
   });
 }
+
+export function queryLoginStatus(params) {
+  return request({
+    url: login.loginStatus,
+    method: 'get',
+    data: params,
+  });
+}
