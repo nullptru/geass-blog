@@ -1,0 +1,54 @@
+.message {
+  &-notice.move-up-leave.move-up-leave-active {
+    animation-name: MessageMoveOut;
+    overflow: hidden;
+    animation-duration: .3s;
+  }
+}
+
+:global {
+  .geass {
+    &-message {
+      font-size: 1em;
+      line-height: 1.5;
+      color: rgba(0, 0, 0, 0.65);
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      list-style: none;
+      position: fixed;
+      z-index: 1010;
+      width: 100%;
+      top: 16px;
+      left: 0;
+      pointer-events: none;
+    }
+
+    &-message-notice {
+      padding: 8px;
+      text-align: center;
+    }
+
+    &-message-notice-content {
+      padding: 10px 16px;
+      border-radius: 4px;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+      background: #fff;
+      display: inline-block;
+      pointer-events: all;
+    }
+  }
+}
+
+@keyframes MessageMoveOut {
+  0% {
+    opacity: 1;
+    max-height: 150px;
+    padding: 8px;
+  }
+  100% {
+    opacity: 0;
+    max-height: 0;
+    padding: 0;
+  }
+}

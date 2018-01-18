@@ -1,0 +1,87 @@
+@import '~themes/vars.less';
+
+.list code {
+  background: #f7f7f7;
+}
+
+:global {
+  #live2d {
+    position: fixed;
+    bottom: 0;
+    right: 0;
+  }
+
+  #dialog {
+    position: fixed;
+    top: 0;
+    z-index: 1000;
+  }
+}
+
+:global {
+  .fade-enter {
+    opacity: 0;
+    z-index: 1;
+  }
+  
+  .fade-enter.fade-enter-active {
+    opacity: 1;
+    transition: opacity 250ms ease-in;
+  }
+}
+
+button {
+  position: relative;
+  display: inline-block;
+  padding: 4px 8px;
+  width: 120px;
+  height: @button-height-base;
+  font-size: 12px;
+  line-height: @line-height-base;
+  color: @input-color;
+  background-color: @input-bg;
+  background-image: none;
+  border: @border-width-base @border-style-base @input-border-color;
+  border-radius: 6px;
+  transition: all .3s;
+
+  &:hover {
+    .hover();
+  }
+
+  &:focus {
+    .active();
+  }
+}
+
+// input status
+// == when focus or actived
+.active(@color: @outline-color) {
+  border-color: @color;
+  outline: 0;
+  box-shadow: 0 0 @outline-blur-size @outline-width fade(@color, 20%);
+}
+
+// == when hoverd
+.hover(@color: @input-hover-border-color) {
+  border-color: @color;
+}
+
+.footerIcon {
+  a {
+    display: inline-block;
+    margin: 16px 12px;
+    margin-bottom: 0;
+    cursor: pointer;
+    transition: color .3s ease;
+
+  }
+  i {
+    font-size: 48px;
+    color: whitesmoke;
+
+    &:hover {
+      color: #dfdfdf;
+    }
+  }
+}

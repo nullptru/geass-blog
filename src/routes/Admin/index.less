@@ -1,0 +1,68 @@
+.container {
+  min-height: ~"calc(100% - 40px)";
+  background: white;
+  margin-left: 220px;
+  padding: 20px;
+}
+
+.form {
+  width: 400px;
+  height: 400px;
+  padding: 40px;
+  button {
+    width: 100%;
+    border-radius: 2px;
+    box-shadow: 5px 5px 10px rgba(46, 181, 164, 0.1)
+    //background-color: #4688ff;
+    //&:hover{
+    //  background-color: #579cff;
+    //}
+    //&:active{
+    //  background-color: #1e68ee;
+    //}
+  }
+
+  p {
+    color: rgb(204, 204, 204);
+    text-align: center;
+    margin-top: 16px;
+
+    span {
+      &:first-child {
+        margin-right: 16px;
+      }
+    }
+  }
+  img {
+    margin-top: -3px;
+  }
+}
+
+.logo {
+  margin-bottom: 24px;
+  text-align: center;
+  font-size: 2em;
+  font-weight: bolder;
+  
+}
+
+// login
+.loginContainer {
+  display: flex;
+  min-height: 100vh;
+  align-items: center;
+  justify-content: center;
+  color: rgb(5, 5, 5);
+  background: url("https://hugo-smpl-theme.netlify.com/assets/img/bg.jpg");
+
+  button {
+    height: 2.5em;
+    background: rgb(74, 205, 214);
+    font-size: 1em;
+    color: white;
+  }
+}
+
+.formItem {
+  margin: 8px 0;
+}

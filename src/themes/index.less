@@ -1,0 +1,75 @@
+@import './grid.less';
+@import './vars.less';
+
+:global {
+  .center {
+      text-align: center;
+  }
+  .margin-base {
+    margin: 4px 8px;
+  }
+}
+
+body {
+	margin: 0;
+  padding: 0;
+  min-width: 320px;
+  color: @font-color;
+  font-family: Helvetica, Arial, sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  background-color:#f7f7f7;
+  font-size: @font-base-size;
+}
+
+img {
+  max-width: 100%;
+}
+
+table {
+	border-collapse: collapse;
+	border-spacing: 0;
+}
+pre {
+  border: 1px solid #ccc;
+}
+
+blockquote {
+  color: #666;
+  margin: 0;
+  padding-left: 1.5em;
+  border-left: 0.5em #eee solid;
+}
+
+tr {
+  border-top: 1px solid #c6cbd1;
+  background: #fff;
+}
+
+th,
+td {
+  padding: 6px 13px;
+  border: 1px solid #dfe2e5;
+}
+
+table tr:nth-child(2n) {
+  background: #f6f8fa;
+}
+
+code {
+  background: #f8f8f8;
+  padding: 2px 6px;
+  margin: 0 2px;
+  border-radius: 2px;
+}
+
+label {
+  margin: 8px 4px;
+}
+
+:global {
+  .error {
+    font-size: 12px;
+    color: red;
+  }
+}

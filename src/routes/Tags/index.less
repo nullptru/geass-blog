@@ -1,0 +1,47 @@
+@import '~themes/vars.less';
+
+.tagsPanel {
+  margin: 8px auto 16px;
+}
+
+.tag {
+  color: #0085a1;
+  font-size: 18px;
+  i {
+    font-size: 20px;
+  }
+  span {
+    color: #0085a1;
+  }
+}
+
+.articlesPanel {
+  margin-top: 16px;
+}
+
+.article {
+  margin: 12px;
+  padding: 4px 16px;
+  cursor: pointer;
+  
+  &::after {
+    display: block;
+    content: '';
+    width: 100%;
+    margin-top: 16px;
+    border: 0px solid #dfdfdf;
+    border-bottom-width: 1px;
+  }
+  .title {
+    margin: 8px auto;
+    font-size: 20px;
+    color: #404040;
+  }
+
+  &:hover {
+    color: #0085a1;
+    .title {
+      color: #0085a1;
+    }
+  }
+}

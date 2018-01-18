@@ -1,0 +1,209 @@
+@import '~themes/vars.less';
+
+.detailContainer {
+  margin-top: -120px;
+  z-index: 1000;
+  transform: translateZ(0);
+  word-break: break-all;
+}
+.detail {
+  position: relative;
+  margin: 24px auto;
+  padding: 12px;
+  min-height: 280px;
+  background: white;
+  color: black;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  border-radius: 8px;
+
+  .title {
+    margin: 16px 0 4px;
+    text-align: center;
+    font-size: @article-title-font;
+    font-weight: bold;
+  }
+
+  .meta {
+    text-align: center;
+    font-size: @font-meta-size;
+    color: @meta-color;
+    .time {
+      font-style: italic;
+      margin-right: 8px;
+    }
+  }
+
+  .content {
+    margin: 12px 12px 20px 12px;
+    padding: 8px 16px;
+  }
+
+  .tags {
+    margin: 20px 0 12px;
+    color: @tag-color;
+    .tagIcon {
+      margin-left: 8px;
+      color: @tag-color;
+    }
+    .tag {
+      margin-left: 8px;
+      color: @tag-color;
+      &:hover {
+        cursor: pointer;
+        text-decoration: underline;
+      }
+    }
+  }
+}
+.btnGroup {
+  display: flex;
+  justify-content: space-between;
+
+  .basic {
+    padding: 4px 30px;
+    display: inline-block;
+    position: relative;
+    width: 100px;
+    max-width: 128px;
+    height: 50px;
+    text-align: center;
+    line-height: 50px;
+    background: #ccc;
+    color: @font-color;
+    border-radius: 100px;
+    transition: .3s all ease-in-out;
+    overflow: hidden;
+    z-index: 10;
+  }
+  .pre, .next {
+    .basic;
+    &:hover, &::after {
+      background: #e6e6e6;
+    }
+    &:hover::after {
+      width: 100%;
+    }
+    &::after {
+      content: '';
+      position: absolute;
+      width: 0%;
+      height: 100%;
+      right: 0;
+      top: 0;
+      transition: .3s all ease-in-out;
+      z-index: 1;
+    }
+    span {
+      position: relative;
+      font-weight: bold;
+      z-index: 101;
+    }
+    .title {
+      display: block;
+      font-size: 12px;
+    }
+  }
+  .noMore {
+    .basic
+  }
+}
+
+.commentContainer {
+  margin: 60px 0;
+  word-break: break-all;
+
+  .header, .subHeader {
+    font-weight: bold;
+  }
+  .header {
+    font-size: 1.64em;
+  }
+
+  .subHeader {
+    font-size: 1.32em;
+    margin: 8px 0 16px 0;
+  }
+
+  .commentItem {
+    margin: 24px 0;
+    &:after {
+      content: ' ';
+      display: block;
+      border: 0.5px dashed gray;
+    }
+  }
+
+  header {
+    font-size: 1em;
+    font-weight: bold;
+    margin: 12px 0;
+  }
+
+  .name {
+    margin-right: 8px;
+  }
+
+  .time {
+    font-size: 0.7em;
+    color: lightgray;
+    &:before {
+      content: '•';
+      margin-right: 4px;
+    }
+  }
+  .editComment {
+    display: block;
+    width: 100%;
+    min-height: 100px;
+    line-height: 1.5em;
+  }
+
+  .editAuthor {
+    display: block;
+    width: 50%;
+    line-height: 1.5em;
+    margin-bottom: 12px;
+  }
+
+  .commentMessage {
+    line-height: 1.5em;
+    font-size: 1em;
+    margin-bottom: 20px;
+    // border-left: 2px solid grey;
+  }
+
+  .list {
+    max-width: 100%;
+  }
+
+  .submitBtn {
+    display: flex;
+    justify-content: center;
+    cursor: pointer;
+    width: 100px;
+    margin: 8px 0;
+    height: 2em;
+    line-height: 2em;
+    background: white;
+    padding: 4px 8px;
+    border-radius: 4px;
+    box-shadow: 0 0 2px rgba(0, 0, 0, 0.5);
+    transition: all .3s ease; 
+
+    &:hover {
+      // background: rgba(250, 250, 250, 0.8);
+      box-shadow: 0 .5px 2px rgba(0, 0, 0, 0.5);
+    }
+  }
+}
+
+@media (min-width: 768px) {
+  .commentContainer{
+    .editAuthor {
+      width: 20%;
+    }
+    .list, .editComment {
+      width: 70%;
+    }
+  }
+}

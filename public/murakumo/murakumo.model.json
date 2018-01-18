@@ -1,0 +1,26 @@
+{
+	"version":"Sample 1.0.0",
+	"model":"murakumo.moc",
+	"textures":[
+		"../murakumo_2048/texture_00.png"
+	],
+	"motions":{
+		"tap_bust":[
+			{"file":"motions/murakumo_tap_bust_01.mtn"},
+			{"file":"motions/murakumo_tap_bust_02.mtn"}
+		],
+		"idle":[
+			{"file":"motions/murakumo_idle_01.mtn"},
+			{"file":"motions/murakumo_idle_02.mtn"},
+			{"file":"motions/murakumo_idle_03.mtn"}
+		],
+		"tap_ear":[
+			{"file":"motions/murakumo_tap_ear_01.mtn"}
+		],
+		"tap":[
+			{"file":"motions/murakumo_m_01.mtn"},
+			{"file":"motions/murakumo_m_02.mtn"}
+		]
+	},
+	"physics":"murakumo.physics.json"
+}

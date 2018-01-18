@@ -1,0 +1,29 @@
+# See https://help.github.com/articles/ignoring-files/ for more about ignoring files.
+
+# dependencies
+/node_modules
+/blog-server/node_modules
+
+# production
+/dist
+/**/dist
+
+# yarn
+yarn.lock
+
+# vscode config
+/**/.vscode
+.vscode
+
+# misc
+.DS_Store
+npm-debug.log*
+
+# package-lock
+/**/package-lock.json
+
+# config
+/blog-server/**/config.js
+/**/config.js
+
+/**/imgs

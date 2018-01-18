@@ -1,0 +1,47 @@
+@import '~themes/vars.less';
+
+.menu {
+    display: flex;
+    margin: 0;
+    padding: 0;
+}
+.menu > .menuItem {
+    margin: 0;
+    flex: 0 0 auto;
+    display: inline-block;
+    position: relative;
+    vertical-align: middle;
+    line-height: 1;
+    text-decoration: none;
+    cursor: pointer;
+    background: 0 0;
+    color: white;
+    padding: 1.11em 1.14285714em;
+    text-transform: none;
+    font-weight: 400;
+    font-size: 1em;
+    transition: background .1s ease,box-shadow .1s ease,color .1s ease;
+
+    &:hover {
+        background: rgba(255,255,255,.08);
+        color: rgba(255,255,255,.87);
+    }
+}
+
+.menuItem.active {
+    background: rgba(255,255,255,.08);
+    color: rgba(255,255,255,.7);
+}
+
+.menuItem.noBackground {
+    &:hover {
+        background: transparent;
+    }
+    &.active {
+        background: transparent;
+    }
+}
+
+.verticle {
+    flex-direction: column;
+}

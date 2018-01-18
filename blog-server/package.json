@@ -1,0 +1,39 @@
+{
+  "name": "blog-server",
+  "version": "1.0.0",
+  "description": "geass blog server",
+  "main": "index.js",
+  "scripts": {
+    "start": "babel-node src/index.js",
+    "pm": "pm2 start --interpreter babel-node ./src/index.js",
+    "build": "babel src -d dist --source-maps",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [
+    "blog",
+    "server"
+  ],
+  "author": "geass",
+  "license": "ISC",
+  "dependencies": {
+    "jsonwebtoken": "^8.1.0",
+    "koa": "^2.4.1",
+    "koa-body": "^2.5.0",
+    "koa-logger": "^3.1.0",
+    "koa-multer": "^1.0.2",
+    "koa-router": "^7.3.0",
+    "koa-session-minimal": "^3.0.4",
+    "koa2-cors": "^2.0.5",
+    "mysql": "^2.15.0",
+    "qiniu": "^7.1.1"
+  },
+  "devDependencies": {
+    "babel-core": "^6.26.0",
+    "babel-eslint": "^8.0.2",
+    "babel-plugin-transform-runtime": "^6.23.0",
+    "babel-preset-env": "^1.6.1",
+    "babel-preset-stage-0": "^6.24.1",
+    "babel-runtime": "^6.26.0",
+    "eslint": "^4.11.0"
+  }
+}

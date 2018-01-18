@@ -1,0 +1,34 @@
+@import '~themes/vars.less';
+
+.tag {
+    display: inline-block;
+    margin: 4px 4px;
+    border: none;
+    font-size: @font-base-size;
+    border-radius: 10px;
+    & a {
+        display: inline-block;
+        padding: 8px 15px;
+    }
+    &:hover {
+        box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
+    }
+}
+.primary {
+    background-color: #efefef;
+    & a {
+        color: #8d8d8d;
+    }
+}
+.lightBlue {
+    background-color: #ffedff;
+    & a {
+        color: #789169;
+    }
+}
+.lightRed {
+    background-color: #ffc4c8;
+}
+.lightGreen {
+    background-color: #b8f2eb;
+}

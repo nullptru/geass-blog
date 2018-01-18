@@ -1,0 +1,40 @@
+@import '~themes/vars.less';
+
+.card {
+    margin: 10px;
+    padding: 10px;
+    background-color: @transparent-white;
+    border-radius: 5px;
+    transform: translateZ(0);
+
+    header {
+        color: @default-font-color;
+        text-align: center;
+    }
+
+    .header {
+        display: inline-block;
+        margin: 10px auto 5px;
+        font-size: 20px;
+        font-weight: bold;
+        &::after {
+            width: 80%;
+            display: block;
+            position: relative;
+            left: 10%;
+            border: 1px solid #bbbbbb;
+            margin: 5px 0;
+            content: '';
+        }
+    }
+    
+    .container {
+        text-align: left;
+    }
+}
+
+@media (min-width: 768) {
+    .card {
+        min-width: 220px;
+    }
+}
