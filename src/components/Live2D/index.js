@@ -45,9 +45,6 @@ class Live2D extends React.PureComponent {
       if (live2dSprite.hitTest('body', point.x, point.y)) {
         live2dSprite.startRandomMotionOnce('tap_body');
       }
-      if (live2dSprite.hitTest('head', point.x, point.y)) {
-        live2dSprite.playSound('星のカケラ.mp3', '/sound/');
-      }
     });
     live2dSprite.on('mousemove', (evt) => {
       const point = evt.data.global;
