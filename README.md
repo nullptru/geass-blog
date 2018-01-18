@@ -21,9 +21,13 @@ npm start
 npm run build
 ```
 ### 界面展示
+##### 主页
 ![主页](http://p1wmhg5ee.bkt.clouddn.com/main.png)
+##### 详情
 ![详情](http://p1wmhg5ee.bkt.clouddn.com/56FF3551-3CE5-4B55-9380-F7D4DA748218.png)
+##### 登陆
 ![登陆](http://p1wmhg5ee.bkt.clouddn.com/63CC2D25-5A4C-411A-91D8-CCBF7C442603.png)
+##### 后台
 ![后台](http://p1wmhg5ee.bkt.clouddn.com/592D8DB1-FF55-4504-8FAC-ABFC0C73A4BB.png)
 
 ### 功能实现
