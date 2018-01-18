@@ -150,7 +150,6 @@ articles.get('/articles/tags', async (ctx) => {
 articles.get('/article/:id', async (ctx) => {
   const ipAddress = ip.address();
   const isNew = ip.addCached(ctx.req.socket.remoteAddress || ipAddress);
-  console.log(ctx.req.socket.remoteAddress, ctx.req.socket.remoteFamily, ctx.req.socket.remotePort);
   const querys = [{
     sql: "SELECT articles.*, GROUP_CONCAT(concat_ws(',', tags.id, tags.name,tags.value) ORDER BY tags.id SEPARATOR '|') AS articleTags  FROM articles " +
     'LEFT JOIN tag2article ON tag2article.article_id = articles.id ' +
