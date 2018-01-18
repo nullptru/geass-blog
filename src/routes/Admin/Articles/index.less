@@ -120,6 +120,7 @@
   font-size: 1em;
   padding: 8px 12px;
   &:hover {
+    cursor: pointer;
     background: #7f7f7f;
     i, span {
       color: white;
@@ -136,6 +137,7 @@
   font-size: 1em;
   padding: 8px 12px;
   &:hover {
+    cursor: pointer;
     background: #7f7f7f;
   }
 }
@@ -166,6 +168,9 @@
       color: #7f7f7f
     }
   }
+  &:hover {
+    cursor: pointer;
+  }
 }
 
 .listItem {
@@ -175,12 +180,14 @@
   border: 0px solid lightgray;
   padding-left: 12px;
   border-bottom-width: 1px;
+  word-break: break-all;
   color: black;
   box-shadow: 0 0 1px rgba(0, 0, 0, 0.1);
   cursor: pointer;
   z-index: 1000;
 
-  .title {
+  .itemTitle {
+    line-height: 1.5em;
     font-size: 16px;
     margin: 8px 0;
   }

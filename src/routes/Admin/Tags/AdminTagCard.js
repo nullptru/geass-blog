@@ -8,8 +8,8 @@ const AdminTagCard = ({ tag, onEdit, onDelete }) => {
       className={styles.tagCard}
       footer={
         <div className={styles.buttonGrp}>
-          <button onClick={onEdit}>编辑</button>
-          <button onClick={onDelete}>删除</button>
+          <a onClick={onEdit}>编辑</a>
+          <a onClick={onDelete}>删除</a>
         </div>
       }
     >

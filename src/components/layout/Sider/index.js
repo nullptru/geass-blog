@@ -8,7 +8,7 @@ export default class Sider extends React.PureComponent {
     return (
       <div className={styles.sider}>
         <div className={styles.logo}>Geass Blog</div>
-        <Menu items={items} mode="verticle" onClick={onMenuClick} />
+        <Menu items={items} mode="verticle" onClick={onMenuClick} defaultActiveKey={items[0].key} />
       </div>
     );
   }

@@ -29,10 +29,22 @@
 }
 
 .buttonGrp {
-  button {
+  a {
+    display: inline-block;
     width: 50%;
+    box-sizing: border-box;
+    text-align: center;
+    line-height: 2;
     border-radius: 0;
+    border: 1px solid lightgray;
     border-bottom: none;
+    cursor: pointer;
+    &:hover {
+      box-shadow: 0 0 4px rgba(0, 0, 0, 0.2);
+    }
+    &:first-child {
+      border-right: none;
+    }
   }
 }
 

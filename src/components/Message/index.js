@@ -1,6 +1,6 @@
 import React from 'react';
 import Notification from 'rc-notification';
-import 'rc-notification/assets/index.css';
+import './index.less';
 
 const defaultDuration = 3;
 const defaultTop = '5%';
@@ -13,8 +13,9 @@ function getMessageInstance(callback) {
     return;
   }
   Notification.newInstance({
+    prefixCls: 'geass-message',
     transitionName: 'move-up',
-    style: { top: defaultTop, left: '50%' }, // 覆盖原来的样式
+    style: { top: defaultTop }, // 覆盖原来的样式
   }, (instance) => {
     if (messageInstance) {
       callback(messageInstance);

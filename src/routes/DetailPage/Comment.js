@@ -19,6 +19,8 @@ class Comment extends React.PureComponent {
       type: 'comments/updateState',
       payload: {
         list: [],
+        inputErr: false,
+        createErr: false,
       },
     });
   }
@@ -79,7 +81,7 @@ class Comment extends React.PureComponent {
                 <section key={comment.id} className={styles.commentItem}>
                   <header>
                     <span className={styles.name}>{comment.author}</span>
-                    {comment.created_time && <span className={styles.time}>{comment.createdTime.substr(0, 10)}</span>}
+                    {comment.createdTime && <span className={styles.time}>{comment.createdTime.substr(0, 10)}</span>}
                   </header>
                   <div className={styles.commentMessage}><span>{comment.message}</span></div>
                 </section>

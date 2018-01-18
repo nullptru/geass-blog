@@ -8,7 +8,7 @@ import Article from 'components/ArticleItem';
 import { Search, Pagination, Loading } from 'components';
 import LatestPostCard from './components/LatestPostCard';
 import TagsCard from './components/TagsCard';
-import './index.less';
+import styles from './index.less';
 
 /* eslint-disable no-extra-boolean-cast */
 const Home = ({
@@ -51,7 +51,11 @@ const Home = ({
         <div className="col-md-8 col-sm-12">
           <div style={{ position: 'relative', minHeight: '300px' }}>
             <Loading spinning={loading.effects['articles/queryArticles']} />
-            {list.map(article =>
+            {list.length === 0 ? (
+              <div className={styles.vacantContainer}>
+                这个区域暂时没有内容呢QAQ，请去其它地方看看吧～
+              </div>
+            ) : list.map(article =>
               <Article article={article} key={article.id} onClick={onArticleClick.bind(null, article.id)} />)}
           </div>
           <Pagination pagination={pagination} onSelect={handlePaginationChange} />
