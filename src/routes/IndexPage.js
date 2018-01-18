@@ -3,7 +3,7 @@ import { connect } from 'dva';
 import PropTypes from 'prop-types';
 import { Switch, Route } from 'dva/router';
 import DocumentTitle from 'react-document-title';
-import { Head, Footer, Live2D, Icon } from 'components';
+import { Head, Footer, Live2D, Icon, ErrorBoundary } from 'components';
 import styles from './IndexPage.less';
 
 class IndexPage extends React.PureComponent {
@@ -28,6 +28,20 @@ class IndexPage extends React.PureComponent {
     }
     return title;
   }
+
+  handleError = (err, errInfo) => {
+    // eslint-disable-next-line
+    const ua = navigator.appVersion;
+    this.props.dispatch({
+      type: 'app/errorHandle',
+      payload: {
+        errInfo: `${err.name}：${err.message}`,
+        stack: errInfo.componentStack,
+        ua,
+      },
+    });
+  }
+
   render() {
     const { articles, getRouteData, location } = this.props;
     const headItems = [{
@@ -44,24 +58,26 @@ class IndexPage extends React.PureComponent {
     const { article } = articles;
     const [routers] = getRouteData('/');
     return (
-      <DocumentTitle title={this.getPageTitle(article)}>
-        <div id="app">
-          <Head items={headItems} article={article} location={location} />
-          <div className="container">
-            <Switch>
-              {routers.children.map(route => <Route key={route.path} path={route.path} component={route.component} exact={route.exact} />)}
-            </Switch>
-          </div>
-          <Live2D />
-          <Footer copyright="@CopyRight 2017 Blog of Geass">
-            <div className={styles.footerIcon}>
-              <a href="https://github.com/nullptru"><Icon type="github" /></a>
-              <a href="https://weibo.com/5349121795/profile?topnav=1&wvr=6"><Icon type="weibo" /></a>
-              <a href="https://twitter.com/nullptru"><Icon type="twitter" /></a>
+      <ErrorBoundary onError={this.handleError} >
+        <DocumentTitle title={this.getPageTitle(article)}>
+          <div id="app">
+            <Head items={headItems} article={article} location={location} />
+            <div className="container">
+              <Switch>
+                {routers.children.map(route => <Route key={route.path} path={route.path} component={route.component} exact={route.exact} />)}
+              </Switch>
             </div>
-          </Footer>
-        </div>
-      </DocumentTitle>
+            <Live2D />
+            <Footer copyright="@CopyRight 2017 Blog of Geass">
+              <div className={styles.footerIcon}>
+                <a href="https://github.com/nullptru"><Icon type="github" /></a>
+                <a href="https://weibo.com/5349121795/profile?topnav=1&wvr=6"><Icon type="weibo" /></a>
+                <a href="https://twitter.com/nullptru"><Icon type="twitter" /></a>
+              </div>
+            </Footer>
+          </div>
+        </DocumentTitle>
+      </ErrorBoundary>
     );
   }
 }

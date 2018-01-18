@@ -74,6 +74,7 @@ function RouterConfig({ history, app }) {
       return routers.filter(route => route.path === path);
     },
   };
+
   const [loginRouter] = passProps.getRouteData('/iwanttologin');
   return (
     <Router history={history}>

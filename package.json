@@ -19,7 +19,6 @@
     "jsencrypt": "^2.3.1",
     "path-to-regexp": "^2.1.0",
     "pixi-live2d": "^1.2.1",
-    "pixi.js": "^4.6.2",
     "query-string": "^5.0.1",
     "rc-form": "^2.1.7",
     "rc-notification": "^3.0.0",
@@ -28,8 +27,7 @@
     "react": "^16.2.0",
     "react-document-title": "^2.0.3",
     "react-dom": "^16.2.0",
-    "react-markdown": "^3.1.4",
-    "react-transition-group": "^2.2.1"
+    "react-markdown": "^3.1.4"
   },
   "devDependencies": {
     "babel-eslint": "^8.1.2",

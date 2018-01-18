@@ -1,4 +1,3 @@
-/* eslint-disable */
 import { queryLogin, queryLoginStatus } from 'services/login';
 import { message } from 'components';
 import { hexSha1 } from 'utils/sha1.js';
@@ -12,8 +11,7 @@ export default {
 
   effects: {
     *login({ payload }, { call, put }) {
-      payload.password = hexSha1(payload.password);
-      const response = yield call(queryLogin, payload);
+      const response = yield call(queryLogin, { name: payload.name, password: hexSha1(payload.password) });
       if (response.success) {
         yield put({ type: 'updateState', payload: { isLogin: true } });
       } else {
@@ -27,7 +25,7 @@ export default {
       } else {
         yield put({ type: 'updateState', payload: { isLogin: false } });
       }
-    }
+    },
   },
 
   reducers: {
@@ -35,5 +33,4 @@ export default {
       return { ...state, ...payload };
     },
   },
-
 };

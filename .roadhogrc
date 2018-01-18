@@ -1,6 +1,7 @@
 {
   "entry": "src/index.js",
   "publicPath": "/",
+  "devtool": "cheap-module-source-map",
   "env": {
     "development": {
       "extraBabelPlugins": [

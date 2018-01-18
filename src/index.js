@@ -4,6 +4,7 @@ import createLoading from 'dva-loading';
 import Articles from './models/articles';
 import Tags from './models/tags';
 import Login from './models/login';
+import App from './models/app';
 import Router from './router';
 import './index.less';
 
@@ -18,6 +19,7 @@ app.use(createLoading());
 
 // 3. Model
 app.model(Articles);
+app.model(App);
 app.model(Tags);
 app.model(Login);
 

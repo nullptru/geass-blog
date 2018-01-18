@@ -8,6 +8,7 @@ import articles from './routes/articles';
 import tags from './routes/tags';
 import login from './routes/login';
 import comments from './routes/comments';
+import errors from './routes/errors';
 import config from './config';
 
 const app = new Koa();
@@ -16,10 +17,11 @@ app.keys = ['some secret hurr'];
 
 app.use(cors({
   origin: (ctx) => {
-    if (ctx.url === '/test') {
-      return false;
+    const requestOrigin = ctx.get('Origin');
+    if (config.allowOrigins.some(origin => origin === requestOrigin)) {
+      return requestOrigin;
     }
-    return config.origin;
+    return false;
   },
   exposeHeaders: ['WWW-Authenticate', 'Server-Authorization'],
   maxAge: 5,
@@ -41,6 +43,7 @@ router.use(comments.routes()).use(comments.allowedMethods());
 router.use(articles.routes()).use(articles.allowedMethods());
 router.use(tags.routes()).use(tags.allowedMethods());
 router.use(login.routes()).use(login.allowedMethods());
+router.use(errors.routes()).use(errors.allowedMethods());
 
 app.use(async (ctx, next) => {
   try {
