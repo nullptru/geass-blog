@@ -1,8 +1,6 @@
 /*
- Navicat Premium Data Transfer
-
  Source Server Type    : MySQL
- Source Host           : localhost:3306
+ Date: 18/01/2018 15:10:02
 */
 
 SET NAMES utf8mb4;
@@ -39,6 +37,19 @@ CREATE TABLE `comments` (
   PRIMARY KEY (`id`),
   KEY `article_foreign` (`article_id`),
   CONSTRAINT `article_foreign` FOREIGN KEY (`article_id`) REFERENCES `articles` (`id`) ON DELETE CASCADE ON UPDATE NO ACTION
+) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8;
+
+-- ----------------------------
+-- Table structure for errors
+-- ----------------------------
+DROP TABLE IF EXISTS `errors`;
+CREATE TABLE `errors` (
+  `id` int(8) NOT NULL AUTO_INCREMENT,
+  `ua` varchar(256) DEFAULT NULL,
+  `errInfo` text,
+  `stack` text,
+  `created_time` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  PRIMARY KEY (`id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8;
 
 -- ----------------------------

@@ -69,7 +69,7 @@ class Article extends React.PureComponent {
       id: this.props.article.id,
       content: this.state.editorText,
       imageUrl: this.props.article.imageUrl,
-      author: 'Geass',
+      author: this.props.author,
       status,
     };
     this.props.dispatch({
@@ -308,9 +308,10 @@ Article.defaultProps = {
 
 export default connect(({
   tags: { list: tagList },
+  login: { author },
   articles: {
     articleImages, article, list: articleList,
   },
 }) => ({
-  tagList, articleImages, article, articleList,
+  tagList, articleImages, article, articleList, author,
 }))(createForm()(Article));

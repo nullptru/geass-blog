@@ -1,4 +1,5 @@
 import Router from 'koa-router';
+import jwt from 'jsonwebtoken';
 import Pool from '../utils/db';
 import { createToken, checkToken } from '../utils/token';
 
@@ -29,7 +30,8 @@ login.post('/login', async (ctx) => {
 });
 
 login.get('/login/status', checkToken, async (ctx) => {
-  response.data = { isLogin: true };
+  const tokenObj = jwt.decode(ctx.session.token, 'geass_blog');
+  response.data = { isLogin: true, name: tokenObj.userId };
   ctx.body = response;
 });
 
