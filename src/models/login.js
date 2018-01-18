@@ -7,13 +7,14 @@ export default {
 
   state: {
     isLogin: false,
+    name: 'Geass',
   },
 
   effects: {
     *login({ payload }, { call, put }) {
       const response = yield call(queryLogin, { name: payload.name, password: hexSha1(payload.password) });
       if (response.success) {
-        yield put({ type: 'updateState', payload: { isLogin: true } });
+        yield put({ type: 'updateState', payload: { isLogin: true, name: payload.name } });
       } else {
         message.info('用户名密码错误');
       }
@@ -21,7 +22,7 @@ export default {
     *isLogin({ payload }, { call, put }) {
       const response = yield call(queryLoginStatus, payload);
       if (response.success) {
-        yield put({ type: 'updateState', payload: { isLogin: response.data.isLogin } });
+        yield put({ type: 'updateState', payload: { isLogin: response.data.isLogin, name: response.data.name } });
       } else {
         yield put({ type: 'updateState', payload: { isLogin: false } });
       }
