@@ -6,6 +6,7 @@ import ReactMarkdown from 'react-markdown';
 import Select, { Option } from 'rc-select';
 import copy from 'copy-to-clipboard';
 import { createForm } from 'rc-form';
+import { throttle } from 'utils';
 import Upload from 'rc-upload';
 import { Input, Icon, HighLight, CodeMirrorEditor, Dialog } from 'components';
 import 'themes/index.less';
@@ -54,6 +55,14 @@ class Article extends React.PureComponent {
         });
       },
     };
+
+    // update token every 5 min;
+    this.updateToken = throttle(1000 * 60 * 5, () => {
+      this.props.dispatch({
+        type: 'login/isLogin',
+      });
+    });
+
     this.onEditorChange = this.onEditorChange.bind(this);
     this.querySingle = this.querySingle.bind(this);
     this.removeArticle = this.removeArticle.bind(this);
@@ -89,7 +98,11 @@ class Article extends React.PureComponent {
   //   };
   // }
 
-  onEditorChange = text => this.setState({ editorText: text });
+  onEditorChange = (text) => {
+    // update token
+    this.updateToken();
+    this.setState({ editorText: text });
+  }
 
   checkEditStatus = () => {
     let isEdit = false;
@@ -206,7 +219,7 @@ class Article extends React.PureComponent {
       value: editorText,
       articleId,
       shouldUpdate(nextProps, props) {
-        return (nextProps.value !== props.value && (nextProps.articleId !== props.articleId || (!nextProps.articleId && nextProps.value === '')));
+        return ((nextProps.articleId !== props.articleId || (!nextProps.articleId && nextProps.value === '')) && nextProps.value !== props.value);
       },
     };
 

@@ -31,6 +31,9 @@ login.post('/login', async (ctx) => {
 
 login.get('/login/status', checkToken, async (ctx) => {
   const tokenObj = jwt.decode(ctx.session.token, 'geass_blog');
+  // update token
+  const token = createToken(tokenObj.userId);
+  ctx.session.token = token;
   response.data = { isLogin: true, name: tokenObj.userId };
   ctx.body = response;
 });

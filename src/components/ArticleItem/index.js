@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import { Link } from 'dva/router';
 import { Icon } from 'components';
 import styles from './index.less';
-import logo from '../../assets/logo.png';
+import defaultImage from '../../assets/bg_about.jpg';
 
 export default class ArticleItem extends React.PureComponent {
   onClick(articleId) {
@@ -15,7 +15,7 @@ export default class ArticleItem extends React.PureComponent {
     return (
       <section className={`${styles.article}`}>
         <header className={styles.headerContainer} onClick={this.onClick.bind(this, article.id)}>
-          <img className={styles.image} src={article.imageUrl ? article.imageUrl : logo} alt="article" />
+          <img className={styles.image} src={article.imageUrl ? article.imageUrl : defaultImage} alt="article" />
           <div className={styles.header}>
             <div>
               <span className={styles.title}>{ article.title }</span>

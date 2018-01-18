@@ -7,12 +7,9 @@ import 'codemirror/mode/xml/xml';
 import 'codemirror/theme/monokai.css';
 import 'codemirror/lib/codemirror.css';
 
-export default class CodeMirrorEditor extends React.PureComponent {
+export default class CodeMirrorEditor extends React.Component {
   constructor(props) {
     super(props);
-    this.state = {
-      value: this.props.value,
-    };
 
     this.handleChange = this.handleChange.bind(this);
     this.getEditor = this.getEditor.bind(this);
@@ -31,19 +28,19 @@ export default class CodeMirrorEditor extends React.PureComponent {
     this.props.getEditor(this.getEditor());
   }
 
+  shouldComponentUpdate(nextProps) {
+    return false;
+  }
+
   componentWillReceiveProps(nextProps) {
     if(this.props.shouldUpdate(nextProps, this.props)) {
-    this.editor.setValue(nextProps.value);
-      this.setState({ value: nextProps.value });
+      this.editor.setValue(nextProps.value);
     }
   }
 
   handleChange(editor) {
     const value = editor.getValue(); // 得到最新值
-    if (value !== this.state.value) {
-      this.props.onChange(value);
-      this.setState({ value });
-    }
+    this.props.onChange(value);
   }
 
   /**
@@ -68,7 +65,6 @@ export default class CodeMirrorEditor extends React.PureComponent {
     );
   }
 }
-
 
 CodeMirrorEditor.propTypes = {
   value: PropTypes.string,

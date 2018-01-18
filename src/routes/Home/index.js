@@ -51,7 +51,7 @@ const Home = ({
         <div className="col-md-8 col-sm-12">
           <div style={{ position: 'relative', minHeight: '300px' }}>
             <Loading spinning={loading.effects['articles/queryArticles']} />
-            {list.length === 0 ? (
+            {list.length === 0 && !loading.effects['articles/queryArticles'] ? (
               <div className={styles.vacantContainer}>
                 这个区域暂时没有内容呢QAQ，请去其它地方看看吧～
               </div>

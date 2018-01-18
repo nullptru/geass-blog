@@ -37,9 +37,13 @@ const getTags = (tagStr) => {
  */
 articles.all('/', async (ctx, next) => {
   if (ctx.session.token) {
-    const tokenObj = jwt.verify(ctx.session.token, 'geass_blog');
-    const token = createToken(tokenObj.userId);
-    ctx.session.token = token;
+    try {
+      const tokenObj = jwt.verify(ctx.session.token, 'geass_blog');
+      const token = createToken(tokenObj.userId);
+      ctx.session.token = token;
+    } catch (e) {
+      ctx.session.token = undefined;
+    }
   }
   response.success = true;
   await next();
@@ -72,10 +76,10 @@ articles.get('/articles/page', async (ctx) => {
     newItem.tags = getTags(newItem.articleTags);
     newItem.createdTime = dateFormat(newItem.created_time, 'yyyy-MM-dd');
     newItem.imageUrl = newItem.image_url;
-    delete newItem.articleTags;
-    delete newItem.total;
     delete newItem.created_time;
     delete newItem.image_url;
+    delete newItem.articleTags;
+    delete newItem.total;
     return newItem;
   });
   response.data = resData;
@@ -97,9 +101,11 @@ articles.get('/articles/all', async (ctx) => {
     const newItem = { ...item };
     newItem.tags = getTags(newItem.articleTags);
     newItem.createdTime = dateFormat(newItem.created_time, 'yyyy-MM-dd');
+    newItem.imageUrl = newItem.image_url;
+    delete newItem.created_time;
+    delete newItem.image_url;
     delete newItem.articleTags;
     delete newItem.total;
-    delete newItem.created_time;
     return newItem;
   });
   response.data = resData;
@@ -134,8 +140,10 @@ articles.get('/articles/tags', async (ctx) => {
     const newItem = { ...item };
     newItem.tags = getTags(newItem.articleTags);
     newItem.createdTime = dateFormat(newItem.created_time, 'yyyy-MM-dd');
-    delete newItem.articleTags;
+    newItem.imageUrl = newItem.image_url;
     delete newItem.created_time;
+    delete newItem.image_url;
+    delete newItem.articleTags;
     newItem.tags.forEach((tag) => {
       tagsArticles[tag.value].push(newItem);
     });

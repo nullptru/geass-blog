@@ -14,9 +14,13 @@ const response = {
  */
 tags.all('/', async (ctx, next) => {
   if (ctx.session.token) {
-    const tokenObj = jwt.verify(ctx.session.token, 'geass_blog');
-    const token = createToken(tokenObj.userId);
-    ctx.session.token = token;
+    try {
+      const tokenObj = jwt.verify(ctx.session.token, 'geass_blog');
+      const token = createToken(tokenObj.userId);
+      ctx.session.token = token;
+    } catch (e) {
+      ctx.session.token = undefined;
+    }
   }
   response.success = true;
   await next();
