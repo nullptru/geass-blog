@@ -71,7 +71,6 @@ class IndexPage extends React.PureComponent {
             <Footer copyright="@CopyRight 2017 Blog of Geass">
               <div className={styles.footerIcon}>
                 <a href="https://github.com/nullptru"><Icon type="github" /></a>
-                <a href="https://weibo.com/5349121795/profile?topnav=1&wvr=6"><Icon type="weibo" /></a>
                 <a href="https://twitter.com/nullptru"><Icon type="twitter" /></a>
               </div>
             </Footer>
