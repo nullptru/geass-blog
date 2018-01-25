@@ -225,6 +225,8 @@ articles.get('/articles/tags/:tag/page', async (ctx) => {
     const newItem = { ...item };
     newItem.tags = getTags(newItem.articleTags);
     newItem.createdTime = dateFormat(newItem.created_time, 'yyyy-MM-dd');
+    newItem.imageUrl = newItem.image_url;
+    delete newItem.image_url;
     delete newItem.articleTags;
     delete newItem.total;
     delete newItem.created_time;

@@ -8,6 +8,14 @@ import CommentComponent from './Comment';
 import styles from './index.less';
 
 class Detail extends React.PureComponent {
+  componentWillUnmount() {
+    this.props.dispatch({
+      type: 'updateState',
+      payload: {
+        article: {},
+      },
+    });
+  }
   render() {
     const { article, loading } = this.props;
     const tags = article.tags || [];
