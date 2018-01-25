@@ -10,7 +10,7 @@ import styles from './index.less';
 class Detail extends React.PureComponent {
   componentWillUnmount() {
     this.props.dispatch({
-      type: 'updateState',
+      type: 'articles/updateState',
       payload: {
         article: {},
       },
