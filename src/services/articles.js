@@ -34,6 +34,14 @@ export function querySingleArticle(params) {
   });
 }
 
+export function querySingleArticleAdmin(params) {
+  return request({
+    url: articles.querySingleAdmin,
+    method: 'get',
+    data: params,
+  });
+}
+
 export function queryLatestArticles(params) {
   return request({
     url: articles.queryLatest,

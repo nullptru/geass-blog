@@ -2,6 +2,7 @@ import {
   queryArticles,
   queryAll,
   querySingleArticle,
+  querySingleArticleAdmin,
   queryLatestArticles,
   queryByTag,
   create,
@@ -127,6 +128,13 @@ export default {
 
     *querySingleArticle({ payload = {} }, { call, put }) {
       const response = yield call(querySingleArticle, payload);
+      if (response.success) {
+        yield put({ type: 'updateState', payload: { article: response.data } });
+      }
+    },
+
+    *querySingleArticleAdmin({ payload = {} }, { call, put }) {
+      const response = yield call(querySingleArticleAdmin, payload);
       if (response.success) {
         yield put({ type: 'updateState', payload: { article: response.data } });
       }

@@ -152,6 +152,32 @@ articles.get('/articles/tags', async (ctx) => {
   ctx.body = response;
 });
 
+articles.get('/article/admin/:id', async (ctx) => {
+  const rows = await Pool.query("SELECT articles.*, GROUP_CONCAT(concat_ws(',', tags.id, tags.name,tags.value) ORDER BY tags.id SEPARATOR '|') AS articleTags  FROM articles " +
+  'LEFT JOIN tag2article ON tag2article.article_id = articles.id ' +
+  'LEFT JOIN tags ON tag2article.tag_id = tags.id ' +
+  'WHERE articles.id = ? ' +
+  'GROUP BY articles.id', [ctx.params.id]);
+
+  const data = Array.from(rows);
+  const resData = data.map((item) => {
+    const newItem = { ...item };
+    newItem.tags = getTags(newItem.articleTags);
+    newItem.visitedCount = newItem.visited_count;
+    newItem.imageUrl = newItem.image_url;
+    delete newItem.articleTags;
+    delete newItem.visited_count;
+    delete newItem.image_url;
+    return newItem;
+  });
+  [response.data] = resData;
+  // 转义
+  response.data.content = response.data.content.replace(/\\n/g, '\n');
+  response.data.createdTime = dateFormat(response.data.created_time, 'yyyy-MM-dd');
+  delete response.data.created_time;
+  ctx.body = response;
+});
+
 /**
  * 当请求为/articles/:id时，获得对应id文章
  */
@@ -360,8 +386,9 @@ articles.post('/article', checkToken, async (ctx) => {
  * 更新文章
  */
 articles.put('/article', checkToken, async (ctx) => {
-  const columns = ['title', 'content', 'abstraction', 'image_url'];
+  const columns = ['title', 'content', 'abstraction', 'image_url', 'status'];
   const { body } = ctx.request;
+  body.image_url = body.imageUrl;
   const { tagIds = [] } = body;
   const updateObj = {};
   let updated = false;
@@ -396,7 +423,7 @@ articles.put('/article', checkToken, async (ctx) => {
       sql: "SELECT articles.*, GROUP_CONCAT(concat_ws(',', tags.id, tags.name,tags.value) ORDER BY tags.id SEPARATOR '|') AS articleTags  FROM articles " +
       'LEFT JOIN tag2article ON tag2article.article_id = articles.id ' +
       'LEFT JOIN tags ON tag2article.tag_id = tags.id ' +
-      'WHERE articles.id = ?  AND status=1 ' +
+      'WHERE articles.id = ? ' +
       'GROUP BY articles.id',
       params: [body.id],
     });

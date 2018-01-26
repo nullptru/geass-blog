@@ -141,7 +141,7 @@ class Article extends React.PureComponent {
 
   querySingle = (id, cb) => {
     this.props.dispatch({
-      type: 'articles/querySingleArticle',
+      type: 'articles/querySingleArticleAdmin',
       payload: { id },
     }).then(() => {
       this.props.form.setFieldsValue({
