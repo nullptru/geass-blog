@@ -200,7 +200,7 @@ articles.get('/article/:id', async (ctx) => {
     params: [ctx.params.id],
   }];
   if (isNew) {
-    querys.unshift({
+    querys.push({
       sql: 'UPDATE articles SET visited_count = visited_count + 1 WHERE id = ?',
       params: [ctx.params.id],
     });

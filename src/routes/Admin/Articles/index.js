@@ -321,7 +321,7 @@ Article.defaultProps = {
 
 export default connect(({
   tags: { list: tagList },
-  login: { author },
+  login: { name: author },
   articles: {
     articleImages, article, list: articleList,
   },
