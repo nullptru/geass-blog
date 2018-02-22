@@ -206,7 +206,7 @@ articles.get('/article/:id', async (ctx) => {
     });
   }
   const rows = await Pool.startTransaction(querys);
-  const data = Array.from(rows[isNew ? 1 : 0]);
+  const data = Array.from(rows[0]);
   const resData = data.map((item) => {
     const newItem = { ...item };
     newItem.tags = getTags(newItem.articleTags);
@@ -386,7 +386,7 @@ articles.post('/article', checkToken, async (ctx) => {
  * 更新文章
  */
 articles.put('/article', checkToken, async (ctx) => {
-  const columns = ['title', 'content', 'abstraction', 'image_url', 'status'];
+  const columns = ['title', 'content', 'author', 'abstraction', 'image_url', 'status'];
   const { body } = ctx.request;
   body.image_url = body.imageUrl;
   const { tagIds = [] } = body;
