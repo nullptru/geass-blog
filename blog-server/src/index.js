@@ -18,7 +18,7 @@ app.keys = ['some secret hurr'];
 app.use(cors({
   origin: (ctx) => {
     const requestOrigin = ctx.get('Origin');
-    if (config.allowOrigins.some(origin => origin === requestOrigin)) {
+    if (config.allowOrigins.some(origin => origin.test(requestOrigin))) {
       return requestOrigin;
     }
     return false;

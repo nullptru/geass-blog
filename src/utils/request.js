@@ -54,7 +54,7 @@ const fetchRequest = (options) => {
     const headers = {
       'Content-Type': 'application/x-www-form-urlencoded',
     };
-    return axios.post(url, data, headers);
+    return axios.post(url, data, { headers });
   }
   switch (method.toLowerCase()) {
     case 'get':

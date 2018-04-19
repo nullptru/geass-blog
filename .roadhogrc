@@ -2,6 +2,14 @@
   "entry": "src/index.js",
   "publicPath": "/",
   "devtool": "cheap-module-source-map",
+  "proxy": {
+      "/api/v1": {
+        "target": "http://localhost:3000/",
+        "changeOrigin": true,
+        "secure": false,
+        "pathRewrite": { "/api/v1":  "" }
+      }
+  },
   "env": {
     "development": {
       "extraBabelPlugins": [

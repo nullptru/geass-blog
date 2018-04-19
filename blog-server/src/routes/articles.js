@@ -184,7 +184,7 @@ articles.get('/article/admin/:id', async (ctx) => {
 articles.get('/article/:id', async (ctx) => {
   const ipAddress = ip.address();
   const isNew = ip.addCached(ctx.req.socket.remoteAddress || ipAddress);
-  console.log(ctx.req.socket.remoteAddress, ctx.req.socket.remoteFamily, ctx.req.socket.remotePort);
+  // console.log(ctx.req.socket.remoteAddress, ctx.req.socket.remoteFamily, ctx.req.socket.remotePort);
   const querys = [{
     sql: "SELECT articles.*, GROUP_CONCAT(concat_ws(',', tags.id, tags.name,tags.value) ORDER BY tags.id SEPARATOR '|') AS articleTags  FROM articles " +
     'LEFT JOIN tag2article ON tag2article.article_id = articles.id ' +
@@ -230,17 +230,23 @@ articles.get('/article/:id', async (ctx) => {
  * 当请求为/articles/tags/:tag/page时，获得相应tag下的文章列表
  */
 articles.get('/articles/tags/:tag/page', async (ctx) => {
-  const { pageSize = 10, current = 1 } = ctx.query;
+  const { pageSize = 10, current = 1, search = '' } = ctx.query;
+  const searchStr = `%${search}%`;
   const rows = await Pool.query(
-    'SELECT (SELECT count(*) FROM articles, tag2article, tags WHERE tag2article.tag_id = tags.id AND tag2article.article_id = articles.id AND tags.value = ?) AS total, articles.id, articles.title, articles.created_time, articles.abstraction, articles.image_url, ' +
+    'SELECT (SELECT count(*) FROM articles, tag2article, tags ' +
+    'WHERE tag2article.tag_id = tags.id AND tag2article.article_id = articles.id AND tags.value = ? ' +
+    'AND (articles.content LIKE ? OR articles.title LIKE ? OR articles.abstraction LIKE ? )) AS total, articles.id, articles.title, articles.created_time, articles.abstraction, articles.image_url, ' +
     "GROUP_CONCAT(concat_ws(',', tags.id, tags.name,tags.value) ORDER BY tags.id SEPARATOR '|') AS articleTags  FROM articles " +
     'LEFT JOIN tag2article ON tag2article.article_id = articles.id ' +
     'LEFT JOIN tags ON tag2article.tag_id = tags.id ' +
-    'WHERE articles.id IN ( SELECT articles.id FROM articles, tag2article, tags WHERE tag2article.tag_id = tags.id AND tag2article.article_id = articles.id AND tags.value = ? AND status=1 ) ' +
+    'WHERE articles.id IN ( SELECT articles.id FROM articles, tag2article, tags WHERE tag2article.tag_id = tags.id AND tag2article.article_id = articles.id AND tags.value = ? ' +
+    'AND (articles.content LIKE ? OR articles.title LIKE ? OR articles.abstraction LIKE ? ) AND status=1 ) ' +
     'GROUP BY articles.id ' +
     'ORDER BY created_time DESC ' +
     'LIMIT ?, ?',
-    [ctx.params.tag, ctx.params.tag, (current - 1) * pageSize, current * pageSize],
+    [ctx.params.tag, searchStr, searchStr, searchStr,
+      ctx.params.tag, searchStr, searchStr, searchStr,
+      (current - 1) * pageSize, current * pageSize],
   );
   const data = Array.from(rows);
   // pagination
