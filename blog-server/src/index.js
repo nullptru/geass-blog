@@ -2,6 +2,7 @@ import Koa from 'koa';
 import logger from 'koa-logger';
 import KoaBody from 'koa-body';
 import Router from 'koa-router';
+import https from 'https';
 import cors from 'koa2-cors';
 import session from 'koa-session-minimal';
 import articles from './routes/articles';
@@ -58,6 +59,7 @@ app.use(async (ctx, next) => {
 app.use(router.routes())
   .use(router.allowedMethods());
 
-app.listen(config.appPort);
+// app.listen(config.appPort);
+https.createServer(app.callback()).listen(config.appPort);
 /* eslint-disable no-console */
 console.log(`Server running at ${config.appPort}`);
