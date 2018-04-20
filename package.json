@@ -19,6 +19,7 @@
     "jsencrypt": "^2.3.1",
     "path-to-regexp": "^2.1.0",
     "pixi-live2d": "^1.2.1",
+    "pixi.js": "^4.7.3",
     "query-string": "^5.0.1",
     "rc-form": "^2.1.7",
     "rc-notification": "^3.0.0",

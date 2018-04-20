@@ -289,14 +289,14 @@ articles.post('/article/image/upload', checkToken, upload.fields([
   const result = [];
   const files = ctx.req.files.avatar === undefined ? ctx.req.files.gallery : ctx.req.files.avatar;
   for (const file of files) {
-    response.data = { filename: file.path };
-
-    result.push((async () => {
-      const res = await uploadToQiniu(file.path, file.originalname);
-      res.filename = Config.defaultDomain + res.key;
-      await deleteTmpFile(file.path);
-      return res;
-    })(file));
+    // result.push((async () => {
+    //   const res = await uploadToQiniu(file.path, file.originalname);
+    //   res.filename = Config.defaultDomain + res.key;
+    //   await deleteTmpFile(file.path);
+    //   return res;
+    // })(file));
+    // 暂时放弃七牛
+    result.push({ filename: Config.defaultDomain + file.filename });
   }
   const resData = await Promise.all(result);
   response.data = resData.length === 1 ? resData[0] : resData;
