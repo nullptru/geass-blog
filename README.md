@@ -1,7 +1,11 @@
-[在线地址](http://geasscn.me) 
+该版本为SPA版本：
+[在线地址](https://geasscn.me:8080) 
+同构SSR版本：
+[在线地址](https://geasscn.me) 
 
 ### CHANGELOG
-+ v 1.0 ： 正式发布的第一个版本，完成前后端的完整实现
++ v 1.0： 正式发布的第一个版本，完成前后端的完整实现
++ v 1.1: 博客全面迁移到https的怀抱，注释七牛存储，暂存本地
 
 ### 运行
 ```
@@ -12,10 +16,10 @@ npm install / yarn install
 
 // run server
 cd dva-server
-npm start
+npm start / yarn start
 
 // run client
-npm start
+npm start / yarn start
 
 // build
 npm run build
