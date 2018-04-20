@@ -136,7 +136,7 @@ export default {
     *querySingleArticleAdmin({ payload = {} }, { call, put }) {
       const response = yield call(querySingleArticleAdmin, payload);
       if (response.success) {
-        yield put({ type: 'updateState', payload: { article: response.data } });
+        yield put({ type: 'updateState', payload: { article: response.data, articleImages: [] } });
       }
     },
 
